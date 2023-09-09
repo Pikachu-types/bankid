@@ -1,0 +1,40 @@
+{
+  "name": "npm-template",
+  "version": "1.0.0",
+  "description": "This package/library servers as a share point for the mono repo structure javascript projects infrastructure is built upon.",
+  "main": "build/index.js",
+  "files": ["/build"],
+  "types": "build/index.d.ts",
+  "scripts": {
+    "test": "",
+    "lint": "eslint --ext .js,.ts .",
+    "linty": "npm run lint -- --fix",
+    "build": "tsc",
+    "publish": "npm run build && npm publish"
+  },
+  "author": "Jackmay Confidence Idala",
+  "repository": {
+    "type": "git",
+    "url": "[your git repository location eg (git+https://github.com/Account-Profile/repo.git)]"
+  },
+  "bugs": {
+    "url": "[your git issues location eg (https://github.com/Account-Profile/repo/issues)]"
+  },
+  "homepage": "[provide repo homepage]",
+  "keywords": [],
+  "license": "ISC",
+  "dependencies": {
+    "class-transformer": "^0.5.1",
+    "axios": "^1.4.0",
+    "reflect-metadata": "^0.1.13",
+    "rimraf": "^3.0.2"
+  },
+  "devDependencies": {
+    "@types/node": "^20.1.2",
+    "@typescript-eslint/eslint-plugin": "^5.47.1",
+    "@typescript-eslint/parser": "^5.47.1",
+    "eslint": "^8.30.0",
+    "eslint-plugin-import": "^2.26.0",
+    "typescript": "^4.9.4"
+  }
+}
