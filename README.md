@@ -1,4 +1,4 @@
-# [npm template] for making npm packages and publishing them
+# BankID npm package
 
 This package/library servers as a share point for the mono repo structure javascript projects infrastructure is built upon.
 
