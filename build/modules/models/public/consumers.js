@@ -12,6 +12,8 @@ const contact_1 = require("../superficial/contact");
 const labs_sharable_1 = require("labs-sharable");
 const generator_1 = require("../../services/generator");
 const helper_1 = require("../../services/helper");
+const enums_1 = require("../../enums/enums");
+const uuid_1 = require("uuid");
 /**
  * ConsumerModel class
 */
@@ -94,21 +96,48 @@ class ConsumerModel {
         return res;
     }
     /**
-     * create a pretty unique uid for consumers
-     * @param {string} token jwt token
-     * @param {string} tin tax identification number
-     * @return {string} generated uid
+     * creates a new consumer model
+     * @param {ConsoleRegAccountRequest} request organisation create requester
+     * @return {ConsumerModel} new Consumer
      */
-    static createConsumerID(token, tin) {
-        const signature = token.split(".");
-        if (signature.length != 3) {
-            throw new labs_sharable_1.CustomError("Invalid token");
+    static createConsumer(request) {
+        const template = {
+            "tier": 1,
+            "test": false,
+            "regNum": "",
+            "created": 1688536369,
+            "usage": 0,
+            "contact": {
+                "emailVerified": false,
+                "phone": "",
+                "phoneVerified": false,
+                "email": "",
+            },
+            "name": "",
+            "tin": "",
+            "id": "",
+            "email": "",
+            "updatedAt": 1688536369,
+            "keys": {
+                "public": "",
+            },
+            "apis": {
+                "live": "",
+                "test": "",
+            },
+            "apiKey": "",
+        };
+        if (request.email == undefined) {
+            throw new labs_sharable_1.CustomError("Cannot create organisation with no reference to owner");
         }
-        if (tin.length > 13 || tin.length < 10) {
-            throw new labs_sharable_1.CustomError("Invalid Tax Identification Number");
-        }
-        return "bcn_" + signature[2].replace("h-", "") + "-" +
-            tin.substring(0, 4) + tin.substring(10, 12);
+        const data = ConsumerModel.fromJson(template);
+        data.name = request.org;
+        data.email = request.email;
+        data.id = `${enums_1.DocumentTypes.consumer}${(0, uuid_1.v4)()}`;
+        data.created = (0, labs_sharable_1.unixTimeStampNow)();
+        data.lut = (0, labs_sharable_1.unixTimeStampNow)();
+        data.test = request.debug;
+        return data;
     }
     /**
      * create unique keys for consumer
@@ -178,7 +207,7 @@ __decorate([
 ], ConsumerModel.prototype, "created", void 0);
 __decorate([
     (0, class_transformer_1.Expose)()
-], ConsumerModel.prototype, "updatedAt", void 0);
+], ConsumerModel.prototype, "lut", void 0);
 __decorate([
     (0, class_transformer_1.Expose)()
 ], ConsumerModel.prototype, "tier", void 0);

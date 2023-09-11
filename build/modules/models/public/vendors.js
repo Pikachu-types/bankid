@@ -152,7 +152,7 @@ __decorate([
 ], VendorModel.prototype, "created", void 0);
 __decorate([
     (0, class_transformer_1.Expose)()
-], VendorModel.prototype, "updatedAt", void 0);
+], VendorModel.prototype, "lut", void 0);
 __decorate([
     (0, class_transformer_1.Expose)()
 ], VendorModel.prototype, "tier", void 0);

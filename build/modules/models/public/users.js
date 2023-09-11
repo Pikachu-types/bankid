@@ -211,7 +211,7 @@ __decorate([
 ], IdentificationModel.prototype, "vendor", void 0);
 __decorate([
     (0, class_transformer_1.Expose)()
-], IdentificationModel.prototype, "updatedAt", void 0);
+], IdentificationModel.prototype, "lut", void 0);
 __decorate([
     (0, class_transformer_1.Expose)()
 ], IdentificationModel.prototype, "contact", void 0);

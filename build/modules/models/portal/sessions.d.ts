@@ -1,25 +1,20 @@
-import { ConsoleAccountSecurity } from "../../interfaces/documents";
+import { AbstractIPData } from "../superficial/ip";
 /**
- * ConsoleUser class
+ * SessionData class
 */
-export declare class ConsoleUser {
-    /**
-     * id look like [bcn_{id}]
-     */
+export declare class SessionData {
     id: string;
-    email: string;
-    naming: Record<string, unknown>;
-    created: number | undefined;
-    lut: number | undefined;
-    security: ConsoleAccountSecurity | undefined;
-    organizations: string[];
+    date: number;
+    exp: number;
+    ip: Record<string, unknown> | undefined;
+    ipData: AbstractIPData | undefined;
     /**
-     * Change record to ConsoleUser class
+     * Change record to SessionData class
      *
      * @param {Record<string, unknown>} obj  json object from db
-     * @return {ConsoleUser} this class
+     * @return {SessionData} this class
      */
-    static fromJson(obj: Record<string, unknown>): ConsoleUser;
+    static fromJson(obj: Record<string, unknown>): SessionData;
     /**
     * resolve maps for certain attributes
     * @return {void} text
@@ -28,11 +23,11 @@ export declare class ConsoleUser {
     /**
      * Helper class function to find one specific object based on id
      *
-     * @param {ConsoleUser[]} list an array to sort from and find given
+     * @param {SessionData[]} list an array to sort from and find given
      * @param {string} id provide the needed id to match for
-     * @return {ConsoleUser | undefined} found object else undefined
+     * @return {SessionData | undefined} found object else undefined
      */
-    static findOne(list: ConsoleUser[], id: string): ConsoleUser | undefined;
+    static findOne(list: SessionData[], id: string): SessionData | undefined;
     /**
      * un-resolve maps for certain attributes
      * @return {void} nothing

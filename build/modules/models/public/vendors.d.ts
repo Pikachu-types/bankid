@@ -11,7 +11,7 @@ export declare class VendorModel {
     domain: string;
     regNum: string;
     created: number | undefined;
-    updatedAt: number | undefined;
+    lut: number | undefined;
     tier: number;
     test: boolean;
     apis: Record<string, unknown>;

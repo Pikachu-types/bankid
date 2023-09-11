@@ -1,4 +1,5 @@
 import { AuthenticateKeysData, ContactData } from "../superficial/contact";
+import { ConsoleRegAccountRequest } from "../../interfaces/requests";
 /**
  * ConsumerModel class
 */
@@ -14,7 +15,7 @@ export declare class ConsumerModel {
     email: string;
     test: boolean;
     created: number | undefined;
-    updatedAt: number | undefined;
+    lut: number | undefined;
     tier: number;
     contact: Record<string, unknown>;
     keys: Record<string, unknown>;
@@ -58,12 +59,11 @@ export declare class ConsumerModel {
     */
     toMap(): Record<string, unknown>;
     /**
-     * create a pretty unique uid for consumers
-     * @param {string} token jwt token
-     * @param {string} tin tax identification number
-     * @return {string} generated uid
+     * creates a new consumer model
+     * @param {ConsoleRegAccountRequest} request organisation create requester
+     * @return {ConsumerModel} new Consumer
      */
-    static createConsumerID(token: string, tin: string): string;
+    static createConsumer(request: ConsoleRegAccountRequest): ConsumerModel;
     /**
      * create unique keys for consumer
      * @param {string} secret cipher key

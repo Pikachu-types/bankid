@@ -39,7 +39,7 @@ export declare class IdentificationModel {
      * BankID vendor id
      */
     vendor: string;
-    updatedAt: number | undefined;
+    lut: number | undefined;
     contact: Record<string, unknown>;
     address: Record<string, unknown>;
     nationality: Record<string, unknown>;

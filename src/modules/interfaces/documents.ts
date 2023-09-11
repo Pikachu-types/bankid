@@ -44,3 +44,11 @@ export interface DefaultResponse {
   reason?: string;
   data?: Record<string, unknown>;
 };
+
+/**
+ * Console account security
+ */
+export interface ConsoleAccountSecurity {
+  tFA: boolean;
+  generated?: boolean;
+};

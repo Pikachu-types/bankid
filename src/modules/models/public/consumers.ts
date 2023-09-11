@@ -1,9 +1,11 @@
 import {plainToInstance, Expose} from "class-transformer";
 import {AuthenticateKeysData, ContactData} from "../superficial/contact";
-import {CustomError} from "labs-sharable";
+import {CustomError, unixTimeStampNow} from "labs-sharable";
 import { Generator } from "../../services/generator";
 import { FunctionHelpers } from "../../services/helper";
-
+import { DocumentTypes } from "../../enums/enums";
+import { v4 as uuidv4 } from 'uuid';
+import { ConsoleRegAccountRequest } from "../../interfaces/requests";
 
 /**
  * ConsumerModel class
@@ -22,7 +24,7 @@ export class ConsumerModel {
   @Expose() email = "";
   @Expose() test = false;
   @Expose() created: number | undefined;
-  @Expose() updatedAt: number | undefined;
+  @Expose() lut: number | undefined;
   @Expose() tier = 1;
   @Expose() contact: Record<string, unknown> = {};
   @Expose() keys: Record<string, unknown> = {};
@@ -101,25 +103,50 @@ export class ConsumerModel {
   }
 
   /**
-   * create a pretty unique uid for consumers
-   * @param {string} token jwt token
-   * @param {string} tin tax identification number
-   * @return {string} generated uid
+   * creates a new consumer model
+   * @param {ConsoleRegAccountRequest} request organisation create requester
+   * @return {ConsumerModel} new Consumer
    */
-  public static createConsumerID(token: string, tin: string): string {
-    const signature = token.split(".");
-
-    if (signature.length != 3) {
-      throw new CustomError("Invalid token");
+  public static createConsumer(request: ConsoleRegAccountRequest,): ConsumerModel {
+    const template: Record<string, unknown> = {
+      "tier": 1,
+      "test": false,
+      "regNum": "", // edit
+      "created": 1688536369,
+      "usage": 0,
+      "contact": {
+        "emailVerified": false,
+        "phone": "",
+        "phoneVerified": false,
+        "email": "",
+      },
+      "name": "", // edit
+      "tin": "", // edit
+      "id": "",
+      "email": "", //edit
+      "updatedAt": 1688536369,
+      "keys": {
+        "public": "",
+      },
+      "apis": {
+        "live": "",
+        "test": "",
+      },
+      "apiKey": "",
+    };
+    if (request.email == undefined) {
+      throw new CustomError("Cannot create organisation with no reference to owner");
     }
-
-    if (tin.length > 13 || tin.length < 10) {
-      throw new CustomError("Invalid Tax Identification Number");
-    }
-
-    return "bcn_" + signature[2].replace("h-", "") + "-" +
-      tin.substring(0, 4) + tin.substring(10, 12);
+    const data = ConsumerModel.fromJson(template);
+    data.name = request.org;
+    data.email = request.email;
+    data.id = `${DocumentTypes.consumer}${uuidv4()}`;
+    data.created = unixTimeStampNow();
+    data.lut = unixTimeStampNow();
+    data.test = request.debug;
+    return data;
   }
+  
 
   /**
    * create unique keys for consumer

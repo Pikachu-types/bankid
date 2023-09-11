@@ -36,4 +36,7 @@ __exportStar(require("./models/public/standaloneIds"), exports);
 __exportStar(require("./models/bankid"), exports);
 __exportStar(require("./enums/shared"), exports);
 __exportStar(require("./enums/templates"), exports);
+__exportStar(require("./enums/enums"), exports);
+__exportStar(require("./models/portal/consoleuser"), exports);
+__exportStar(require("./models/portal/sessions"), exports);
 //# sourceMappingURL=index.js.map

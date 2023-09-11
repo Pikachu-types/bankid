@@ -22,7 +22,7 @@ export class VendorModel {
   @Expose() regNum = "";
   // @Expose() verificationDomain = "";
   @Expose() created: number | undefined;
-  @Expose() updatedAt: number | undefined;
+  @Expose() lut: number | undefined;
   @Expose() tier = 1;
   @Expose() test = false;
   @Expose() apis: Record<string, unknown> = {};

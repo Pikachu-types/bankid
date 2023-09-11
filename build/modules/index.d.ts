@@ -20,3 +20,6 @@ export * from "./models/public/standaloneIds";
 export * from "./models/bankid";
 export * from "./enums/shared";
 export * from "./enums/templates";
+export * from "./enums/enums";
+export * from "./models/portal/consoleuser";
+export * from "./models/portal/sessions";

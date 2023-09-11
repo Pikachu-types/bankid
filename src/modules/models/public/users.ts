@@ -45,7 +45,7 @@ export class IdentificationModel {
    * BankID vendor id
    */
   @Expose() vendor = "";
-  @Expose() updatedAt: number | undefined;
+  @Expose() lut: number | undefined;
   @Expose() contact: Record<string, unknown> = {};
   @Expose() address: Record<string, unknown> = {};
   @Expose() nationality: Record<string, unknown> = {};

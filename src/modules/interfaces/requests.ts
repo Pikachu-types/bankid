@@ -1,9 +1,50 @@
+import { MagicLinkModes } from "../enums/shared";
+
 /**
  * Magic Login RequestModel
  */
 export interface MagicLoginRequest {
   email: string;
   debug: boolean;
+};
+
+/**
+ * Magic Login Verification
+ */
+export interface MagicLoginVerification {
+  token: string;
+  debug?: boolean;
+};
+
+/**
+ * Magic token structure
+ */
+export interface MagicToken {
+  /**
+   * Usually the email
+   */
+  sub: string;
+  /**
+   * Date created
+   */
+  iat: number;
+  /**
+   * Expires when
+   */
+  exp: number;
+  /**
+   * Type of Magic token
+   */
+  mode: MagicLinkModes | string;
+  /**
+   * Would be undefined if created for login only
+   * else registration parses all reg data here 
+   */
+  data?: ConsoleRegAccountRequest;
+  /**
+   * Session information
+   */
+  session: Record<string, unknown>;
 };
 
 /**

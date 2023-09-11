@@ -2,10 +2,13 @@
     "cSpell.words": [
         "addressclaim",
         "bioclaim",
+        "consoleuser",
         "contactclaim",
         "financials",
         "geoname",
         "namingclaim",
-        "nationalityclaim"
+        "nationalityclaim",
+        "sess",
+        "uuidv"
     ]
 }

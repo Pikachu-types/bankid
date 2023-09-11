@@ -6,32 +6,29 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.ConsoleUser = void 0;
+exports.SessionData = void 0;
 const class_transformer_1 = require("class-transformer");
 const uuid_1 = require("uuid");
 const enums_1 = require("../../enums/enums");
+const ip_1 = require("../superficial/ip");
 /**
- * ConsoleUser class
+ * SessionData class
 */
-class ConsoleUser {
+class SessionData {
     constructor() {
         /* eslint new-cap: ["error", { "capIsNew": false }]*/
-        /**
-         * id look like [bcn_{id}]
-         */
         this.id = "";
-        this.email = "";
-        this.naming = {};
-        this.organizations = [];
+        this.date = 0;
+        this.exp = 0;
     }
     /**
-     * Change record to ConsoleUser class
+     * Change record to SessionData class
      *
      * @param {Record<string, unknown>} obj  json object from db
-     * @return {ConsoleUser} this class
+     * @return {SessionData} this class
      */
     static fromJson(obj) {
-        const result = (0, class_transformer_1.plainToInstance)(ConsoleUser, obj, { excludeExtraneousValues: true });
+        const result = (0, class_transformer_1.plainToInstance)(SessionData, obj, { excludeExtraneousValues: true });
         result.resolveMaps();
         return result;
     }
@@ -40,18 +37,19 @@ class ConsoleUser {
     * @return {void} text
     */
     resolveMaps() {
-        // this.contactData = ContactData.fromJson(this.contact);
+        if (this.ip)
+            this.ipData = ip_1.AbstractIPData.fromJson(this.ip);
     }
     /**
      * Helper class function to find one specific object based on id
      *
-     * @param {ConsoleUser[]} list an array to sort from and find given
+     * @param {SessionData[]} list an array to sort from and find given
      * @param {string} id provide the needed id to match for
-     * @return {ConsoleUser | undefined} found object else undefined
+     * @return {SessionData | undefined} found object else undefined
      */
     static findOne(list, id) {
         for (let i = 0; i < list.length; i++) {
-            if (list[i].id === id || list[i].email === id)
+            if (list[i].id === id)
                 return list[i];
         }
         return;
@@ -61,7 +59,8 @@ class ConsoleUser {
      * @return {void} nothing
      */
     unResolveMaps() {
-        // if (this.contactData) this.contact = this.contactData.toMap();
+        if (this.ipData)
+            this.ip = this.ipData.toMap();
     }
     /**
      * This class handler to json
@@ -76,6 +75,7 @@ class ConsoleUser {
     */
     toMap() {
         const res = JSON.parse(this.toJsonString());
+        delete res["ipData"];
         return res;
     }
     /**
@@ -83,29 +83,20 @@ class ConsoleUser {
      * @return {string} generated uid
      */
     static createID() {
-        return `${enums_1.DocumentTypes.user}${(0, uuid_1.v4)()}`;
+        return `${enums_1.DocumentTypes.session}${(0, uuid_1.v4)()}`;
     }
 }
 __decorate([
     (0, class_transformer_1.Expose)()
-], ConsoleUser.prototype, "id", void 0);
+], SessionData.prototype, "id", void 0);
 __decorate([
     (0, class_transformer_1.Expose)()
-], ConsoleUser.prototype, "email", void 0);
+], SessionData.prototype, "date", void 0);
 __decorate([
     (0, class_transformer_1.Expose)()
-], ConsoleUser.prototype, "naming", void 0);
+], SessionData.prototype, "exp", void 0);
 __decorate([
     (0, class_transformer_1.Expose)()
-], ConsoleUser.prototype, "created", void 0);
-__decorate([
-    (0, class_transformer_1.Expose)()
-], ConsoleUser.prototype, "lut", void 0);
-__decorate([
-    (0, class_transformer_1.Expose)()
-], ConsoleUser.prototype, "security", void 0);
-__decorate([
-    (0, class_transformer_1.Expose)()
-], ConsoleUser.prototype, "organizations", void 0);
-exports.ConsoleUser = ConsoleUser;
-//# sourceMappingURL=consoleuser.js.map
+], SessionData.prototype, "ip", void 0);
+exports.SessionData = SessionData;
+//# sourceMappingURL=sessions.js.map

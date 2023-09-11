@@ -3,5 +3,6 @@
  */
 export declare enum MagicLinkModes {
     Registration = "registration",
-    Login = "login"
+    Login = "login",
+    Onsession = "session"
 }
