@@ -52,3 +52,10 @@ export interface ConsoleAccountSecurity {
   tFA: boolean;
   generated?: boolean;
 };
+
+/**
+ * Console account security
+ */
+export interface ConsumerProfile {
+  logo: string;
+};

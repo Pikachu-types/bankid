@@ -39,6 +39,7 @@ export declare enum DocumentReference {
      * BankID NIN sessions wrapped in a history
      */
     history = "history",
+    userRef = "users",
     /**
       * A request has just been handled
       */
@@ -93,6 +94,15 @@ export declare enum DocumentAction {
     delete = "delete",
     update = "update",
     create = "create"
+}
+/**
+ * User roles
+ */
+export declare enum UserRoles {
+    admin = "admin",
+    owner = "owner",
+    editor = "editor",
+    viewer = "viewer"
 }
 /**
  * Document actions

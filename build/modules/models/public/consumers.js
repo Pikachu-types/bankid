@@ -222,6 +222,9 @@ __decorate([
 ], ConsumerModel.prototype, "apis", void 0);
 __decorate([
     (0, class_transformer_1.Expose)()
+], ConsumerModel.prototype, "profile", void 0);
+__decorate([
+    (0, class_transformer_1.Expose)()
 ], ConsumerModel.prototype, "usage", void 0);
 exports.ConsumerModel = ConsumerModel;
 //# sourceMappingURL=consumers.js.map

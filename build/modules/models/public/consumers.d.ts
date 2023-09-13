@@ -1,5 +1,6 @@
 import { AuthenticateKeysData, ContactData } from "../superficial/contact";
 import { ConsoleRegAccountRequest } from "../../interfaces/requests";
+import { ConsumerProfile } from "../../interfaces/documents";
 /**
  * ConsumerModel class
 */
@@ -20,6 +21,7 @@ export declare class ConsumerModel {
     contact: Record<string, unknown>;
     keys: Record<string, unknown>;
     apis: Record<string, unknown>;
+    profile: ConsumerProfile | undefined;
     usage: number | undefined;
     contactData: ContactData | undefined;
     keyData: AuthenticateKeysData | undefined;

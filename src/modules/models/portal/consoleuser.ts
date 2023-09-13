@@ -13,9 +13,10 @@ export class ConsoleUser {
    */
   @Expose() id = "";
   @Expose() email = "";
+  @Expose() legalAccepted = false;
   @Expose() naming: Record<string, unknown> = {};
-  @Expose() created: number | undefined;
-  @Expose() lut: number | undefined;
+  @Expose() created: number = 0;
+  @Expose() lut: number = 0;
   @Expose() security: ConsoleAccountSecurity | undefined;
   @Expose() organizations: string[] = [];
 
@@ -91,3 +92,13 @@ export class ConsoleUser {
     return `${DocumentTypes.user}${uuidv4()}`;
   }
 }
+
+/**
+ * Consumer user doc model
+ */
+export interface ConsumerUserReference {
+  email: string;
+  role: string;
+  name: string;
+  id: string;
+};

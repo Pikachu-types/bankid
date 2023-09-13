@@ -7,6 +7,12 @@ export interface MagicLoginRequest {
     debug: boolean;
 }
 /**
+ * Validate Token Request
+ */
+export interface MagicTokenValidate {
+    token: string;
+}
+/**
  * Magic Login Verification
  */
 export interface MagicLoginVerification {
@@ -49,6 +55,7 @@ export interface MagicToken {
 export interface ConsoleRegAccountRequest {
     email?: string;
     debug: boolean;
+    legalAccepted: boolean;
     org: string;
     naming?: {
         first: string;

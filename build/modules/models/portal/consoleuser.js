@@ -21,7 +21,10 @@ class ConsoleUser {
          */
         this.id = "";
         this.email = "";
+        this.legalAccepted = false;
         this.naming = {};
+        this.created = 0;
+        this.lut = 0;
         this.organizations = [];
     }
     /**
@@ -94,6 +97,9 @@ __decorate([
 ], ConsoleUser.prototype, "email", void 0);
 __decorate([
     (0, class_transformer_1.Expose)()
+], ConsoleUser.prototype, "legalAccepted", void 0);
+__decorate([
+    (0, class_transformer_1.Expose)()
 ], ConsoleUser.prototype, "naming", void 0);
 __decorate([
     (0, class_transformer_1.Expose)()
@@ -108,4 +114,5 @@ __decorate([
     (0, class_transformer_1.Expose)()
 ], ConsoleUser.prototype, "organizations", void 0);
 exports.ConsoleUser = ConsoleUser;
+;
 //# sourceMappingURL=consoleuser.js.map

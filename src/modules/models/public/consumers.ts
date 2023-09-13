@@ -6,6 +6,7 @@ import { FunctionHelpers } from "../../services/helper";
 import { DocumentTypes } from "../../enums/enums";
 import { v4 as uuidv4 } from 'uuid';
 import { ConsoleRegAccountRequest } from "../../interfaces/requests";
+import { ConsumerProfile } from "../../interfaces/documents";
 
 /**
  * ConsumerModel class
@@ -29,6 +30,7 @@ export class ConsumerModel {
   @Expose() contact: Record<string, unknown> = {};
   @Expose() keys: Record<string, unknown> = {};
   @Expose() apis: Record<string, unknown> = {};
+  @Expose() profile: ConsumerProfile | undefined;
   // / monthly usage counter
   @Expose() usage: number | undefined;
 

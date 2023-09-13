@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.RequestStatus = exports.RequestSources = exports.DocumentAction = exports.DocumentTypes = exports.VerificationMode = exports.DocumentReference = void 0;
+exports.RequestStatus = exports.RequestSources = exports.UserRoles = exports.DocumentAction = exports.DocumentTypes = exports.VerificationMode = exports.DocumentReference = void 0;
 /**
  * Default database document references
  */
@@ -43,6 +43,7 @@ var DocumentReference;
      * BankID NIN sessions wrapped in a history
      */
     DocumentReference["history"] = "history";
+    DocumentReference["userRef"] = "users";
     /**
       * A request has just been handled
       */
@@ -101,6 +102,16 @@ var DocumentAction;
     DocumentAction["update"] = "update";
     DocumentAction["create"] = "create";
 })(DocumentAction = exports.DocumentAction || (exports.DocumentAction = {}));
+/**
+ * User roles
+ */
+var UserRoles;
+(function (UserRoles) {
+    UserRoles["admin"] = "admin";
+    UserRoles["owner"] = "owner";
+    UserRoles["editor"] = "editor";
+    UserRoles["viewer"] = "viewer";
+})(UserRoles = exports.UserRoles || (exports.UserRoles = {}));
 /**
  * Document actions
  */

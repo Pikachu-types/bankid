@@ -8,9 +8,10 @@ export declare class ConsoleUser {
      */
     id: string;
     email: string;
+    legalAccepted: boolean;
     naming: Record<string, unknown>;
-    created: number | undefined;
-    lut: number | undefined;
+    created: number;
+    lut: number;
     security: ConsoleAccountSecurity | undefined;
     organizations: string[];
     /**
@@ -53,4 +54,13 @@ export declare class ConsoleUser {
      * @return {string} generated uid
      */
     static createID(): string;
+}
+/**
+ * Consumer user doc model
+ */
+export interface ConsumerUserReference {
+    email: string;
+    role: string;
+    name: string;
+    id: string;
 }
