@@ -57,6 +57,15 @@ export enum VerificationMode {
 }
 
 /**
+ * Bankid Two factor providers
+ */
+export enum TFAProviders {
+  bankid = "bankid",
+  google = "google",
+  authy = "authy"
+}
+
+/**
  * Bankid Document types
  */
 export enum DocumentTypes {
