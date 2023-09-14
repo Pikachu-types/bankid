@@ -54,6 +54,14 @@ export declare enum VerificationMode {
     signature = "signature"
 }
 /**
+ * Bankid Two factor providers
+ */
+export declare enum TFAProviders {
+    bankid = "bankid",
+    google = "google",
+    authy = "authy"
+}
+/**
  * Bankid Document types
  */
 export declare enum DocumentTypes {
@@ -61,6 +69,10 @@ export declare enum DocumentTypes {
      * Registered NIN
      */
     user = "bid_",
+    /**
+     * Console user
+     */
+    consoleuser = "cnu_",
     /**
      * Issuer of BankIDs
      */

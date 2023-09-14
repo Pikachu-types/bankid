@@ -44,6 +44,7 @@ export interface DefaultResponse {
 export interface ConsoleAccountSecurity {
     tFA: boolean;
     generated?: boolean;
+    provider?: string;
 }
 /**
  * Console account security

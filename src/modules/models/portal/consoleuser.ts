@@ -89,7 +89,7 @@ export class ConsoleUser {
    * @return {string} generated uid
    */
   public static createID(): string {
-    return `${DocumentTypes.user}${uuidv4()}`;
+    return `${DocumentTypes.consoleuser}${uuidv4()}`;
   }
 }
 

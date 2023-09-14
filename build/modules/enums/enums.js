@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.RequestStatus = exports.RequestSources = exports.UserRoles = exports.DocumentAction = exports.DocumentTypes = exports.VerificationMode = exports.DocumentReference = void 0;
+exports.RequestStatus = exports.RequestSources = exports.UserRoles = exports.DocumentAction = exports.DocumentTypes = exports.TFAProviders = exports.VerificationMode = exports.DocumentReference = void 0;
 /**
  * Default database document references
  */
@@ -59,6 +59,15 @@ var VerificationMode;
     VerificationMode["signature"] = "signature";
 })(VerificationMode = exports.VerificationMode || (exports.VerificationMode = {}));
 /**
+ * Bankid Two factor providers
+ */
+var TFAProviders;
+(function (TFAProviders) {
+    TFAProviders["bankid"] = "bankid";
+    TFAProviders["google"] = "google";
+    TFAProviders["authy"] = "authy";
+})(TFAProviders = exports.TFAProviders || (exports.TFAProviders = {}));
+/**
  * Bankid Document types
  */
 var DocumentTypes;
@@ -67,6 +76,10 @@ var DocumentTypes;
      * Registered NIN
      */
     DocumentTypes["user"] = "bid_";
+    /**
+     * Console user
+     */
+    DocumentTypes["consoleuser"] = "cnu_";
     /**
      * Issuer of BankIDs
      */

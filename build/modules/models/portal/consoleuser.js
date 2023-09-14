@@ -86,7 +86,7 @@ class ConsoleUser {
      * @return {string} generated uid
      */
     static createID() {
-        return `${enums_1.DocumentTypes.user}${(0, uuid_1.v4)()}`;
+        return `${enums_1.DocumentTypes.consoleuser}${(0, uuid_1.v4)()}`;
     }
 }
 __decorate([

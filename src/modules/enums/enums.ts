@@ -74,6 +74,10 @@ export enum DocumentTypes {
    */
   user = "bid_",
   /**
+   * Console user
+   */
+  consoleuser = "cnu_",
+  /**
    * Issuer of BankIDs
    */
   vendor = "vnd_",
