@@ -1,3 +1,4 @@
+import { BankIDTypes } from "../enums/enums";
 import { StandaloneBankID } from "../models/public/standaloneIds";
 import { IdentificationModel } from "../models/public/users";
 /**
@@ -51,4 +52,41 @@ export interface ConsoleAccountSecurity {
  */
 export interface ConsumerProfile {
     logo: string;
+}
+/**
+ * App data secrets
+ */
+export interface AppDataSecret {
+    secret: string;
+    created: number;
+    revoked: false;
+}
+/**
+ * App keys
+ */
+export interface APIKeys {
+    live: string;
+    test: string;
+}
+/**
+ * App service json
+ */
+export interface AppServiceJSON {
+    type: BankIDTypes;
+    appid: string;
+    clientid: string;
+    privatekey: string | undefined;
+    publickey: string;
+    authUri: string;
+}
+/**
+ * App service json
+ */
+export interface ConsumerServiceJSON {
+    type: BankIDTypes;
+    clientid: string;
+    privatekey: string | undefined;
+    publickey: string;
+    apikeys: APIKeys;
+    authUri: string;
 }

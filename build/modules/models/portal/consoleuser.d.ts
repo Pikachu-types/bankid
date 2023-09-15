@@ -4,7 +4,7 @@ import { ConsoleAccountSecurity } from "../../interfaces/documents";
 */
 export declare class ConsoleUser {
     /**
-     * id look like [bcn_{id}]
+     * id look like [cnu_{id}]
      */
     id: string;
     email: string;
@@ -63,4 +63,5 @@ export interface ConsumerUserReference {
     role: string;
     name: string;
     id: string;
+    tFA: boolean;
 }

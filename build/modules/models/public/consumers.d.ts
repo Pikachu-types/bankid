@@ -1,6 +1,6 @@
 import { AuthenticateKeysData, ContactData } from "../superficial/contact";
 import { ConsoleRegAccountRequest } from "../../interfaces/requests";
-import { ConsumerProfile } from "../../interfaces/documents";
+import { APIKeys, ConsumerProfile, ConsumerServiceJSON } from "../../interfaces/documents";
 /**
  * ConsumerModel class
 */
@@ -20,7 +20,7 @@ export declare class ConsumerModel {
     tier: number;
     contact: Record<string, unknown>;
     keys: Record<string, unknown>;
-    apis: Record<string, unknown>;
+    apis: APIKeys | undefined;
     profile: ConsumerProfile | undefined;
     usage: number | undefined;
     contactData: ContactData | undefined;
@@ -66,6 +66,11 @@ export declare class ConsumerModel {
      * @return {ConsumerModel} new Consumer
      */
     static createConsumer(request: ConsoleRegAccountRequest): ConsumerModel;
+    /**
+     * generates consumer service json
+     * @return {void} generated uid
+     */
+    generateServiceJSON(): ConsumerServiceJSON;
     /**
      * create unique keys for consumer
      * @param {string} secret cipher key

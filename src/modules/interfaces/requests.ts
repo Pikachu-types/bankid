@@ -9,6 +9,14 @@ export interface MagicLoginRequest {
 };
 
 /**
+ * Create app request
+ */
+export interface CreateAppRequest {
+  clientid: string;
+  data: Record<string, unknown>;
+};
+
+/**
  * Validate Token Request
  */
 export interface MagicTokenValidate {

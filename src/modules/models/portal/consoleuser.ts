@@ -9,7 +9,7 @@ export class ConsoleUser {
   /* eslint new-cap: ["error", { "capIsNew": false }]*/
 
   /**
-   * id look like [bcn_{id}]
+   * id look like [cnu_{id}]
    */
   @Expose() id = "";
   @Expose() email = "";
@@ -101,4 +101,5 @@ export interface ConsumerUserReference {
   role: string;
   name: string;
   id: string;
+  tFA: boolean;
 };

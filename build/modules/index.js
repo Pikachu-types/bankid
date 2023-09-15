@@ -32,6 +32,7 @@ __exportStar(require("./models//public/requests"), exports);
 __exportStar(require("./models/public/responses"), exports);
 __exportStar(require("./models/public/vendors"), exports);
 __exportStar(require("./models/public/users"), exports);
+__exportStar(require("./models/portal/apps"), exports);
 __exportStar(require("./models/public/standaloneIds"), exports);
 __exportStar(require("./models/bankid"), exports);
 __exportStar(require("./enums/shared"), exports);

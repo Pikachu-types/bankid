@@ -14,6 +14,8 @@ var BankID;
         Links["ipChecker"] = "https://ipgeolocation.abstractapi.com/v1/";
         Links["consoleLocalhost"] = "http://localhost:5430";
         Links["consoleDomain"] = "https://console.bankid.ng";
+        Links["connectUri"] = "https://connect.bankid.ng/v1/";
+        Links["authUri"] = "https://connect.bankid.ng/v1/o-auth";
     })(Links = BankID.Links || (BankID.Links = {}));
     class helpers {
         /**

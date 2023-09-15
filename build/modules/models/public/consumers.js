@@ -14,6 +14,7 @@ const generator_1 = require("../../services/generator");
 const helper_1 = require("../../services/helper");
 const enums_1 = require("../../enums/enums");
 const uuid_1 = require("uuid");
+const bankid_1 = require("../bankid");
 /**
  * ConsumerModel class
 */
@@ -33,7 +34,6 @@ class ConsumerModel {
         this.tier = 1;
         this.contact = {};
         this.keys = {};
-        this.apis = {};
     }
     /**
      * Change record to ConsumerModel class
@@ -140,6 +140,25 @@ class ConsumerModel {
         return data;
     }
     /**
+     * generates consumer service json
+     * @return {void} generated uid
+     */
+    generateServiceJSON() {
+        var _a, _b;
+        if (this.apiKey === undefined || this.apiKey.length < 1 ||
+            this.keyData === undefined) {
+            throw new labs_sharable_1.CustomError("Consumer hasn't configured its api settings");
+        }
+        return {
+            type: enums_1.BankIDTypes.consumer,
+            clientid: this.id,
+            privatekey: (_a = this.keyData) === null || _a === void 0 ? void 0 : _a.private,
+            publickey: (_b = this.keyData) === null || _b === void 0 ? void 0 : _b.public,
+            authUri: `${bankid_1.BankID.Links.authUri}?sub=${this.id}`,
+            apikeys: this.apis,
+        };
+    }
+    /**
      * create unique keys for consumer
      * @param {string} secret cipher key
      * @return {void} generated uid
@@ -155,6 +174,9 @@ class ConsumerModel {
                 "private": privateKey,
             };
         }
+        else {
+            throw new labs_sharable_1.CustomError("Could not generate RSA keys.");
+        }
         const signable = {
             "name": this.name,
             "created": this.created,
@@ -167,8 +189,6 @@ class ConsumerModel {
         try {
             const cryp = helper_1.FunctionHelpers.
                 changeCipherStringToModel(source);
-            this.id = "bcn_" + cryp.iv + "-" +
-                this.tin.substring(0, 4) + this.tin.substring(10, 12);
             this.apiKey = `bk-live_${cryp.content}`;
             this.apis = {
                 "live": this.apiKey,

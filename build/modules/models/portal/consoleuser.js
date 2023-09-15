@@ -17,7 +17,7 @@ class ConsoleUser {
     constructor() {
         /* eslint new-cap: ["error", { "capIsNew": false }]*/
         /**
-         * id look like [bcn_{id}]
+         * id look like [cnu_{id}]
          */
         this.id = "";
         this.email = "";

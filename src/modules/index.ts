@@ -16,6 +16,7 @@ export * from "./models//public/requests";
 export * from "./models/public/responses";
 export * from "./models/public/vendors";
 export * from "./models/public/users";
+export * from "./models/portal/apps";
 export * from "./models/public/standaloneIds";
 export * from "./models/bankid";
 export * from "./enums/shared";

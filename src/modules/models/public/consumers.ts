@@ -3,10 +3,11 @@ import {AuthenticateKeysData, ContactData} from "../superficial/contact";
 import {CustomError, unixTimeStampNow} from "labs-sharable";
 import { Generator } from "../../services/generator";
 import { FunctionHelpers } from "../../services/helper";
-import { DocumentTypes } from "../../enums/enums";
+import { BankIDTypes, DocumentTypes } from "../../enums/enums";
 import { v4 as uuidv4 } from 'uuid';
 import { ConsoleRegAccountRequest } from "../../interfaces/requests";
-import { ConsumerProfile } from "../../interfaces/documents";
+import { APIKeys, ConsumerProfile, ConsumerServiceJSON } from "../../interfaces/documents";
+import { BankID } from "../bankid";
 
 /**
  * ConsumerModel class
@@ -29,7 +30,7 @@ export class ConsumerModel {
   @Expose() tier = 1;
   @Expose() contact: Record<string, unknown> = {};
   @Expose() keys: Record<string, unknown> = {};
-  @Expose() apis: Record<string, unknown> = {};
+  @Expose() apis: APIKeys | undefined;
   @Expose() profile: ConsumerProfile | undefined;
   // / monthly usage counter
   @Expose() usage: number | undefined;
@@ -151,6 +152,25 @@ export class ConsumerModel {
   
 
   /**
+   * generates consumer service json
+   * @return {void} generated uid
+   */
+  public generateServiceJSON(): ConsumerServiceJSON {
+    if (this.apiKey === undefined || this.apiKey.length < 1 ||
+      this.keyData === undefined) {
+      throw new CustomError("Consumer hasn't configured its api settings");
+    }
+    return {
+      type: BankIDTypes.consumer,
+      clientid: this.id,
+      privatekey: this.keyData?.private,
+      publickey: this.keyData?.public,
+      authUri: `${BankID.Links.authUri}?sub=${this.id}`,
+      apikeys: this.apis as APIKeys,
+    }
+  }
+  
+  /**
    * create unique keys for consumer
    * @param {string} secret cipher key
    * @return {void} generated uid
@@ -168,6 +188,8 @@ export class ConsumerModel {
         "public": publicKey,
         "private": privateKey,
       };
+    } else {
+      throw new CustomError("Could not generate RSA keys.")
     }
     const signable = {
       "name": this.name,
@@ -183,8 +205,6 @@ export class ConsumerModel {
     try {
       const cryp = FunctionHelpers.
         changeCipherStringToModel(source);
-      this.id = "bcn_" + cryp.iv + "-" +
-        this.tin.substring(0, 4) + this.tin.substring(10, 12);
       this.apiKey = `bk-live_${cryp.content}`;
       this.apis = {
         "live": this.apiKey,

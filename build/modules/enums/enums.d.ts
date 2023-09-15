@@ -41,6 +41,10 @@ export declare enum DocumentReference {
     history = "history",
     userRef = "users",
     /**
+     * Consumer apps reference
+     */
+    apps = "apps",
+    /**
       * A request has just been handled
       */
     requestLogged = "bankids/{users}/history/{doc}",
@@ -52,6 +56,15 @@ export declare enum DocumentReference {
 export declare enum VerificationMode {
     identification = "identification",
     signature = "signature"
+}
+/**
+ * Bankid DB Types
+ */
+export declare enum BankIDTypes {
+    app = "app",
+    user = "user",
+    consumer = "consumer",
+    console = "console-user"
 }
 /**
  * Bankid Two factor providers

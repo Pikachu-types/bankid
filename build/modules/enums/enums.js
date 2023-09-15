@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.RequestStatus = exports.RequestSources = exports.UserRoles = exports.DocumentAction = exports.DocumentTypes = exports.TFAProviders = exports.VerificationMode = exports.DocumentReference = void 0;
+exports.RequestStatus = exports.RequestSources = exports.UserRoles = exports.DocumentAction = exports.DocumentTypes = exports.TFAProviders = exports.BankIDTypes = exports.VerificationMode = exports.DocumentReference = void 0;
 /**
  * Default database document references
  */
@@ -45,6 +45,10 @@ var DocumentReference;
     DocumentReference["history"] = "history";
     DocumentReference["userRef"] = "users";
     /**
+     * Consumer apps reference
+     */
+    DocumentReference["apps"] = "apps";
+    /**
       * A request has just been handled
       */
     DocumentReference["requestLogged"] = "bankids/{users}/history/{doc}";
@@ -58,6 +62,16 @@ var VerificationMode;
     VerificationMode["identification"] = "identification";
     VerificationMode["signature"] = "signature";
 })(VerificationMode = exports.VerificationMode || (exports.VerificationMode = {}));
+/**
+ * Bankid DB Types
+ */
+var BankIDTypes;
+(function (BankIDTypes) {
+    BankIDTypes["app"] = "app";
+    BankIDTypes["user"] = "user";
+    BankIDTypes["consumer"] = "consumer";
+    BankIDTypes["console"] = "console-user";
+})(BankIDTypes = exports.BankIDTypes || (exports.BankIDTypes = {}));
 /**
  * Bankid Two factor providers
  */
