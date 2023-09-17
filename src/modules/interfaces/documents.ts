@@ -77,7 +77,9 @@ export interface AppProfile {
  */
 export interface AppDataSecret {
   secret: string;
+  id: string;
   created: number;
+  lut?: number;
   revoked: boolean;
 };
 

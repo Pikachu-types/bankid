@@ -54,6 +54,23 @@ class FunctionHelpers {
             createCipherString(labs_sharable_1.LabsCipher.encrypt(source, cipherKey));
     }
     /**
+     * Revert CipherType model string to readable string
+     * long function
+     * @param {string} cipherKey secret key
+     * @param {string} source content
+     * @return {string} returns value.
+     */
+    static bankidCipherToString(cipherKey, source) {
+        try {
+            const signature = FunctionHelpers.
+                changeCipherStringToModel(source);
+            return labs_sharable_1.LabsCipher.decrypt(signature, cipherKey);
+        }
+        catch (e) {
+            throw new labs_sharable_1.CustomError(`${e}`);
+        }
+    }
+    /**
      * Verify Client side app approval
      * @param {string} cipherKey key used to unlock cipher
      * @param {string} source content to string from

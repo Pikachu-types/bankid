@@ -35,7 +35,7 @@ class ClientApp {
         this.id = "";
         this.owner = "";
         this.appName = "";
-        this.type = "";
+        this.type = enums_1.AppType.test;
         this.displayName = "";
         this.lut = 0;
         this.created = 0;
@@ -97,11 +97,16 @@ class ClientApp {
     }
     /**
      * Create new app secret
+     * @param {string} secret aes cipher key
+     * @param {AppType} type app type
      * @return {string} text
      */
-    static generateSecret() {
+    static generateSecret(secret, type) {
         return {
-            secret: `${enums_1.AppTypeSecretRef}${(0, uuid_1.v1)()}`,
+            id: (0, labs_sharable_1.generateRandomAlphaNumeric)(12),
+            secret: helper_1.FunctionHelpers.bankidCipherString(secret, `${type === enums_1.AppType.production ?
+                enums_1.AppTypeSecretRef.production :
+                enums_1.AppTypeSecretRef.test}${(0, uuid_1.v1)()}`),
             created: (0, labs_sharable_1.unixTimeStampNow)(),
             revoked: false,
         };

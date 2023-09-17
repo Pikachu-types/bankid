@@ -33,6 +33,14 @@ export declare class FunctionHelpers {
      */
     static bankidCipherString(cipherKey: string, source: string): string;
     /**
+     * Revert CipherType model string to readable string
+     * long function
+     * @param {string} cipherKey secret key
+     * @param {string} source content
+     * @return {string} returns value.
+     */
+    static bankidCipherToString(cipherKey: string, source: string): string;
+    /**
      * Verify Client side app approval
      * @param {string} cipherKey key used to unlock cipher
      * @param {string} source content to string from

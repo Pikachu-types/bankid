@@ -1,12 +1,12 @@
 import { plainToInstance, Expose } from "class-transformer";
 import { v4 as uuidv4, v1 as uuidv1 } from 'uuid';
-import { AppTypeSecretRef, BankIDTypes, DocumentTypes } from "../../enums/enums";
+import { AppType, AppTypeSecretRef, BankIDTypes, DocumentTypes } from "../../enums/enums";
 import { AppDataSecret, AppServiceJSON } from "../../interfaces/documents";
 import { AuthenticateKeysData } from "../superficial/contact";
 import { BankID } from "../bankid";
 import { Generator } from "../../services/generator";
 import { FunctionHelpers } from "../../services/helper";
-import { CustomError, RSAKeys, delay, unixTimeStampNow } from "labs-sharable";
+import { CustomError, RSAKeys, delay, generateRandomAlphaNumeric, unixTimeStampNow } from "labs-sharable";
 import { ActionCallback } from "../../interfaces/type_modules";
 /**
  * ClientApp class
@@ -20,7 +20,7 @@ export class ClientApp {
   @Expose() id = "";
   @Expose() owner = "";
   @Expose() appName = "";
-  @Expose() type = "";
+  @Expose() type: AppType = AppType.test;
   @Expose() displayName = "";
   @Expose() lut = 0;
   @Expose() created = 0;
@@ -92,11 +92,17 @@ export class ClientApp {
   
   /**
    * Create new app secret
+   * @param {string} secret aes cipher key
+   * @param {AppType} type app type
    * @return {string} text
    */
-  public static generateSecret(): AppDataSecret {
+  public static generateSecret(secret: string, type: AppType): AppDataSecret {
     return {
-      secret: `${AppTypeSecretRef}${uuidv1()}`,
+      id: generateRandomAlphaNumeric(12),
+      secret: FunctionHelpers.bankidCipherString(secret,
+        `${type === AppType.production ?
+          AppTypeSecretRef.production :
+          AppTypeSecretRef.test}${uuidv1()}`),
       created: unixTimeStampNow(),
       revoked: false,
     };

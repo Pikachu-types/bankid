@@ -60,6 +60,24 @@ export class FunctionHelpers {
   }
 
   /**
+   * Revert CipherType model string to readable string
+   * long function
+   * @param {string} cipherKey secret key
+   * @param {string} source content
+   * @return {string} returns value.
+   */
+  public static bankidCipherToString(cipherKey: string,
+    source: string): string {
+    try {
+      const signature = FunctionHelpers.
+        changeCipherStringToModel(source);
+      return LabsCipher.decrypt(signature, cipherKey);
+    } catch (e) {
+      throw new CustomError(`${e}`);
+    }
+  }
+
+  /**
    * Verify Client side app approval
    * @param {string} cipherKey key used to unlock cipher
    * @param {string} source content to string from

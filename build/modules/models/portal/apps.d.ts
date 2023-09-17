@@ -1,3 +1,4 @@
+import { AppType } from "../../enums/enums";
 import { AppDataSecret } from "../../interfaces/documents";
 import { AuthenticateKeysData } from "../superficial/contact";
 import { RSAKeys } from "labs-sharable";
@@ -11,7 +12,7 @@ export declare class ClientApp {
     id: string;
     owner: string;
     appName: string;
-    type: string;
+    type: AppType;
     displayName: string;
     lut: number;
     created: number;
@@ -46,9 +47,11 @@ export declare class ClientApp {
     toJsonString(): string;
     /**
      * Create new app secret
+     * @param {string} secret aes cipher key
+     * @param {AppType} type app type
      * @return {string} text
      */
-    static generateSecret(): AppDataSecret;
+    static generateSecret(secret: string, type: AppType): AppDataSecret;
     /**
     * get document in map format
     * @return { Record<string, unknown>} returns doc map .
