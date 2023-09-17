@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.RequestStatus = exports.RequestSources = exports.UserRoles = exports.DocumentAction = exports.DocumentTypes = exports.TFAProviders = exports.BankIDTypes = exports.VerificationMode = exports.DocumentReference = void 0;
+exports.RequestStatus = exports.RequestSources = exports.UserRoles = exports.DocumentAction = exports.AppTypeSecretRef = exports.AppType = exports.DocumentTypes = exports.TFAProviders = exports.BankIDTypes = exports.VerificationMode = exports.DocumentReference = void 0;
 /**
  * Default database document references
  */
@@ -121,6 +121,22 @@ var DocumentTypes;
     DocumentTypes["session"] = "sess_";
 })(DocumentTypes = exports.DocumentTypes || (exports.DocumentTypes = {}));
 /**
+ * AppTypes on BankID
+ */
+var AppType;
+(function (AppType) {
+    AppType["production"] = "production";
+    AppType["test"] = "test";
+})(AppType = exports.AppType || (exports.AppType = {}));
+/**
+ * AppType secret key reference on BankID
+ */
+var AppTypeSecretRef;
+(function (AppTypeSecretRef) {
+    AppTypeSecretRef["production"] = "prd_";
+    AppTypeSecretRef["test"] = "snb_";
+})(AppTypeSecretRef = exports.AppTypeSecretRef || (exports.AppTypeSecretRef = {}));
+/**
  * Document actions
  */
 var DocumentAction;
@@ -128,6 +144,7 @@ var DocumentAction;
     DocumentAction["delete"] = "delete";
     DocumentAction["update"] = "update";
     DocumentAction["create"] = "create";
+    DocumentAction["get"] = "get";
 })(DocumentAction = exports.DocumentAction || (exports.DocumentAction = {}));
 /**
  * User roles

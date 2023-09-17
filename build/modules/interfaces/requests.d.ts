@@ -1,3 +1,4 @@
+import { DocumentAction } from "../enums/enums";
 import { MagicLinkModes } from "../enums/shared";
 /**
  * Magic Login RequestModel
@@ -10,8 +11,17 @@ export interface MagicLoginRequest {
  * Create app request
  */
 export interface CreateAppRequest {
-    clientid: string;
+    consumer: string;
     data: Record<string, unknown>;
+}
+/**
+ * Modify app request
+ */
+export interface ModifyAppRequest {
+    consumer: string;
+    appID: string;
+    action?: DocumentAction;
+    secretid?: string;
 }
 /**
  * Validate Token Request

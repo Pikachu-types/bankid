@@ -56,4 +56,5 @@ export class Generator {
       public: publicKey,
     };
   }
+  
 }

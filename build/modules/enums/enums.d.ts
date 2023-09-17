@@ -113,12 +113,27 @@ export declare enum DocumentTypes {
     session = "sess_"
 }
 /**
+ * AppTypes on BankID
+ */
+export declare enum AppType {
+    production = "production",
+    test = "test"
+}
+/**
+ * AppType secret key reference on BankID
+ */
+export declare enum AppTypeSecretRef {
+    production = "prd_",
+    test = "snb_"
+}
+/**
  * Document actions
  */
 export declare enum DocumentAction {
     delete = "delete",
     update = "update",
-    create = "create"
+    create = "create",
+    get = "get"
 }
 /**
  * User roles

@@ -119,12 +119,28 @@ export enum DocumentTypes {
 }
 
 /**
+ * AppTypes on BankID
+ */
+export enum AppType {
+  production = "production",
+  test = "test",
+}
+/**
+ * AppType secret key reference on BankID
+ */
+export enum AppTypeSecretRef {
+  production = "prd_",
+  test = "snb_",
+}
+
+/**
  * Document actions
  */
 export enum DocumentAction {
   delete = "delete",
   update = "update",
-  create = "create"
+  create = "create",
+  get = "get",
 }
 
 /**

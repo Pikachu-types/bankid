@@ -11,6 +11,7 @@
         "geoname",
         "namingclaim",
         "nationalityclaim",
+        "secretid",
         "sess",
         "uuidv"
     ]

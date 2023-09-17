@@ -1,4 +1,6 @@
 import { BankIDTypes } from "../enums/enums";
+import { ClientApp } from "../models/portal/apps";
+import { ConsumerModel } from "../models/public/consumers";
 import { StandaloneBankID } from "../models/public/standaloneIds";
 import { IdentificationModel } from "../models/public/users";
 /**
@@ -54,12 +56,19 @@ export interface ConsumerProfile {
     logo: string;
 }
 /**
+ * App profile
+ */
+export interface AppProfile {
+    client: ConsumerModel;
+    app: ClientApp;
+}
+/**
  * App data secrets
  */
 export interface AppDataSecret {
     secret: string;
     created: number;
-    revoked: false;
+    revoked: boolean;
 }
 /**
  * App keys
@@ -74,7 +83,7 @@ export interface APIKeys {
 export interface AppServiceJSON {
     type: BankIDTypes;
     appid: string;
-    clientid: string;
+    consumer: string;
     privatekey: string | undefined;
     publickey: string;
     authUri: string;

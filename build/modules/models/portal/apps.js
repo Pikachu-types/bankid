@@ -5,12 +5,21 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.ClientApp = void 0;
 const class_transformer_1 = require("class-transformer");
 const uuid_1 = require("uuid");
 const enums_1 = require("../../enums/enums");
-const bankid_1 = require("../bankid");
+const contact_1 = require("../superficial/contact");
 const generator_1 = require("../../services/generator");
 const helper_1 = require("../../services/helper");
 const labs_sharable_1 = require("labs-sharable");
@@ -31,7 +40,7 @@ class ClientApp {
         this.lut = 0;
         this.created = 0;
         this.secrets = [];
-        this.keys = {};
+        this.keys = { private: "", public: "" };
     }
     /**
      * Change record to ClientApp class
@@ -58,45 +67,26 @@ class ClientApp {
         return;
     }
     /**
-     * create app service json
-     * @param {string} secret cipher key
-     * @param {string} clientid provide consumer id
-     * @return {AppServiceJSON} generated uid
-     */
-    generateServiceJSON(secret, clientid) {
-        var _a, _b;
-        if (this.keyData === undefined)
-            this.generateRSA(secret);
-        if (this.keyData === undefined) {
-            throw new labs_sharable_1.CustomError("Could not still generate RSA keys.");
-        }
-        return {
-            type: enums_1.BankIDTypes.app,
-            appid: this.id,
-            clientid: clientid,
-            privatekey: (_a = this.keyData) === null || _a === void 0 ? void 0 : _a.private,
-            publickey: (_b = this.keyData) === null || _b === void 0 ? void 0 : _b.public,
-            authUri: `${bankid_1.BankID.Links.authUri}?sub=${clientid}&app=${this.id}`,
-        };
-    }
-    /**
      * create unique RSA keys for app
-     * @param {string} secret cipher key
+     * @param {string} secret aes cipher key
      * @return {void} generated uid
      */
-    generateRSA(secret) {
-        const gen = generator_1.Generator.createRSAPairString();
-        if (gen !== undefined) {
+    generateRSA(secret, callback) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const gen = generator_1.Generator.createRSAPairString();
+            yield (0, labs_sharable_1.delay)(400);
+            if (gen === undefined || !gen.private || !gen.public) {
+                throw new labs_sharable_1.CustomError("Could not generate RSA keys.");
+            }
             const publicKey = helper_1.FunctionHelpers.bankidCipherString(secret, gen.public);
             const privateKey = helper_1.FunctionHelpers.bankidCipherString(secret, gen.private);
             this.keys = {
                 public: publicKey,
                 private: privateKey,
             };
-        }
-        else {
-            throw new labs_sharable_1.CustomError("Could not generate RSA keys.");
-        }
+            this.keyData = contact_1.AuthenticateKeysData.fromJson(this.keys);
+            callback(this.keyData);
+        });
     }
     /**
      * This class handler to json
@@ -104,6 +94,17 @@ class ClientApp {
      */
     toJsonString() {
         return JSON.stringify(this);
+    }
+    /**
+     * Create new app secret
+     * @return {string} text
+     */
+    static generateSecret() {
+        return {
+            secret: `${enums_1.AppTypeSecretRef}${(0, uuid_1.v1)()}`,
+            created: (0, labs_sharable_1.unixTimeStampNow)(),
+            revoked: false,
+        };
     }
     /**
     * get document in map format

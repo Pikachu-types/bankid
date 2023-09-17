@@ -1,5 +1,6 @@
-import { AppDataSecret, AppServiceJSON } from "../../interfaces/documents";
+import { AppDataSecret } from "../../interfaces/documents";
 import { AuthenticateKeysData } from "../superficial/contact";
+import { RSAKeys } from "labs-sharable";
 /**
  * ClientApp class
 */
@@ -15,7 +16,7 @@ export declare class ClientApp {
     lut: number;
     created: number;
     secrets: AppDataSecret[];
-    keys: Record<string, unknown>;
+    keys: RSAKeys;
     keyData: AuthenticateKeysData | undefined;
     /**
      * Change record to ClientApp class
@@ -33,23 +34,21 @@ export declare class ClientApp {
      */
     static findOne(list: ClientApp[], id: string): ClientApp | undefined;
     /**
-     * create app service json
-     * @param {string} secret cipher key
-     * @param {string} clientid provide consumer id
-     * @return {AppServiceJSON} generated uid
-     */
-    generateServiceJSON(secret: string, clientid: string): AppServiceJSON;
-    /**
      * create unique RSA keys for app
-     * @param {string} secret cipher key
+     * @param {string} secret aes cipher key
      * @return {void} generated uid
      */
-    private generateRSA;
+    generateRSA(secret: string, callback: (keys: AuthenticateKeysData) => void): Promise<void>;
     /**
      * This class handler to json
      * @return {string} text
      */
     toJsonString(): string;
+    /**
+     * Create new app secret
+     * @return {string} text
+     */
+    static generateSecret(): AppDataSecret;
     /**
     * get document in map format
     * @return { Record<string, unknown>} returns doc map .
