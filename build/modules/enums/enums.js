@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.RequestStatus = exports.RequestSources = exports.UserRoles = exports.DocumentAction = exports.AppTypeSecretRef = exports.AppType = exports.DocumentTypes = exports.TFAProviders = exports.BankIDTypes = exports.VerificationMode = exports.DocumentReference = void 0;
+exports.RequestStatus = exports.RequestSources = exports.UserRoles = exports.DocumentAction = exports.AppTypeSecretRef = exports.AppVerificationStatus = exports.AppType = exports.DocumentTypes = exports.TFAProviders = exports.BankIDTypes = exports.VerificationMode = exports.DocumentReference = void 0;
 /**
  * Default database document references
  */
@@ -128,6 +128,16 @@ var AppType;
     AppType["production"] = "production";
     AppType["test"] = "test";
 })(AppType = exports.AppType || (exports.AppType = {}));
+/**
+ * App Verification status
+ */
+var AppVerificationStatus;
+(function (AppVerificationStatus) {
+    AppVerificationStatus["verified"] = "verified";
+    AppVerificationStatus["waiting"] = "waiting";
+    AppVerificationStatus["unverified"] = "unverified";
+    AppVerificationStatus["stale"] = "stale";
+})(AppVerificationStatus = exports.AppVerificationStatus || (exports.AppVerificationStatus = {}));
 /**
  * AppType secret key reference on BankID
  */

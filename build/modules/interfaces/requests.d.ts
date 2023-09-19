@@ -24,6 +24,12 @@ export interface ModifyAppRequest {
     secretid?: string;
 }
 /**
+ * Org Request
+ */
+export interface OrgRequest {
+    consumer: string;
+}
+/**
  * Validate Token Request
  */
 export interface MagicTokenValidate {

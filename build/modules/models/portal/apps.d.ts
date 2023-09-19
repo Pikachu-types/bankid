@@ -1,4 +1,4 @@
-import { AppType } from "../../enums/enums";
+import { AppType, AppVerificationStatus } from "../../enums/enums";
 import { AppDataSecret } from "../../interfaces/documents";
 import { AuthenticateKeysData } from "../superficial/contact";
 import { RSAKeys } from "labs-sharable";
@@ -13,6 +13,7 @@ export declare class ClientApp {
     owner: string;
     appName: string;
     type: AppType;
+    verificationStatus: AppVerificationStatus;
     displayName: string;
     lut: number;
     created: number;

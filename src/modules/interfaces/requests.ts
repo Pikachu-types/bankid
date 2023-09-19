@@ -28,6 +28,13 @@ export interface ModifyAppRequest {
 };
 
 /**
+ * Org Request
+ */
+export interface OrgRequest {
+  consumer: string;
+};
+
+/**
  * Validate Token Request
  */
 export interface MagicTokenValidate {

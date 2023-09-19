@@ -1,6 +1,6 @@
 import { plainToInstance, Expose } from "class-transformer";
 import { v4 as uuidv4, v1 as uuidv1 } from 'uuid';
-import { AppType, AppTypeSecretRef, BankIDTypes, DocumentTypes } from "../../enums/enums";
+import { AppType, AppTypeSecretRef, AppVerificationStatus, BankIDTypes, DocumentTypes } from "../../enums/enums";
 import { AppDataSecret, AppServiceJSON } from "../../interfaces/documents";
 import { AuthenticateKeysData } from "../superficial/contact";
 import { BankID } from "../bankid";
@@ -21,6 +21,7 @@ export class ClientApp {
   @Expose() owner = "";
   @Expose() appName = "";
   @Expose() type: AppType = AppType.test;
+  @Expose() verificationStatus: AppVerificationStatus = AppVerificationStatus.stale;
   @Expose() displayName = "";
   @Expose() lut = 0;
   @Expose() created = 0;

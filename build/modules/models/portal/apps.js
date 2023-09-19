@@ -36,6 +36,7 @@ class ClientApp {
         this.owner = "";
         this.appName = "";
         this.type = enums_1.AppType.test;
+        this.verificationStatus = enums_1.AppVerificationStatus.stale;
         this.displayName = "";
         this.lut = 0;
         this.created = 0;
@@ -140,6 +141,9 @@ __decorate([
 __decorate([
     (0, class_transformer_1.Expose)()
 ], ClientApp.prototype, "type", void 0);
+__decorate([
+    (0, class_transformer_1.Expose)()
+], ClientApp.prototype, "verificationStatus", void 0);
 __decorate([
     (0, class_transformer_1.Expose)()
 ], ClientApp.prototype, "displayName", void 0);

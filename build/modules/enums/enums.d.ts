@@ -120,6 +120,15 @@ export declare enum AppType {
     test = "test"
 }
 /**
+ * App Verification status
+ */
+export declare enum AppVerificationStatus {
+    verified = "verified",
+    waiting = "waiting",
+    unverified = "unverified",
+    stale = "stale"
+}
+/**
  * AppType secret key reference on BankID
  */
 export declare enum AppTypeSecretRef {
