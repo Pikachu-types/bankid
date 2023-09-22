@@ -1,4 +1,13 @@
 "use strict";
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.FunctionHelpers = void 0;
 const labs_sharable_1 = require("labs-sharable");
@@ -52,6 +61,17 @@ class FunctionHelpers {
     static bankidCipherString(cipherKey, source) {
         return FunctionHelpers.
             createCipherString(labs_sharable_1.LabsCipher.encrypt(source, cipherKey));
+    }
+    /**
+     * Create an api key for BankID consumer
+     * @param {string} content use your own content
+     * @return {string} returns value.
+     */
+    static generateApiKey(content) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const token = content !== null && content !== void 0 ? content : crypto.randomUUID();
+            return yield labs_sharable_1.LabsCipher.hashWithBcrypt(token, 10);
+        });
     }
     /**
      * Revert CipherType model string to readable string

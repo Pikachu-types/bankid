@@ -4,5 +4,6 @@
 export declare enum MagicLinkModes {
     Registration = "registration",
     Login = "login",
-    Onsession = "session"
+    Onsession = "session",
+    Invitation = "invitation"
 }

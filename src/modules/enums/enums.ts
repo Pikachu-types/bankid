@@ -144,6 +144,14 @@ export enum AppTypeSecretRef {
 }
 
 /**
+ * Api key prefix
+ */
+export enum ApiKeyPrefix {
+  live = "bk-live_",
+  test = "bk-test_",
+}
+
+/**
  * Document actions
  */
 export enum DocumentAction {

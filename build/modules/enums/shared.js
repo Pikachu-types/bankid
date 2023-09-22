@@ -9,5 +9,6 @@ var MagicLinkModes;
     MagicLinkModes["Registration"] = "registration";
     MagicLinkModes["Login"] = "login";
     MagicLinkModes["Onsession"] = "session";
+    MagicLinkModes["Invitation"] = "invitation";
 })(MagicLinkModes = exports.MagicLinkModes || (exports.MagicLinkModes = {}));
 //# sourceMappingURL=shared.js.map

@@ -136,6 +136,13 @@ export declare enum AppTypeSecretRef {
     test = "snb_"
 }
 /**
+ * Api key prefix
+ */
+export declare enum ApiKeyPrefix {
+    live = "bk-live_",
+    test = "bk-test_"
+}
+/**
  * Document actions
  */
 export declare enum DocumentAction {

@@ -33,6 +33,12 @@ export declare class FunctionHelpers {
      */
     static bankidCipherString(cipherKey: string, source: string): string;
     /**
+     * Create an api key for BankID consumer
+     * @param {string} content use your own content
+     * @return {string} returns value.
+     */
+    static generateApiKey(content?: string): Promise<string>;
+    /**
      * Revert CipherType model string to readable string
      * long function
      * @param {string} cipherKey secret key

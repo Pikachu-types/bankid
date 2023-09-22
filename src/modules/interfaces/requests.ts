@@ -1,4 +1,4 @@
-import { DocumentAction } from "../enums/enums";
+import { DocumentAction, UserRoles } from "../enums/enums";
 import { MagicLinkModes } from "../enums/shared";
 
 /**
@@ -35,10 +35,49 @@ export interface OrgRequest {
 };
 
 /**
+ * Org Request create
+ */
+export interface CreateConsumerRequest {
+  name: string;
+  userID: string;
+  debug: boolean;
+};
+
+/**
+ * Org Invitation user
+ */
+export interface UserInvitation {
+  consumer: string;
+  email: string;
+  role: UserRoles;
+  debug: boolean
+};
+
+/**
  * Validate Token Request
  */
 export interface MagicTokenValidate {
   token: string;
+};
+
+/**
+ * Database Action Request
+ */
+export interface DatabaseActionRequest {
+  action: DocumentAction;
+  /**
+   * Data to update document with
+   */
+  data: Record<string, unknown>;
+  /**
+   * Doc ID
+   * we figure out what collection from the id
+   */
+  id: string;
+  /**
+   * Consumer ID
+   */
+  consumer?: string;
 };
 
 /**
@@ -66,6 +105,10 @@ export interface MagicToken {
    */
   exp: number;
   /**
+   * Organisation attached to
+   */
+  org?: string;
+  /**
    * Type of Magic token
    */
   mode: MagicLinkModes | string;
@@ -74,6 +117,11 @@ export interface MagicToken {
    * else registration parses all reg data here 
    */
   data?: ConsoleRegAccountRequest;
+  /**
+   * Wouldn't be undefined if created for invitation only
+   * else registration parses all reg data here 
+   */
+  invitation?: UserInvitation;
   /**
    * Session information
    */
@@ -88,6 +136,7 @@ export interface ConsoleRegAccountRequest {
   debug: boolean;
   legalAccepted: boolean;
   org: string;
+  role?: string;
   naming?: {
     first: string;
     last: string;

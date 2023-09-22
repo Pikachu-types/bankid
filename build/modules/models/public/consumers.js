@@ -5,6 +5,15 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.ConsumerModel = void 0;
 const class_transformer_1 = require("class-transformer");
@@ -53,6 +62,20 @@ class ConsumerModel {
     resolveMaps() {
         this.contactData = contact_1.ContactData.fromJson(this.contact);
         this.keyData = contact_1.AuthenticateKeysData.fromJson(this.keys);
+    }
+    /**
+     * Helper class function to validate if org name already exists
+     *
+     * @param {ConsumerModel[]} list an array to sort from and find given
+     * @param {string} name provide the needed id to match for
+     * @return {ConsumerModel | undefined} found object else undefined
+     */
+    static exists(list, name) {
+        for (let i = 0; i < list.length; i++) {
+            if (list[i].name === name)
+                return list[i];
+        }
+        return;
     }
     /**
      * Helper class function to find one specific object based on id
@@ -159,46 +182,71 @@ class ConsumerModel {
         };
     }
     /**
-     * create unique keys for consumer
-     * @param {string} secret cipher key
-     * @return {void} generated uid
-     */
-    createIdentifiers(secret) {
-        const gen = generator_1.Generator.createRSAPairString();
-        // console.log("Gen returned: ", gen);
-        if (gen !== undefined) {
+      * create unique RSA keys for app
+      * @param {string} secret aes cipher key
+      * @return {void} generated uid
+      */
+    generateRSA(secret, callback) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const gen = generator_1.Generator.createRSAPairString();
+            yield (0, labs_sharable_1.delay)(400);
+            if (gen === undefined || !gen.private || !gen.public) {
+                throw new labs_sharable_1.CustomError("Could not generate RSA keys.");
+            }
             const publicKey = helper_1.FunctionHelpers.bankidCipherString(secret, gen.public);
             const privateKey = helper_1.FunctionHelpers.bankidCipherString(secret, gen.private);
             this.keys = {
-                "public": publicKey,
-                "private": privateKey,
+                public: publicKey,
+                private: privateKey,
             };
-        }
-        else {
-            throw new labs_sharable_1.CustomError("Could not generate RSA keys.");
-        }
+            this.keyData = contact_1.AuthenticateKeysData.fromJson(this.keys);
+            this.generateApiKeys(secret);
+            callback(this.keyData);
+        });
+    }
+    /**
+     * create unique api keys for consumer
+     * @param {string} secret cipher key
+     * @return {void} generated api keys
+     */
+    generateApiKeys(secret) {
         const signable = {
             "name": this.name,
             "created": this.created,
-            "email": this.email,
-            "regNum": this.regNum,
-            "tin": this.tin,
+            "identifier": this.id,
         };
         const source = helper_1.FunctionHelpers.bankidCipherString(secret, JSON.stringify(signable));
-        // console.log("Org signature: ", signable);
         try {
             const cryp = helper_1.FunctionHelpers.
                 changeCipherStringToModel(source);
-            this.apiKey = `bk-live_${cryp.content}`;
             this.apis = {
-                "live": this.apiKey,
-                "test": `bk-test_${cryp.iv}`,
+                live: `${enums_1.ApiKeyPrefix.live}${cryp.content}`,
+                test: `${enums_1.ApiKeyPrefix.test}${cryp.iv}`,
             };
+            this.apiKey = this.apis.live;
         }
-        catch (err) {
-            console.log("Failed creating credentials");
+        catch (error) {
+            throw new labs_sharable_1.CustomError("Failed creating credentials");
         }
-        this.resolveMaps();
+    }
+    /**
+     * finally hash api keys for db storing
+     * @return {void} generated api keys
+     */
+    hashAPIKeys() {
+        var _a;
+        return __awaiter(this, void 0, void 0, function* () {
+            if (((_a = this.apis) === null || _a === void 0 ? void 0 : _a.live) === undefined || this.apis.live.length < 1) {
+                throw new labs_sharable_1.CustomError("Api keys haven't been created");
+            }
+            const live = yield helper_1.FunctionHelpers.generateApiKey(this.apis.live);
+            const test = yield helper_1.FunctionHelpers.generateApiKey(this.apis.test);
+            this.apis = {
+                live: live,
+                test: test,
+            };
+            this.apiKey = this.apis.live;
+        });
     }
 }
 __decorate([

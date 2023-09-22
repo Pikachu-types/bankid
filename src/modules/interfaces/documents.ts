@@ -114,3 +114,11 @@ export interface ConsumerServiceJSON {
   apikeys: APIKeys;
   authUri: string;
 };
+
+/**
+ * Pending Invitation reference
+ */
+export interface PendingInvitation {
+  id: string;
+  invitation: string;
+};

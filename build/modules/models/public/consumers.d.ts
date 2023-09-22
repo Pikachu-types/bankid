@@ -38,6 +38,14 @@ export declare class ConsumerModel {
     */
     resolveMaps(): void;
     /**
+     * Helper class function to validate if org name already exists
+     *
+     * @param {ConsumerModel[]} list an array to sort from and find given
+     * @param {string} name provide the needed id to match for
+     * @return {ConsumerModel | undefined} found object else undefined
+     */
+    static exists(list: ConsumerModel[], name: string): ConsumerModel | undefined;
+    /**
      * Helper class function to find one specific object based on id
      *
      * @param {ConsumerModel[]} list an array to sort from and find given
@@ -72,9 +80,20 @@ export declare class ConsumerModel {
      */
     generateServiceJSON(): ConsumerServiceJSON;
     /**
-     * create unique keys for consumer
+      * create unique RSA keys for app
+      * @param {string} secret aes cipher key
+      * @return {void} generated uid
+      */
+    generateRSA(secret: string, callback: (keys: AuthenticateKeysData) => void): Promise<void>;
+    /**
+     * create unique api keys for consumer
      * @param {string} secret cipher key
-     * @return {void} generated uid
+     * @return {void} generated api keys
      */
-    createIdentifiers(secret: string): void;
+    private generateApiKeys;
+    /**
+     * finally hash api keys for db storing
+     * @return {void} generated api keys
+     */
+    hashAPIKeys(): Promise<void>;
 }

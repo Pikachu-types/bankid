@@ -60,6 +60,16 @@ export class FunctionHelpers {
   }
 
   /**
+   * Create an api key for BankID consumer
+   * @param {string} content use your own content
+   * @return {string} returns value.
+   */
+  public static async generateApiKey(content?: string): Promise<string> {
+    const token = content ?? crypto.randomUUID();
+    return await LabsCipher.hashWithBcrypt(token, 10);
+  }
+
+  /**
    * Revert CipherType model string to readable string
    * long function
    * @param {string} cipherKey secret key

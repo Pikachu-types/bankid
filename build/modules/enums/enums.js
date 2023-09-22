@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.RequestStatus = exports.RequestSources = exports.UserRoles = exports.DocumentAction = exports.AppTypeSecretRef = exports.AppVerificationStatus = exports.AppType = exports.DocumentTypes = exports.TFAProviders = exports.BankIDTypes = exports.VerificationMode = exports.DocumentReference = void 0;
+exports.RequestStatus = exports.RequestSources = exports.UserRoles = exports.DocumentAction = exports.ApiKeyPrefix = exports.AppTypeSecretRef = exports.AppVerificationStatus = exports.AppType = exports.DocumentTypes = exports.TFAProviders = exports.BankIDTypes = exports.VerificationMode = exports.DocumentReference = void 0;
 /**
  * Default database document references
  */
@@ -146,6 +146,14 @@ var AppTypeSecretRef;
     AppTypeSecretRef["production"] = "prd_";
     AppTypeSecretRef["test"] = "snb_";
 })(AppTypeSecretRef = exports.AppTypeSecretRef || (exports.AppTypeSecretRef = {}));
+/**
+ * Api key prefix
+ */
+var ApiKeyPrefix;
+(function (ApiKeyPrefix) {
+    ApiKeyPrefix["live"] = "bk-live_";
+    ApiKeyPrefix["test"] = "bk-test_";
+})(ApiKeyPrefix = exports.ApiKeyPrefix || (exports.ApiKeyPrefix = {}));
 /**
  * Document actions
  */

@@ -1,9 +1,9 @@
-import {plainToInstance, Expose} from "class-transformer";
-import {AuthenticateKeysData, ContactData} from "../superficial/contact";
-import {CustomError, unixTimeStampNow} from "labs-sharable";
+import { plainToInstance, Expose } from "class-transformer";
+import { AuthenticateKeysData, ContactData } from "../superficial/contact";
+import { CustomError, delay, unixTimeStampNow } from "labs-sharable";
 import { Generator } from "../../services/generator";
 import { FunctionHelpers } from "../../services/helper";
-import { BankIDTypes, DocumentTypes } from "../../enums/enums";
+import { ApiKeyPrefix, BankIDTypes, DocumentTypes } from "../../enums/enums";
 import { v4 as uuidv4 } from 'uuid';
 import { ConsoleRegAccountRequest } from "../../interfaces/requests";
 import { APIKeys, ConsumerProfile, ConsumerServiceJSON } from "../../interfaces/documents";
@@ -61,6 +61,20 @@ export class ConsumerModel {
     this.keyData = AuthenticateKeysData.fromJson(this.keys);
   }
 
+  /**
+   * Helper class function to validate if org name already exists
+   *
+   * @param {ConsumerModel[]} list an array to sort from and find given
+   * @param {string} name provide the needed id to match for
+   * @return {ConsumerModel | undefined} found object else undefined
+   */
+  public static exists(list: ConsumerModel[], name: string)
+    : ConsumerModel | undefined {
+    for (let i = 0; i < list.length; i++) {
+      if (list[i].name === name) return list[i];
+    }
+    return;
+  }
   /**
    * Helper class function to find one specific object based on id
    *
@@ -149,7 +163,7 @@ export class ConsumerModel {
     data.test = request.debug;
     return data;
   }
-  
+
 
   /**
    * generates consumer service json
@@ -169,51 +183,73 @@ export class ConsumerModel {
       apikeys: this.apis as APIKeys,
     }
   }
-  
-  /**
-   * create unique keys for consumer
-   * @param {string} secret cipher key
-   * @return {void} generated uid
-   */
-  public createIdentifiers(secret:string): void {
-    const gen = Generator.createRSAPairString();
 
-    // console.log("Gen returned: ", gen);
-    if (gen !== undefined) {
-      const publicKey = FunctionHelpers.bankidCipherString(secret,
-        gen.public);
-      const privateKey = FunctionHelpers.bankidCipherString(secret,
-        gen.private);
-      this.keys = {
-        "public": publicKey,
-        "private": privateKey,
-      };
-    } else {
+
+  /**
+    * create unique RSA keys for app
+    * @param {string} secret aes cipher key
+    * @return {void} generated uid
+    */
+  public async generateRSA(secret: string, callback:
+    (keys: AuthenticateKeysData) => void): Promise<void> {
+    const gen = Generator.createRSAPairString();
+    await delay(400);
+    if (gen === undefined || !gen.private || !gen.public) {
       throw new CustomError("Could not generate RSA keys.")
     }
+    const publicKey = FunctionHelpers.bankidCipherString(secret,
+      gen.public);
+    const privateKey = FunctionHelpers.bankidCipherString(secret,
+      gen.private);
+    this.keys = {
+      public: publicKey,
+      private: privateKey,
+    };
+    this.keyData = AuthenticateKeysData.fromJson(this.keys);
+    this.generateApiKeys(secret);
+    callback(this.keyData);
+  }
+
+  /**
+   * create unique api keys for consumer
+   * @param {string} secret cipher key
+   * @return {void} generated api keys
+   */
+  private generateApiKeys(secret: string): void {
     const signable = {
       "name": this.name,
       "created": this.created,
-      "email": this.email,
-      "regNum": this.regNum,
-      "tin": this.tin,
+      "identifier": this.id,
     };
     const source = FunctionHelpers.bankidCipherString(secret,
       JSON.stringify(signable));
-    // console.log("Org signature: ", signable);
-
     try {
       const cryp = FunctionHelpers.
         changeCipherStringToModel(source);
-      this.apiKey = `bk-live_${cryp.content}`;
       this.apis = {
-        "live": this.apiKey,
-        "test": `bk-test_${cryp.iv}`,
+        live: `${ApiKeyPrefix.live}${cryp.content}`,
+        test: `${ApiKeyPrefix.test}${cryp.iv}`,
       };
-    } catch (err) {
-      console.log("Failed creating credentials");
+      this.apiKey = this.apis.live;
+    } catch (error) {
+      throw new CustomError("Failed creating credentials");
     }
+  }
 
-    this.resolveMaps();
+  /**
+   * finally hash api keys for db storing
+   * @return {void} generated api keys
+   */
+  public async hashAPIKeys(): Promise<void> {
+    if (this.apis?.live === undefined || this.apis.live.length < 1) {
+      throw new CustomError("Api keys haven't been created");
+    }
+    const live = await FunctionHelpers.generateApiKey(this.apis.live);
+    const test = await FunctionHelpers.generateApiKey(this.apis.test);
+    this.apis = {
+      live: live,
+      test: test,
+    };
+    this.apiKey = this.apis.live;
   }
 }
