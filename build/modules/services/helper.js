@@ -165,6 +165,15 @@ class FunctionHelpers {
             return false;
         }
     }
+    /**
+     * Change JSON to BankID string
+     * @param {Record<string, unknown>} source json content
+     * @param {string} secret designated cipher secret code
+     * @return {string} returns aes value.
+     */
+    static encryptJSON(source, secret) {
+        return this.bankidCipherString(secret, JSON.stringify(source));
+    }
 }
 exports.FunctionHelpers = FunctionHelpers;
 //# sourceMappingURL=helper.js.map

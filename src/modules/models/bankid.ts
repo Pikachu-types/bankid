@@ -1,4 +1,7 @@
-import { CustomError } from "labs-sharable";
+import {
+  CustomError, generateRandomAlphaNumeric,
+  unixTimeStampNow
+} from "labs-sharable";
 import { MagicLinkModes } from "../enums/shared";
 import { DocumentReference, DocumentTypes } from "../enums/enums";
 
@@ -28,6 +31,14 @@ export namespace BankID {
       debug: boolean = false, mode?: MagicLinkModes): string {
       return `${debug ? Links.consoleLocalhost : Links.consoleDomain}` +
         `/magic/${token}${mode === undefined ? '': `?mode=${mode}`}`;
+    }
+
+    /**
+     * Create a request identifier
+     * @return {string} returns value.
+     */
+    public static requestID(): string {
+      return `${DocumentTypes.requests}${unixTimeStampNow()}-${generateRandomAlphaNumeric(4)}`;
     }
 
     /**

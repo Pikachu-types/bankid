@@ -73,4 +73,11 @@ export declare class FunctionHelpers {
      * @return {boolean} returns state.
      */
     static verifyRequester(cipherKey: string, source?: string): boolean;
+    /**
+     * Change JSON to BankID string
+     * @param {Record<string, unknown>} source json content
+     * @param {string} secret designated cipher secret code
+     * @return {string} returns aes value.
+     */
+    static encryptJSON(source: Record<string, unknown>, secret: string): string;
 }

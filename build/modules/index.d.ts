@@ -2,6 +2,7 @@ export * from "./services/helper";
 export * from "./services/api_client";
 export * from "./services/generator";
 export * from "./interfaces/requests";
+export * from "./interfaces/consumer_requests";
 export * from "./interfaces/documents";
 export * from "./interfaces/type_modules";
 export * from "./models/public/approvedClients";

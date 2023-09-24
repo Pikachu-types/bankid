@@ -53,9 +53,9 @@ export declare enum DocumentReference {
 /**
  * Bankid Request Modes enum
  */
-export declare enum VerificationMode {
-    identification = "identification",
-    signature = "signature"
+export declare enum RequestMode {
+    Identification = "identification",
+    Signature = "signature"
 }
 /**
  * Bankid DB Types

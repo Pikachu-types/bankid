@@ -17,7 +17,8 @@ export type AsyncCallback = () => Promise<unknown>
 /**
  *  Define a type alias for custom endpoint verification and callback
  */
-export type EndpointCallback = (request: Request, response: Response) => Promise<unknown>
+export type EndpointCallback = (request: Request,
+    response: Response) => Promise<unknown>
 
 /**
  * BankID Account type

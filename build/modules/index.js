@@ -18,6 +18,7 @@ __exportStar(require("./services/helper"), exports);
 __exportStar(require("./services/api_client"), exports);
 __exportStar(require("./services/generator"), exports);
 __exportStar(require("./interfaces/requests"), exports);
+__exportStar(require("./interfaces/consumer_requests"), exports);
 __exportStar(require("./interfaces/documents"), exports);
 __exportStar(require("./interfaces/type_modules"), exports);
 __exportStar(require("./models/public/approvedClients"), exports);

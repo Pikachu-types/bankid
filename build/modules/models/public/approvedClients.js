@@ -15,10 +15,10 @@ exports.ApprovedClients = ApprovedClients;
  */
 ApprovedClients.applications = ["ng.bankid.mobile", "console.bankid.ng"];
 /**
- * Our backend apis can-only be called by these micro-services or portals
+ * Our backend apis can-only be called by these micro-services or clients
  */
 ApprovedClients.requesters = ["api.bankid.ng", "connect.bankid.ng",
-    "b49932e5-5776-44af-883f-39fd5f1c7761"];
+    "b49932e5-5776-44af-883f-39fd5f1c7761", "ng.bankid.mobile"];
 /**
  * For endpoints which require less scrutiny we have
  * these authorized apps by package name and web-domain

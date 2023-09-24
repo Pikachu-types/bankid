@@ -1,4 +1,5 @@
 import {plainToInstance, Expose} from "class-transformer";
+import { AbstractIPData } from "../superficial/ip";
 
 /**
  * HookData
@@ -51,11 +52,18 @@ export class IdentificationRequest {
 
   @Expose() type = "";
 
+  /**
+   * Ip address
+   */
+  @Expose() ip = "";
+
   @Expose() name = "";
 
   @Expose() signed = false;
 
   @Expose() details: Record<string, unknown> | undefined;
+
+  @Expose() signatureIP: AbstractIPData | undefined;
 
   @Expose() signature: string | undefined;
 

@@ -28,6 +28,13 @@ export declare class ClientApp {
      */
     static fromJson(obj: Record<string, unknown>): ClientApp;
     /**
+     * Validate if secret is valid
+     * @param {string} other string value to compare
+     * @param {string} cipher provide the secret for cipher process
+     * @return {boolean} valid or not
+     */
+    validateSecret(other: string, cipher: string): boolean;
+    /**
      * Helper class function to find one specific object based on id
      *
      * @param {ClientApp[]} list an array to sort from and find given

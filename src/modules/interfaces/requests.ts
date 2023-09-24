@@ -142,3 +142,4 @@ export interface ConsoleRegAccountRequest {
     last: string;
   };
 };
+

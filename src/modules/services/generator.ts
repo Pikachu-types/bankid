@@ -1,6 +1,5 @@
 import {
   RSAKeys,
-  generateRandomAlphaNumeric, unixTimeStampNow,
 } from "labs-sharable";
 // import { generateKeyPair } from "crypto";
 import * as crypto from "crypto";
@@ -9,14 +8,6 @@ import * as crypto from "crypto";
  * Generator service class
  */
 export class Generator {
-  /**
-   * Create a request identifier
-   * @return {string} returns value.
-   */
-  public static requestID(): string {
-    return `req_${unixTimeStampNow()}-${generateRandomAlphaNumeric(4)}`;
-  }
-
   /**
    * Create a app link
    * @param {string} mode request mode i.e [signature, identification]

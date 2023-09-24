@@ -14,6 +14,14 @@ export interface EnrolmentMade {
 }
 
 /**
+ * AppConsumerReturn
+*/
+export interface AppConsumerReturn {
+  consumer: ConsumerModel,
+  app: ClientApp,
+}
+
+/**
  * Console purpose solely
 */
 export interface QuestionStructure {
@@ -122,3 +130,55 @@ export interface PendingInvitation {
   id: string;
   invitation: string;
 };
+
+/**
+ * Auth Token data
+ */
+export interface AuthToken {
+  /**
+   * Consumer id this was made on behalf
+   */
+  sub: string;
+  /**
+   * Date created
+   */
+  iat: number;
+  /**
+   * Expires when
+   */
+  exp: number;
+  /**
+   * App ID
+   */
+  app: string;
+  /**
+   * 
+   */
+  name: string;
+  /**
+   * Acquired scopes
+   */
+  scopes?: string[];
+  /**
+   * app secret
+   */
+  secret: string;
+};
+
+/**
+ * Request Signature
+ */
+export interface RequestSignature {
+  id: string,
+  iat: number;
+  exp: number;
+  mode: string;
+  payload: string;
+  ip: string;
+  name: string;
+  consumer: string;
+  app: string;
+  user: string;
+  acquireClaims?: string[];
+}
+

@@ -1,3 +1,4 @@
+import { AbstractIPData } from "../superficial/ip";
 /**
  * HookData
 */
@@ -39,9 +40,14 @@ export declare class IdentificationRequest {
     signedAt: number | undefined;
     user: string;
     type: string;
+    /**
+     * Ip address
+     */
+    ip: string;
     name: string;
     signed: boolean;
     details: Record<string, unknown> | undefined;
+    signatureIP: AbstractIPData | undefined;
     signature: string | undefined;
     acquireClaims: string[];
     /**

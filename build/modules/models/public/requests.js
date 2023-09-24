@@ -40,6 +40,10 @@ class IdentificationRequest {
         this.exp = 0;
         this.user = "";
         this.type = "";
+        /**
+         * Ip address
+         */
+        this.ip = "";
         this.name = "";
         this.signed = false;
         this.acquireClaims = [];
@@ -112,6 +116,9 @@ __decorate([
 ], IdentificationRequest.prototype, "type", void 0);
 __decorate([
     (0, class_transformer_1.Expose)()
+], IdentificationRequest.prototype, "ip", void 0);
+__decorate([
+    (0, class_transformer_1.Expose)()
 ], IdentificationRequest.prototype, "name", void 0);
 __decorate([
     (0, class_transformer_1.Expose)()
@@ -119,6 +126,9 @@ __decorate([
 __decorate([
     (0, class_transformer_1.Expose)()
 ], IdentificationRequest.prototype, "details", void 0);
+__decorate([
+    (0, class_transformer_1.Expose)()
+], IdentificationRequest.prototype, "signatureIP", void 0);
 __decorate([
     (0, class_transformer_1.Expose)()
 ], IdentificationRequest.prototype, "signature", void 0);

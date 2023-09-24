@@ -4,11 +4,6 @@ import { RSAKeys } from "labs-sharable";
  */
 export declare class Generator {
     /**
-     * Create a request identifier
-     * @return {string} returns value.
-     */
-    static requestID(): string;
-    /**
      * Create a app link
      * @param {string} mode request mode i.e [signature, identification]
      * @param {string} requestSignature the jwt signed string

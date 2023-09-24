@@ -55,9 +55,9 @@ export enum DocumentReference {
 /**
  * Bankid Request Modes enum
  */
-export enum VerificationMode {
-  identification = "identification",
-  signature = "signature"
+export enum RequestMode {
+  Identification = "identification",
+  Signature = "signature"
 }
 
 /**

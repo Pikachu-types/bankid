@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.RequestStatus = exports.RequestSources = exports.UserRoles = exports.DocumentAction = exports.ApiKeyPrefix = exports.AppTypeSecretRef = exports.AppVerificationStatus = exports.AppType = exports.DocumentTypes = exports.TFAProviders = exports.BankIDTypes = exports.VerificationMode = exports.DocumentReference = void 0;
+exports.RequestStatus = exports.RequestSources = exports.UserRoles = exports.DocumentAction = exports.ApiKeyPrefix = exports.AppTypeSecretRef = exports.AppVerificationStatus = exports.AppType = exports.DocumentTypes = exports.TFAProviders = exports.BankIDTypes = exports.RequestMode = exports.DocumentReference = void 0;
 /**
  * Default database document references
  */
@@ -57,11 +57,11 @@ var DocumentReference;
 /**
  * Bankid Request Modes enum
  */
-var VerificationMode;
-(function (VerificationMode) {
-    VerificationMode["identification"] = "identification";
-    VerificationMode["signature"] = "signature";
-})(VerificationMode = exports.VerificationMode || (exports.VerificationMode = {}));
+var RequestMode;
+(function (RequestMode) {
+    RequestMode["Identification"] = "identification";
+    RequestMode["Signature"] = "signature";
+})(RequestMode = exports.RequestMode || (exports.RequestMode = {}));
 /**
  * Bankid DB Types
  */

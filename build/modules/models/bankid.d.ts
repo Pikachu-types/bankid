@@ -22,6 +22,11 @@ export declare namespace BankID {
         */
         static buildLoginLink(token: string, debug?: boolean, mode?: MagicLinkModes): string;
         /**
+         * Create a request identifier
+         * @return {string} returns value.
+         */
+        static requestID(): string;
+        /**
          * Find what collection based on  id
          * @param {string} id doc id
          * @return {string} returns collection

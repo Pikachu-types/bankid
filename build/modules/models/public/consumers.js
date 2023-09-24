@@ -248,6 +248,22 @@ class ConsumerModel {
             this.apiKey = this.apis.live;
         });
     }
+    /**
+     * Validate if api key is valid
+     * @param {string} other string value to compare
+     * @return {boolean} valid or not
+     */
+    validateApiKey(other) {
+        var _a, _b;
+        if (this.apiKey.length < 1) {
+            return false;
+        }
+        if (((_a = this.apis) === null || _a === void 0 ? void 0 : _a.live) === other)
+            return true;
+        if (((_b = this.apis) === null || _b === void 0 ? void 0 : _b.test) === other)
+            return true;
+        return false;
+    }
 }
 __decorate([
     (0, class_transformer_1.Expose)()

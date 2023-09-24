@@ -96,4 +96,10 @@ export declare class ConsumerModel {
      * @return {void} generated api keys
      */
     hashAPIKeys(): Promise<void>;
+    /**
+     * Validate if api key is valid
+     * @param {string} other string value to compare
+     * @return {boolean} valid or not
+     */
+    validateApiKey(other: string): boolean;
 }

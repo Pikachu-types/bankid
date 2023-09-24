@@ -32,6 +32,13 @@ var BankID;
                 `/magic/${token}${mode === undefined ? '' : `?mode=${mode}`}`;
         }
         /**
+         * Create a request identifier
+         * @return {string} returns value.
+         */
+        static requestID() {
+            return `${enums_1.DocumentTypes.requests}${(0, labs_sharable_1.unixTimeStampNow)()}-${(0, labs_sharable_1.generateRandomAlphaNumeric)(4)}`;
+        }
+        /**
          * Find what collection based on  id
          * @param {string} id doc id
          * @return {string} returns collection

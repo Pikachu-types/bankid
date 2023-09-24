@@ -54,6 +54,26 @@ class ClientApp {
         return result;
     }
     /**
+     * Validate if secret is valid
+     * @param {string} other string value to compare
+     * @param {string} cipher provide the secret for cipher process
+     * @return {boolean} valid or not
+     */
+    validateSecret(other, cipher) {
+        if (this.secrets === undefined) {
+            return false;
+        }
+        let flag = false;
+        for (let i = 0; i < this.secrets.length; i++) {
+            var secret = helper_1.FunctionHelpers.bankidCipherToString(cipher, this.secrets[i].secret);
+            if (secret === other) {
+                flag = true;
+                break;
+            }
+        }
+        return flag;
+    }
+    /**
      * Helper class function to find one specific object based on id
      *
      * @param {ClientApp[]} list an array to sort from and find given

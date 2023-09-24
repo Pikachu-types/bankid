@@ -10,7 +10,7 @@ export declare class ApprovedClients {
      */
     static applications: string[];
     /**
-     * Our backend apis can-only be called by these micro-services or portals
+     * Our backend apis can-only be called by these micro-services or clients
      */
     static requesters: string[];
     /**

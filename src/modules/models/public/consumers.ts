@@ -75,6 +75,7 @@ export class ConsumerModel {
     }
     return;
   }
+
   /**
    * Helper class function to find one specific object based on id
    *
@@ -251,5 +252,20 @@ export class ConsumerModel {
       test: test,
     };
     this.apiKey = this.apis.live;
+  }
+  
+
+  /**
+   * Validate if api key is valid
+   * @param {string} other string value to compare
+   * @return {boolean} valid or not
+   */
+  public validateApiKey(other: string): boolean {
+    if (this.apiKey.length < 1) {
+      return false;
+    }
+    if (this.apis?.live === other) return true;
+    if (this.apis?.test === other) return true;
+    return false;
   }
 }

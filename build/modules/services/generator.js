@@ -24,20 +24,12 @@ var __importStar = (this && this.__importStar) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Generator = void 0;
-const labs_sharable_1 = require("labs-sharable");
 // import { generateKeyPair } from "crypto";
 const crypto = __importStar(require("crypto"));
 /**
  * Generator service class
  */
 class Generator {
-    /**
-     * Create a request identifier
-     * @return {string} returns value.
-     */
-    static requestID() {
-        return `req_${(0, labs_sharable_1.unixTimeStampNow)()}-${(0, labs_sharable_1.generateRandomAlphaNumeric)(4)}`;
-    }
     /**
      * Create a app link
      * @param {string} mode request mode i.e [signature, identification]
