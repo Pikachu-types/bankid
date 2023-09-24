@@ -54,6 +54,14 @@ export declare class ConsumerModel {
      */
     static findOne(list: ConsumerModel[], id: string): ConsumerModel | undefined;
     /**
+     * Helper class function to find one specific object based on id
+     *
+     * @param {ConsumerModel[]} list an array to sort from and find given
+     * @param {string} key provide api key needed to match for
+     * @return {ConsumerModel | undefined} found object else undefined
+     */
+    static matchApiKey(list: ConsumerModel[], key: string): ConsumerModel | undefined;
+    /**
      * un-resolve maps for certain attributes
      * @return {void} nothing
      */

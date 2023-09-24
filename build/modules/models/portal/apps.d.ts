@@ -47,6 +47,15 @@ export declare class ClientApp {
     /**
      * Helper class function to find one specific object based on id
      *
+     * @param {ConsumerModel[]} list an array to sort from and find given
+     * @param {string} secret provide app secret needed to match for
+     * @param {string} cipher provide the secret for cipher process
+     * @return {ClientApp | undefined} found object else undefined
+     */
+    static matchSecretKey(list: ClientApp[], secret: string, cipher: string): ClientApp | undefined;
+    /**
+     * Helper class function to find one specific object based on id
+     *
      * @param {ClientApp[]} list an array to sort from and find given
      * @param {string} id provide the needed id to match for
      * @return {ClientApp | undefined} found object else undefined

@@ -92,6 +92,24 @@ export class ConsumerModel {
   }
 
   /**
+   * Helper class function to find one specific object based on id
+   *
+   * @param {ConsumerModel[]} list an array to sort from and find given
+   * @param {string} key provide api key needed to match for
+   * @return {ConsumerModel | undefined} found object else undefined
+   */
+  public static matchApiKey(list: ConsumerModel[], key: string)
+    : ConsumerModel | undefined {
+    for (let i = 0; i < list.length; i++) {
+      var a = list[i];
+      if (a.validateApiKey(key)) {
+        return a;
+      }
+    }
+    return;
+  }
+
+  /**
    * un-resolve maps for certain attributes
    * @return {void} nothing
    */

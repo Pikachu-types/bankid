@@ -33,14 +33,14 @@ class Generator {
     /**
      * Create a app link
      * @param {string} mode request mode i.e [signature, identification]
-     * @param {string} requestSignature the jwt signed string
+     * @param {Requests} request the request
      * @param {string} source what kind of consumer generated this
      * @param {string} nin bankid user
      * @return {string} returns value.
      */
-    static appLink(mode, requestSignature, source, nin) {
+    static appLink(mode, request, source, nin) {
         return `https://mobil.bankid.ng/auth/?mode=${mode}` +
-            `&value=${requestSignature}&source=${source}${nin !== undefined ?
+            `&value=${request.request}&id=${request.id}&source=${source}${nin !== undefined ?
                 `&nin=${nin}` : ""}`;
     }
     /**

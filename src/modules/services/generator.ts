@@ -3,6 +3,7 @@ import {
 } from "labs-sharable";
 // import { generateKeyPair } from "crypto";
 import * as crypto from "crypto";
+import { Requests } from "../models/public/requests";
 
 /**
  * Generator service class
@@ -11,15 +12,15 @@ export class Generator {
   /**
    * Create a app link
    * @param {string} mode request mode i.e [signature, identification]
-   * @param {string} requestSignature the jwt signed string
+   * @param {Requests} request the request
    * @param {string} source what kind of consumer generated this
    * @param {string} nin bankid user
    * @return {string} returns value.
    */
   public static appLink(mode: string,
-    requestSignature: string, source: string, nin?:string): string {
+    request: Requests, source: string, nin?:string): string {
     return `https://mobil.bankid.ng/auth/?mode=${mode}` +
-      `&value=${requestSignature}&source=${source}${nin !== undefined ?
+      `&value=${request.request}&id=${request.id}&source=${source}${nin !== undefined ?
         `&nin=${nin}` :""}`;
   }
 

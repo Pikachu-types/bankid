@@ -96,6 +96,23 @@ class ClientApp {
     /**
      * Helper class function to find one specific object based on id
      *
+     * @param {ConsumerModel[]} list an array to sort from and find given
+     * @param {string} secret provide app secret needed to match for
+     * @param {string} cipher provide the secret for cipher process
+     * @return {ClientApp | undefined} found object else undefined
+     */
+    static matchSecretKey(list, secret, cipher) {
+        for (let i = 0; i < list.length; i++) {
+            var a = list[i];
+            if (a.validateSecret(secret, cipher)) {
+                return a;
+            }
+        }
+        return;
+    }
+    /**
+     * Helper class function to find one specific object based on id
+     *
      * @param {ClientApp[]} list an array to sort from and find given
      * @param {string} id provide the needed id to match for
      * @return {ClientApp | undefined} found object else undefined

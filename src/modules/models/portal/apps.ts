@@ -27,7 +27,6 @@ export class ClientApp {
   @Expose() created = 0;
   @Expose() secrets: AppDataSecret[] = [];
   @Expose() keys: RSAKeys = {private: "", public: ""};
-
   
   keyData: AuthenticateKeysData | undefined;
 
@@ -87,6 +86,25 @@ export class ClientApp {
       }
     }
     return flag;
+  }
+
+  /**
+   * Helper class function to find one specific object based on id
+   *
+   * @param {ConsumerModel[]} list an array to sort from and find given
+   * @param {string} secret provide app secret needed to match for
+   * @param {string} cipher provide the secret for cipher process
+   * @return {ClientApp | undefined} found object else undefined
+   */
+  public static matchSecretKey(list: ClientApp[], secret: string, cipher: string)
+    : ClientApp | undefined {
+    for (let i = 0; i < list.length; i++) {
+      var a = list[i];
+      if (a.validateSecret(secret, cipher)) {
+        return a;
+      }
+    }
+    return;
   }
 
   /**
