@@ -51,7 +51,27 @@ class ClientApp {
      */
     static fromJson(obj) {
         const result = (0, class_transformer_1.plainToInstance)(ClientApp, obj, { excludeExtraneousValues: true });
+        result.resolveMaps();
         return result;
+    }
+    /**
+     * un-resolve maps for certain attributes
+     * @return {void} nothing
+     */
+    unResolveMaps() {
+        var _a;
+        if (this.keyData)
+            this.keys = {
+                private: (_a = this.keyData.private) !== null && _a !== void 0 ? _a : '',
+                public: this.keyData.public,
+            };
+    }
+    /**
+    * resolve maps for certain attributes
+    * @return {void} text
+    */
+    resolveMaps() {
+        this.keyData = contact_1.AuthenticateKeysData.fromJson(this.keys);
     }
     /**
      * Validate if secret is valid

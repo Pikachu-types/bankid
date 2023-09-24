@@ -8,6 +8,7 @@ import { DocumentReference, DocumentTypes } from "../enums/enums";
 export namespace BankID {
   export enum AppIdentifier {
     android = "ng.bankid.mobile",
+    uniLink = "ng.bankid://",
     ios = "ng.bankid.mobile",
     iosID = "", /// todo fill when gone live
   }

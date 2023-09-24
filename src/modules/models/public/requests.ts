@@ -1,5 +1,6 @@
 import {plainToInstance, Expose} from "class-transformer";
 import { AbstractIPData } from "../superficial/ip";
+import { DeviceProfile } from "../../interfaces/documents";
 
 /**
  * HookData
@@ -23,6 +24,10 @@ export class IdentificationRequest {
    * Bank ID consumer id
    */
   @Expose() consumer = "";
+  /**
+   * Consumer app id
+   */
+  @Expose() app = "";
   /**
    * Verification mode [identification or signature]
    */
@@ -136,6 +141,10 @@ export class Requests {
    * reference: string
    */
   @Expose() hook: HookData | undefined;
+  /**
+   * Tells which bankid device picked request first
+   */
+  @Expose() device: DeviceProfile | undefined;
   /**
    * This tells our servers how to handle the request
    * mobile, web or file

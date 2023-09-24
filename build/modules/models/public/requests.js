@@ -23,6 +23,10 @@ class IdentificationRequest {
          */
         this.consumer = "";
         /**
+         * Consumer app id
+         */
+        this.app = "";
+        /**
          * Verification mode [identification or signature]
          */
         this.mode = "";
@@ -93,6 +97,9 @@ __decorate([
 __decorate([
     (0, class_transformer_1.Expose)()
 ], IdentificationRequest.prototype, "consumer", void 0);
+__decorate([
+    (0, class_transformer_1.Expose)()
+], IdentificationRequest.prototype, "app", void 0);
 __decorate([
     (0, class_transformer_1.Expose)()
 ], IdentificationRequest.prototype, "mode", void 0);
@@ -221,6 +228,9 @@ __decorate([
 __decorate([
     (0, class_transformer_1.Expose)()
 ], Requests.prototype, "hook", void 0);
+__decorate([
+    (0, class_transformer_1.Expose)()
+], Requests.prototype, "device", void 0);
 __decorate([
     (0, class_transformer_1.Expose)()
 ], Requests.prototype, "destination", void 0);

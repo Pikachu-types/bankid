@@ -28,6 +28,16 @@ export declare class ClientApp {
      */
     static fromJson(obj: Record<string, unknown>): ClientApp;
     /**
+     * un-resolve maps for certain attributes
+     * @return {void} nothing
+     */
+    unResolveMaps(): void;
+    /**
+    * resolve maps for certain attributes
+    * @return {void} text
+    */
+    resolveMaps(): void;
+    /**
      * Validate if secret is valid
      * @param {string} other string value to compare
      * @param {string} cipher provide the secret for cipher process

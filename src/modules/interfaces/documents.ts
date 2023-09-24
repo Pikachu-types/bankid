@@ -81,6 +81,16 @@ export interface AppProfile {
 };
 
 /**
+ * Device profile
+ */
+export interface DeviceProfile {
+  model: string;
+  deviceID: string;
+  platform: string;
+  serialNumber?: number;
+};
+
+/**
  * App data secrets
  */
 export interface AppDataSecret {

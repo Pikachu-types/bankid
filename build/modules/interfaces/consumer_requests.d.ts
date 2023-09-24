@@ -1,4 +1,5 @@
 import { RequestMode } from "../enums/enums";
+import { DeviceProfile } from "./documents";
 /**
  * Authentication request
  */
@@ -67,9 +68,48 @@ export interface SignRequest {
     /**
      * Device information
      */
-    device: Record<string, unknown>;
+    device: DeviceProfile;
     /**
      * Standalone bankid identifier
      */
     bankid: string;
+}
+/**
+ * Handle client request
+ */
+export interface ClientRequest {
+    /**
+     * Request id
+     */
+    request: string;
+    /**
+      * Device information
+     */
+    device: DeviceProfile;
+    /**
+     * NIN bankid identifier
+     */
+    user: string;
+}
+/**
+ * RetrieveBankiD request
+ */
+export interface RetrieveBankiD {
+    /**
+     * Ciphered string
+     */
+    code: string;
+}
+/**
+ * ModifyBankiD request
+ */
+export interface ModifyBankiD {
+    /**
+     * Standalone BankID identifier
+     */
+    issued: string;
+    /**
+     * Device information
+     */
+    device?: DeviceProfile;
 }

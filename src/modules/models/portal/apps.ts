@@ -42,7 +42,28 @@ export class ClientApp {
     : ClientApp {
     const result: ClientApp = plainToInstance(ClientApp, obj,
       { excludeExtraneousValues: true });
+    result.resolveMaps();
     return result;
+  }
+
+  /**
+   * un-resolve maps for certain attributes
+   * @return {void} nothing
+   */
+  public unResolveMaps(): void {
+    if (this.keyData) this.keys = {
+      private: this.keyData.private ?? '',
+      public: this.keyData.public,
+    };
+  }
+
+
+  /**
+  * resolve maps for certain attributes
+  * @return {void} text
+  */
+  public resolveMaps(): void {
+    this.keyData = AuthenticateKeysData.fromJson(this.keys);
   }
 
 

@@ -1,4 +1,5 @@
 import { AbstractIPData } from "../superficial/ip";
+import { DeviceProfile } from "../../interfaces/documents";
 /**
  * HookData
 */
@@ -18,6 +19,10 @@ export declare class IdentificationRequest {
      * Bank ID consumer id
      */
     consumer: string;
+    /**
+     * Consumer app id
+     */
+    app: string;
     /**
      * Verification mode [identification or signature]
      */
@@ -94,6 +99,10 @@ export declare class Requests {
      * reference: string
      */
     hook: HookData | undefined;
+    /**
+     * Tells which bankid device picked request first
+     */
+    device: DeviceProfile | undefined;
     /**
      * This tells our servers how to handle the request
      * mobile, web or file

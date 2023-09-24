@@ -8,6 +8,7 @@ var BankID;
     let AppIdentifier;
     (function (AppIdentifier) {
         AppIdentifier["android"] = "ng.bankid.mobile";
+        AppIdentifier["uniLink"] = "ng.bankid://";
         AppIdentifier["ios"] = "ng.bankid.mobile";
         AppIdentifier["iosID"] = "";
     })(AppIdentifier = BankID.AppIdentifier || (BankID.AppIdentifier = {}));
