@@ -33,5 +33,12 @@ export declare namespace BankID {
          * @return {string} returns collection
          */
         static whatCollection(id: string): string;
+        /**
+         * Create BankID linked string
+         * @param {string} value the value you like to encrypt
+         * @param {string} secret cipher value secret
+         * @return {string} return ip  address
+         */
+        static bankidlinkedstring(value: string, secret: string): string;
     }
 }

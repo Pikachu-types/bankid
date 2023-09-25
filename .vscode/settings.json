@@ -3,6 +3,7 @@
         "addressclaim",
         "apikeys",
         "authy",
+        "bankidlinkedstring",
         "bioclaim",
         "clientid",
         "consoleuser",

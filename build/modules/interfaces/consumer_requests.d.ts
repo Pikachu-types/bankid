@@ -34,6 +34,7 @@ export interface IDRequest {
     user: string;
     payload: string;
     ip: string;
+    seeds?: number;
 }
 /**
  * Signature request

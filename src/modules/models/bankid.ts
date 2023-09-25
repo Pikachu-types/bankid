@@ -4,6 +4,7 @@ import {
 } from "labs-sharable";
 import { MagicLinkModes } from "../enums/shared";
 import { DocumentReference, DocumentTypes } from "../enums/enums";
+import { FunctionHelpers } from "../services/helper";
 
 export namespace BankID {
   export enum AppIdentifier {
@@ -70,6 +71,19 @@ export namespace BankID {
         default:
           return "na";
       }
+    }
+    
+    /**
+     * Create BankID linked string
+     * @param {string} value the value you like to encrypt
+     * @param {string} secret cipher value secret
+     * @return {string} return ip  address
+     */
+    public static bankidlinkedstring(value: string, secret: string)
+      : string {
+      const encrypt = FunctionHelpers.bankidCipherString(secret,
+        value);
+      return `${BankID.AppIdentifier.uniLink}${encrypt}`;
     }
   }
 }

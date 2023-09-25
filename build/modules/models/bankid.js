@@ -3,6 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.BankID = void 0;
 const labs_sharable_1 = require("labs-sharable");
 const enums_1 = require("../enums/enums");
+const helper_1 = require("../services/helper");
 var BankID;
 (function (BankID) {
     let AppIdentifier;
@@ -67,6 +68,16 @@ var BankID;
                 default:
                     return "na";
             }
+        }
+        /**
+         * Create BankID linked string
+         * @param {string} value the value you like to encrypt
+         * @param {string} secret cipher value secret
+         * @return {string} return ip  address
+         */
+        static bankidlinkedstring(value, secret) {
+            const encrypt = helper_1.FunctionHelpers.bankidCipherString(secret, value);
+            return `${BankID.AppIdentifier.uniLink}${encrypt}`;
         }
     }
     BankID.helpers = helpers;
