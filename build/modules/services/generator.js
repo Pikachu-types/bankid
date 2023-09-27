@@ -40,7 +40,7 @@ class Generator {
      */
     static appLink(mode, request, source, nin) {
         return `https://mobil.bankid.ng/auth/?mode=${mode}` +
-            `&value=${request.request}&id=${request.id}&source=${source}${nin !== undefined ?
+            `&id=${request.id}&source=${source}${nin !== undefined ?
                 `&nin=${nin}` : ""}`;
     }
     /**
