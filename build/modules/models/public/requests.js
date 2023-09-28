@@ -48,6 +48,10 @@ class IdentificationRequest {
          * Ip address
          */
         this.ip = "";
+        /**
+         * User agent
+         */
+        this.useragent = "";
         this.name = "";
         this.signed = false;
         this.acquireClaims = [];
@@ -124,6 +128,9 @@ __decorate([
 __decorate([
     (0, class_transformer_1.Expose)()
 ], IdentificationRequest.prototype, "ip", void 0);
+__decorate([
+    (0, class_transformer_1.Expose)()
+], IdentificationRequest.prototype, "useragent", void 0);
 __decorate([
     (0, class_transformer_1.Expose)()
 ], IdentificationRequest.prototype, "name", void 0);

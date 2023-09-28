@@ -165,6 +165,7 @@ export interface RequestSignature {
     iat: number;
     exp: number;
     mode: string;
+    useragent: string;
     payload: string;
     ip: string;
     name: string;

@@ -49,6 +49,10 @@ export declare class IdentificationRequest {
      * Ip address
      */
     ip: string;
+    /**
+     * User agent
+     */
+    useragent: string;
     name: string;
     signed: boolean;
     details: Record<string, unknown> | undefined;

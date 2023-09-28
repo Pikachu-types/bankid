@@ -34,6 +34,7 @@ export interface IDRequest {
     user: string;
     payload: string;
     ip: string;
+    useragent: string;
     seeds?: number;
 }
 /**
@@ -46,6 +47,7 @@ export interface SignatureRequest {
         host: string;
         reference: string;
     };
+    useragent: string;
     payload: string;
     ip: string;
 }

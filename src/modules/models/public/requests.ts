@@ -61,6 +61,11 @@ export class IdentificationRequest {
    * Ip address
    */
   @Expose() ip = "";
+  
+  /**
+   * User agent
+   */
+  @Expose() useragent = "";
 
   @Expose() name = "";
 
