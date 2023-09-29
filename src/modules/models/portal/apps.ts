@@ -1,13 +1,11 @@
 import { plainToInstance, Expose } from "class-transformer";
 import { v4 as uuidv4, v1 as uuidv1 } from 'uuid';
-import { AppType, AppTypeSecretRef, AppVerificationStatus, BankIDTypes, DocumentTypes } from "../../enums/enums";
-import { AppDataSecret, AppServiceJSON } from "../../interfaces/documents";
+import { AppType, AppTypeSecretRef, AppVerificationStatus, DocumentTypes } from "../../enums/enums";
+import { AppDataSecret } from "../../interfaces/documents";
 import { AuthenticateKeysData } from "../superficial/contact";
-import { BankID } from "../bankid";
 import { Generator } from "../../services/generator";
 import { FunctionHelpers } from "../../services/helper";
 import { CustomError, RSAKeys, delay, generateRandomAlphaNumeric, unixTimeStampNow } from "labs-sharable";
-import { ActionCallback } from "../../interfaces/type_modules";
 /**
  * ClientApp class
 */
