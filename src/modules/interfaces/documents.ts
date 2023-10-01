@@ -63,6 +63,7 @@ export interface ConsoleAccountSecurity {
   tFA: boolean;
   generated?: boolean;
   provider?: string
+  nin?: string
 };
 
 /**
