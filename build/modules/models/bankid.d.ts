@@ -7,7 +7,8 @@ export declare namespace BankID {
         iosID = ""
     }
     enum Links {
-        ipChecker = "https://ipgeolocation.abstractapi.com/v1/",
+        ipChecker = "https://ipapi.co",
+        oldIpChecker = "https://ipgeolocation.abstractapi.com/v1/",
         consoleLocalhost = "http://localhost:5430",
         consoleDomain = "https://console.bankid.ng",
         connectUri = "https://connect.bankid.ng/v1/",

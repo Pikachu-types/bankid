@@ -6,6 +6,67 @@ import { plainToInstance, Expose } from "class-transformer";
 export class AbstractIPData {
     /* eslint new-cap: ["error", { "capIsNew": false }]*/
 
+    @Expose() ip = "";
+    @Expose() city = "";
+    @Expose() version = "";
+    @Expose() postal: string = "";
+    @Expose() region = "";
+    @Expose() region_code = "";
+    @Expose() continent = "";
+    @Expose() in_eu = false;
+    @Expose() continent_code = "";
+    @Expose() country_code = "";
+    @Expose() country_code_ios3 = "";
+    @Expose() currency = "";
+    @Expose() currency_name = "";
+    @Expose() asn = "";
+    @Expose() country_calling_code = "";
+    @Expose() country = "";
+    @Expose() country_tld = "";
+    @Expose() hostname = "";
+    @Expose() languages = "";
+    @Expose() org = "";
+    @Expose() latitude = 0;
+    @Expose() longitude = 0;
+    @Expose() timezone: string = "";
+
+    /**
+     * Change record to AbstractIPData class
+     *
+     * @param {Record<string, unknown>} obj  json object from db
+     * @return {AbstractIPData} this class
+     */
+    public static fromJson(obj: Record<string, unknown>)
+        : AbstractIPData {
+        const result: AbstractIPData = plainToInstance(AbstractIPData, obj,
+            { excludeExtraneousValues: true });
+
+        return result;
+    }
+
+    /**
+     * This class handler to json
+     * @return {string} text
+     */
+    public toJsonString(): string {
+        return JSON.stringify(this, null, 4);
+    }
+
+    /**
+    * get document in map format
+    * @return { Record<string, unknown>} returns doc map .
+    */
+    public toMap()
+        : Record<string, unknown> {
+        return JSON.parse(this.toJsonString());
+    }
+}/**
+ * User AbstractIPData class
+*/
+
+export class AbstractIPAdData {
+    /* eslint new-cap: ["error", { "capIsNew": false }]*/
+
     @Expose() ip_address = "";
     @Expose() city = "";
     @Expose() city_geoname_id = 0;
@@ -28,14 +89,14 @@ export class AbstractIPData {
     @Expose() region_geoname_id = 0;
 
     /**
-     * Change record to AbstractIPData class
+     * Change record to AbstractIPAdData class
      *
      * @param {Record<string, unknown>} obj  json object from db
-     * @return {AbstractIPData} this class
+     * @return {AbstractIPAdData} this class
      */
     public static fromJson(obj: Record<string, unknown>)
-        : AbstractIPData {
-        const result: AbstractIPData = plainToInstance(AbstractIPData, obj,
+        : AbstractIPAdData {
+        const result: AbstractIPAdData = plainToInstance(AbstractIPAdData, obj,
             { excludeExtraneousValues: true });
 
         return result;

@@ -45,14 +45,55 @@ class ExternalApiClient {
       * Checkup IP
       * @param {string} apiKey abstractApi key
       * @param {string} ipAddress ip address to look for
-      * @return {Promise<AbstractIPData>} returns response.
+      * @return {Promise<AbstractIPAdData>} returns response.
       */
-    static ipChecker(apiKey, ipAddress) {
+    static oldIpChecker(apiKey, ipAddress) {
         var _a;
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 const { data, status } = yield axios_1.default.get(bankid_1.BankID.Links.ipChecker + "?api_key="
                     + apiKey + "&ip_address=" + ipAddress, {
+                    headers: {
+                        Accept: 'application/json',
+                    }
+                });
+                console.log(JSON.stringify(data, null, 4));
+                if (status == 200) {
+                    return ip_1.AbstractIPAdData.fromJson(data);
+                }
+                else {
+                    throw new labs_sharable_1.CustomError(JSON.stringify(data), status);
+                }
+            }
+            catch (error) {
+                if ((0, axios_1.isAxiosError)(error)) {
+                    console.log("error message: ", error.message);
+                    const response = error.response;
+                    if (response) {
+                        throw new labs_sharable_1.CustomError("", response.status, response.data);
+                    }
+                    else {
+                        throw new labs_sharable_1.CustomError(error.message, (_a = error.status) !== null && _a !== void 0 ? _a : 500);
+                    }
+                }
+                else {
+                    throw new labs_sharable_1.CustomError("An unexpected error occurred", 500);
+                }
+            }
+        });
+    }
+    /**
+      * Checkup IP
+      * @param {string} apiKey abstractApi key
+      * @param {string} ipAddress ip address to look for
+      * @param {boolean} debug toggle if use apikey
+      * @return {Promise<AbstractIPData>} returns response.
+      */
+    static ipChecker(apiKey, ipAddress, debug = false) {
+        var _a;
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const { data, status } = yield axios_1.default.get(`${bankid_1.BankID.Links.ipChecker}/${ipAddress}/json/${debug ? '' : `?key=${apiKey}`}`, {
                     headers: {
                         Accept: 'application/json',
                     }
