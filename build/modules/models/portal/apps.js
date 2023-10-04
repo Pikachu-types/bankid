@@ -185,6 +185,21 @@ class ClientApp {
     static createID() {
         return `${enums_1.DocumentTypes.app}${(0, uuid_1.v4)()}`;
     }
+    /**
+     * Check if app is safe to return real nin-data
+     * @return {boolean} generated uid
+     */
+    safeApp() {
+        return this.verificationStatus === enums_1.AppVerificationStatus.verified
+            && this.type === enums_1.AppType.production;
+    }
+    /**
+     * Check if app is a test app
+     * @return {boolean} generated uid
+     */
+    testApp() {
+        return this.type === enums_1.AppType.test;
+    }
 }
 __decorate([
     (0, class_transformer_1.Expose)()

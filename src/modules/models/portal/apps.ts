@@ -5,7 +5,7 @@ import { AppDataSecret } from "../../interfaces/documents";
 import { AuthenticateKeysData } from "../superficial/contact";
 import { Generator } from "../../services/generator";
 import { FunctionHelpers } from "../../services/helper";
-import { CustomError, RSAKeys, delay, generateRandomAlphaNumeric, unixTimeStampNow } from "labs-sharable";
+import { CustomError, RSAKeys, delay, equalToIgnoreCase, generateRandomAlphaNumeric, unixTimeStampNow } from "labs-sharable";
 /**
  * ClientApp class
 */
@@ -186,5 +186,22 @@ export class ClientApp {
    */
   public static createID(): string {
     return `${DocumentTypes.app}${uuidv4()}`;
+  }
+  
+  /**
+   * Check if app is safe to return real nin-data
+   * @return {boolean} generated uid
+   */
+  public safeApp(): boolean {
+    return this.verificationStatus === AppVerificationStatus.verified
+      && this.type === AppType.production;
+  }  
+
+  /**
+   * Check if app is a test app
+   * @return {boolean} generated uid
+   */
+  public testApp(): boolean {
+    return this.type === AppType.test;
   }
 }

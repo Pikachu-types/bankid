@@ -89,4 +89,14 @@ export declare class ClientApp {
      * @return {string} generated uid
      */
     static createID(): string;
+    /**
+     * Check if app is safe to return real nin-data
+     * @return {boolean} generated uid
+     */
+    safeApp(): boolean;
+    /**
+     * Check if app is a test app
+     * @return {boolean} generated uid
+     */
+    testApp(): boolean;
 }
