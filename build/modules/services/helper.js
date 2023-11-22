@@ -174,6 +174,25 @@ class FunctionHelpers {
     static encryptJSON(source, secret) {
         return this.bankidCipherString(secret, JSON.stringify(source));
     }
+    /**
+     * Extract IP address
+     * @return {string} return ip  address
+    */
+    static getIPAddress(request) {
+        try {
+            let ip = request.headers["cf-connecting-ip"] ||
+                request.headers["x-real-ip"] ||
+                request.headers["x-forwarded-for"] ||
+                request.socket.remoteAddress || "";
+            if (ip.includes(",")) {
+                ip = ip.split(",")[0];
+            }
+            return ip;
+        }
+        catch (e) {
+            return '';
+        }
+    }
 }
 exports.FunctionHelpers = FunctionHelpers;
 //# sourceMappingURL=helper.js.map

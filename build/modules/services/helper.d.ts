@@ -1,5 +1,6 @@
 /// <reference types="node" />
 import { CipherType } from "labs-sharable";
+import { Request } from "express";
 /**
  * Callable Function Helper class
  */
@@ -80,4 +81,9 @@ export declare class FunctionHelpers {
      * @return {string} returns aes value.
      */
     static encryptJSON(source: Record<string, unknown>, secret: string): string;
+    /**
+     * Extract IP address
+     * @return {string} return ip  address
+    */
+    static getIPAddress(request: Request): string;
 }
