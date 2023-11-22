@@ -1,5 +1,6 @@
 import {CipherType, CustomError, LabsCipher} from "labs-sharable";
 import { ApprovedClients } from "../models/public/approvedClients";
+import { Request } from "express";
 
 /**
  * Callable Function Helper class
@@ -177,6 +178,25 @@ export class FunctionHelpers {
   public static encryptJSON(source: Record<string, unknown>,
     secret: string): string {
     return this.bankidCipherString(secret, JSON.stringify(source));
+  }
+
+  /**
+   * Extract IP address
+   * @return {string} return ip  address
+  */
+  public static getIPAddress(request: Request)
+    : string {
+    let ip: string =
+      request.headers["cf-connecting-ip"] as string ||
+      request.headers["x-real-ip"] as string ||
+      request.headers["x-forwarded-for"] as string ||
+      request.socket.remoteAddress || "";
+
+    if (ip.includes(",")) {
+      ip = ip.split(",")[0];
+    }
+
+    return ip;
   }
 
 }
