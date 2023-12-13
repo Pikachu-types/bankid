@@ -16,6 +16,10 @@ export declare class IdentificationRequest {
      */
     id: string;
     /**
+     * If flow request was created on behalf of a subtype process like [document signing]
+     */
+    reference: string | undefined;
+    /**
      * Bank ID consumer id
      */
     consumer: string;
@@ -92,6 +96,7 @@ export declare class Requests {
     request: string;
     mode: string;
     id: string;
+    reference: string | undefined;
     /**
      * nin or cac numbers
      */

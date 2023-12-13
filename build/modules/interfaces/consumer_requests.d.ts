@@ -43,12 +43,31 @@ export interface IDRequest {
 export interface SignatureRequest {
     mode: RequestMode;
     nin: string;
-    webhook: {
+    webhook?: {
         host: string;
         reference: string;
     };
     useragent: string;
     payload: string;
+    ip: string;
+}
+/**
+ * electronic document signature request
+ */
+export interface eDocSignRequests {
+    /**
+     * all required nin identifiers to sign this document
+     */
+    to: string[];
+    webhook: {
+        host: string;
+        reference: string;
+    };
+    file: {
+        url: string;
+        title: string;
+    };
+    useragent: string;
     ip: string;
 }
 /**

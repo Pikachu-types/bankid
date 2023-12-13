@@ -100,6 +100,9 @@ __decorate([
 ], IdentificationRequest.prototype, "id", void 0);
 __decorate([
     (0, class_transformer_1.Expose)()
+], IdentificationRequest.prototype, "reference", void 0);
+__decorate([
+    (0, class_transformer_1.Expose)()
 ], IdentificationRequest.prototype, "consumer", void 0);
 __decorate([
     (0, class_transformer_1.Expose)()
@@ -229,6 +232,9 @@ __decorate([
 __decorate([
     (0, class_transformer_1.Expose)()
 ], Requests.prototype, "id", void 0);
+__decorate([
+    (0, class_transformer_1.Expose)()
+], Requests.prototype, "reference", void 0);
 __decorate([
     (0, class_transformer_1.Expose)()
 ], Requests.prototype, "to", void 0);

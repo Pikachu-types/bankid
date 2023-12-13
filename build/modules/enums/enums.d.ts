@@ -44,11 +44,18 @@ export declare enum DocumentReference {
      * Consumer apps reference
      */
     apps = "apps",
+    documents = "documents",
+    /**
+     * Sub collection for documents/signatures
+     */
+    signatures = "signatures",
     /**
       * A request has just been handled
       */
     requestLogged = "bankids/{users}/history/{doc}",
-    requestUpdated = "requests/{doc}"
+    signatureAdded = "documents/{doc}/signatures/{identifier}",
+    requestUpdated = "requests/{doc}",
+    eDocumentsUpdated = "documents/{doc}"
 }
 /**
  * Bankid Request Modes enum
@@ -103,6 +110,11 @@ export declare enum DocumentTypes {
      * BankID mobile, desktop and watch
      */
     bankID = "std_",
+    /**
+     * Document id for e-signatures on
+     * pdf files
+     */
+    document = "doc_",
     /**
      * Console registered apps
      */

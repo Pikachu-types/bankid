@@ -48,11 +48,18 @@ var DocumentReference;
      * Consumer apps reference
      */
     DocumentReference["apps"] = "apps";
+    DocumentReference["documents"] = "documents";
+    /**
+     * Sub collection for documents/signatures
+     */
+    DocumentReference["signatures"] = "signatures";
     /**
       * A request has just been handled
       */
     DocumentReference["requestLogged"] = "bankids/{users}/history/{doc}";
+    DocumentReference["signatureAdded"] = "documents/{doc}/signatures/{identifier}";
     DocumentReference["requestUpdated"] = "requests/{doc}";
+    DocumentReference["eDocumentsUpdated"] = "documents/{doc}";
 })(DocumentReference = exports.DocumentReference || (exports.DocumentReference = {}));
 /**
  * Bankid Request Modes enum
@@ -111,6 +118,11 @@ var DocumentTypes;
      * BankID mobile, desktop and watch
      */
     DocumentTypes["bankID"] = "std_";
+    /**
+     * Document id for e-signatures on
+     * pdf files
+     */
+    DocumentTypes["document"] = "doc_";
     /**
      * Console registered apps
      */

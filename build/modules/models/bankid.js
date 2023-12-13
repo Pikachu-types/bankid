@@ -19,6 +19,9 @@ var BankID;
         Links["oldIpChecker"] = "https://ipgeolocation.abstractapi.com/v1/";
         Links["consoleLocalhost"] = "http://localhost:5430";
         Links["consoleDomain"] = "https://console.bankid.ng";
+        Links["signaturesDomain"] = "https://in.pasby.africa";
+        Links["eDocsDomain"] = "https://in.pasby.africa/edocs/";
+        Links["connectedDomain"] = "https://in.pasby.africa/connected/";
         Links["connectUri"] = "https://connect.bankid.ng/";
         Links["authUri"] = "https://connect.bankid.ng/authorization/grant/v1";
     })(Links = BankID.Links || (BankID.Links = {}));
@@ -40,6 +43,14 @@ var BankID;
          */
         static requestID() {
             return `${enums_1.DocumentTypes.requests}${(0, labs_sharable_1.unixTimeStampNow)()}-${(0, labs_sharable_1.generateRandomAlphaNumeric)(4)}`;
+        }
+        /**
+         * Create a e document verifier link
+         * @param {string} id doc id
+         * @return {string} returns value.
+         */
+        static eDocVerifierLink(id) {
+            return `${Links.eDocsDomain}${id.replace(enums_1.DocumentTypes.document, "")}`;
         }
         /**
          * Find what collection based on  id

@@ -18,6 +18,9 @@ export namespace BankID {
     oldIpChecker = "https://ipgeolocation.abstractapi.com/v1/",
     consoleLocalhost = "http://localhost:5430",
     consoleDomain = "https://console.bankid.ng",
+    signaturesDomain = "https://in.pasby.africa",
+    eDocsDomain = "https://in.pasby.africa/edocs/",
+    connectedDomain = "https://in.pasby.africa/connected/",
     connectUri = "https://connect.bankid.ng/",
     authUri = "https://connect.bankid.ng/authorization/grant/v1",
   }
@@ -42,6 +45,15 @@ export namespace BankID {
      */
     public static requestID(): string {
       return `${DocumentTypes.requests}${unixTimeStampNow()}-${generateRandomAlphaNumeric(4)}`;
+    }
+
+    /**
+     * Create a e document verifier link
+     * @param {string} id doc id
+     * @return {string} returns value.
+     */
+    public static eDocVerifierLink(id: string): string {
+      return `${Links.eDocsDomain}${id.replace(DocumentTypes.document, "")}`;
     }
 
     /**

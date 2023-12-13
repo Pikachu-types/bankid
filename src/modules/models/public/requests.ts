@@ -21,6 +21,10 @@ export class IdentificationRequest {
    */
   @Expose() id = "";
   /**
+   * If flow request was created on behalf of a subtype process like [document signing]
+   */
+  @Expose() reference: string | undefined;
+  /**
    * Bank ID consumer id
    */
   @Expose() consumer = "";
@@ -134,6 +138,7 @@ export class Requests {
   @Expose() request = "";
   @Expose() mode = "";
   @Expose() id = "";
+  @Expose() reference: string | undefined;
   /**
    * nin or cac numbers
    */
