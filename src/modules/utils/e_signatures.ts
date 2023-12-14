@@ -1,8 +1,14 @@
 import bwipjs from 'bwip-js';
-import { CustomError, convertUnixToDate, unixTimeStampNow } from 'labs-sharable';
-import { PDFDocument, StandardFonts, rgb } from 'pdf-lib';
+import {
+  CustomError,
+  convertUnixToDate, unixTimeStampNow
+} from 'labs-sharable';
+import {
+  PDFDocument,
+  StandardFonts, rgb
+} from 'pdf-lib';
 import { v3 as uuidv3, } from 'uuid';
-import { Documents } from '../models/public/documents';
+import { download } from '../services/http';
 
 export namespace ESignatures {
   export interface SignatureRequest {
@@ -64,9 +70,9 @@ export namespace ESignatures {
     * @return {void} stamped pdf document
     */
     public static async stampOnlinePDF(data: SignatureRequest, callback: (matrix: Uint8Array) => void): Promise<void> {
-      const existingPdfBytes = await fetch(data.pdf).then(res => res.arrayBuffer());
-      const stampBytes = await fetch(stampurl).then(res => res.arrayBuffer());
-      const logoBytes = await fetch(pasbyLogo).then(res => res.arrayBuffer());
+      const existingPdfBytes = await download(data.pdf);
+      const stampBytes = await download(stampurl);
+      const logoBytes = await download(pasbyLogo);
       const pdfDoc = await PDFDocument.load(existingPdfBytes)
       const pages = pdfDoc.getPages();
       const stamp = await pdfDoc.embedPng(stampBytes);
@@ -139,5 +145,4 @@ export namespace ESignatures {
     }
 
   }
-
-}
+} 

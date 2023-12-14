@@ -17,6 +17,7 @@ const bwip_js_1 = __importDefault(require("bwip-js"));
 const labs_sharable_1 = require("labs-sharable");
 const pdf_lib_1 = require("pdf-lib");
 const uuid_1 = require("uuid");
+const http_1 = require("../services/http");
 var ESignatures;
 (function (ESignatures) {
     const namespace = "60f2c8a8-9844-11ee-b9d1-0242ac120002";
@@ -57,9 +58,9 @@ var ESignatures;
         */
         static stampOnlinePDF(data, callback) {
             return __awaiter(this, void 0, void 0, function* () {
-                const existingPdfBytes = yield fetch(data.pdf).then(res => res.arrayBuffer());
-                const stampBytes = yield fetch(stampurl).then(res => res.arrayBuffer());
-                const logoBytes = yield fetch(pasbyLogo).then(res => res.arrayBuffer());
+                const existingPdfBytes = yield (0, http_1.download)(data.pdf);
+                const stampBytes = yield (0, http_1.download)(stampurl);
+                const logoBytes = yield (0, http_1.download)(pasbyLogo);
                 const pdfDoc = yield pdf_lib_1.PDFDocument.load(existingPdfBytes);
                 const pages = pdfDoc.getPages();
                 const stamp = yield pdfDoc.embedPng(stampBytes);

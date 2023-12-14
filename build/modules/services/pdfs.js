@@ -14,6 +14,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.PDFCheck = void 0;
 const pdf_parse_1 = __importDefault(require("pdf-parse"));
+const http_1 = require("./http");
 /**
  * Callable for PDF checks
  */
@@ -27,8 +28,8 @@ class PDFCheck {
     }
     static testPDF(url) {
         return __awaiter(this, void 0, void 0, function* () {
-            let pdf = yield fetch(url).then(res => res.arrayBuffer());
-            let result = yield this.isPDF(Buffer.from(pdf));
+            let pdf = yield (0, http_1.download)(url);
+            let result = yield this.isPDF(pdf);
             return result.isPDF;
         });
     }

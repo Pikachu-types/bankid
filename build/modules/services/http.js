@@ -32,7 +32,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.Http = void 0;
+exports.download = exports.Http = void 0;
 const axios_1 = __importStar(require("axios"));
 const labs_sharable_1 = require("labs-sharable");
 /**
@@ -78,4 +78,17 @@ class Http {
     }
 }
 exports.Http = Http;
+/**
+ * Download any fle with axios
+ * @param {string} url download url
+ * @returns
+ */
+function download(url) {
+    return __awaiter(this, void 0, void 0, function* () {
+        const response = yield axios_1.default.get(url, { responseType: 'arraybuffer' });
+        const fileData = Buffer.from(response.data, 'binary');
+        return fileData;
+    });
+}
+exports.download = download;
 //# sourceMappingURL=http.js.map

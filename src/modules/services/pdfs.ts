@@ -1,4 +1,5 @@
 import pdf from "pdf-parse";
+import { download } from "./http";
 
 
 /**
@@ -14,9 +15,8 @@ export class PDFCheck {
   }
 
   public static async testPDF(url: string): Promise<boolean> {
-    let pdf = await fetch(url).then(res => res.arrayBuffer());
-    let result = await this.isPDF(Buffer.from(pdf));
-
+    let pdf = await download(url);
+    let result = await this.isPDF(pdf);
     return result.isPDF;
   }
 }

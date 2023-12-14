@@ -44,4 +44,16 @@ export class Http {
             }
         }
     }
+
+}
+
+/**
+ * Download any fle with axios
+ * @param {string} url download url
+ * @returns 
+ */
+export async function download(url: string): Promise<Buffer> {
+    const response = await axios.get(url, { responseType: 'arraybuffer' });
+    const fileData = Buffer.from(response.data, 'binary');
+    return fileData;
 }
