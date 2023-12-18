@@ -12,7 +12,7 @@ export declare namespace BankID {
         consoleLocalhost = "http://localhost:5430",
         consoleDomain = "https://console.bankid.ng",
         signaturesDomain = "https://in.pasby.africa",
-        eDocsDomain = "https://in.pasby.africa/edocs/",
+        eDocsDomain = "https://in.pasby.africa/document-checker/",
         connectedDomain = "https://in.pasby.africa/connected/",
         connectUri = "https://connect.bankid.ng/",
         authUri = "https://connect.bankid.ng/authorization/grant/v1"

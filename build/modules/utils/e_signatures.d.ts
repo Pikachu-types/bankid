@@ -10,9 +10,17 @@ export declare namespace ESignatures {
          */
         pdf: string;
         /**
-         * Matrix data message
+         * pasby document checker url
          */
-        matrix: string;
+        checker: string;
+        /**
+         * pasby-signature
+         */
+        signature: string;
+        /**
+         * key to decipher signature with
+         */
+        vi: string;
         /**
          * when was document request created
          */

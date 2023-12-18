@@ -20,7 +20,7 @@ var BankID;
         Links["consoleLocalhost"] = "http://localhost:5430";
         Links["consoleDomain"] = "https://console.bankid.ng";
         Links["signaturesDomain"] = "https://in.pasby.africa";
-        Links["eDocsDomain"] = "https://in.pasby.africa/edocs/";
+        Links["eDocsDomain"] = "https://in.pasby.africa/document-checker/";
         Links["connectedDomain"] = "https://in.pasby.africa/connected/";
         Links["connectUri"] = "https://connect.bankid.ng/";
         Links["authUri"] = "https://connect.bankid.ng/authorization/grant/v1";

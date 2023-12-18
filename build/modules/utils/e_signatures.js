@@ -71,7 +71,7 @@ var ESignatures;
                 const textSize = 8.2;
                 const textWidth = helveticaFont.widthOfTextAtSize(data.reference, textSize);
                 const textHeight = helveticaFont.heightAtSize(textSize);
-                helpers.generateDataMatrix(data.matrix, (png) => __awaiter(this, void 0, void 0, function* () {
+                helpers.generateDataMatrix(data.signature, (png) => __awaiter(this, void 0, void 0, function* () {
                     const matrix = yield pdfDoc.embedPng(png);
                     for (let i = 0; i < pages.length; i++) {
                         const page = pages[i];
@@ -101,6 +101,13 @@ var ESignatures;
                             font: helveticaFont,
                             color: (0, pdf_lib_1.rgb)(0.67, 0.67, 0.73),
                         });
+                        page.drawText(data.checker, {
+                            x: (width * 0.68) * 0.2,
+                            y: 28,
+                            size: 8,
+                            font: helveticaFont,
+                            color: (0, pdf_lib_1.rgb)(0.67, 0.67, 0.73),
+                        });
                         page.drawRectangle({
                             x: (width * 0.68) * 0.30,
                             y: 10,
@@ -117,6 +124,7 @@ var ESignatures;
                         });
                     }
                     pdfDoc.setCreator('pasby™ by Finsel DGI Limited(https://pasby.africa)');
+                    pdfDoc.setAuthor(`pasby™ - ${data.vi}`);
                     pdfDoc.setCreationDate((0, labs_sharable_1.convertUnixToDate)(data.iat));
                     pdfDoc.setModificationDate((0, labs_sharable_1.convertUnixToDate)((0, labs_sharable_1.unixTimeStampNow)()));
                     callback(yield pdfDoc.save());

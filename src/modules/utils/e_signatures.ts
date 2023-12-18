@@ -21,9 +21,17 @@ export namespace ESignatures {
      */
     pdf: string;
     /**
-     * Matrix data message
+     * pasby document checker url
      */
-    matrix: string;
+    checker: string;
+    /**
+     * pasby-signature
+     */
+    signature: string;
+    /**
+     * key to decipher signature with
+     */
+    vi: string;
     /**
      * when was document request created
      */
@@ -84,7 +92,7 @@ export namespace ESignatures {
       const textWidth = helveticaFont.widthOfTextAtSize(data.reference, textSize);
       const textHeight = helveticaFont.heightAtSize(textSize);
 
-      helpers.generateDataMatrix(data.matrix, async (png) => {
+      helpers.generateDataMatrix(data.signature, async (png) => {
         const matrix = await pdfDoc.embedPng(png);
 
         for (let i = 0; i < pages.length; i++){
@@ -120,6 +128,14 @@ export namespace ESignatures {
             color: rgb(0.67, 0.67, 0.73),
           });
 
+          page.drawText(data.checker, {
+            x: (width * 0.68) * 0.2,
+            y: 28,
+            size: 8,
+            font: helveticaFont,
+            color: rgb(0.67, 0.67, 0.73),
+          });
+
           page.drawRectangle({
             x: (width * 0.68) * 0.30,
             y: 10,
@@ -138,6 +154,7 @@ export namespace ESignatures {
         }
 
         pdfDoc.setCreator('pasby™ by Finsel DGI Limited(https://pasby.africa)');
+        pdfDoc.setAuthor(`pasby™ - ${data.vi}`);
         pdfDoc.setCreationDate(convertUnixToDate(data.iat));
         pdfDoc.setModificationDate(convertUnixToDate(unixTimeStampNow()));
         callback(await pdfDoc.save());
