@@ -13,7 +13,7 @@ export class ApprovedClients {
    * Our backend apis can-only be called by these micro-services or clients
    */
   static requesters = ["api.bankid.ng", "connect.bankid.ng", "api.pasby.africa",
-    "in.pasby.africa",
+    "138141d7-87fd-40d7-9b82-20ec85ada807",
     "b49932e5-5776-44af-883f-39fd5f1c7761", "ng.bankid.mobile"];
   
   /**
