@@ -17,10 +17,6 @@ class NationalityData {
         this.nationalities = [];
         this.primary = "";
         this.residence = "";
-        /**
-        * Is politically exposed
-        */
-        this.pep = false;
     }
     /**
      * Change record to NationalityData class
@@ -84,5 +80,8 @@ __decorate([
 __decorate([
     (0, class_transformer_1.Expose)()
 ], NationalityData.prototype, "pep", void 0);
+__decorate([
+    (0, class_transformer_1.Expose)()
+], NationalityData.prototype, "watchListed", void 0);
 exports.NationalityData = NationalityData;
 //# sourceMappingURL=nationality.js.map

@@ -1,5 +1,7 @@
 import { DocumentAction, UserRoles } from "../enums/enums";
 import { MagicLinkModes } from "../enums/shared";
+import { DojahBVNResponse, DojahNINResponse } from "../services/dojah";
+import { EdenModel } from "./documents";
 
 /**
  * Magic Login RequestModel
@@ -141,4 +143,60 @@ export interface ConsoleRegAccountRequest {
     first: string;
     last: string;
   };
+};
+
+
+
+/**
+ * Setup Requests
+ */
+export interface SetupRequest {
+  phone: {
+    mobile: string,
+    verified: boolean,
+  },
+  identification: {
+    country: string,
+    methods: string[],
+  },
+  passport: {
+    // first name
+    given: string,
+    surname: string,
+    gender: string,
+    // country code
+    a3Code: string,
+    // passport number
+    docID: string,
+    // nin
+    personalNumber: string,
+    dob: number,
+    exp: number,
+  },
+  bvn: string,
+  image: string
+};
+
+/**
+ * Face match request
+ */
+export interface FaceMatchingRequest{
+  // bvn image
+  bvn: string,
+  // nin image
+  nin: string,
+  // selfie
+  query: string,
+};
+
+/**
+ * Commit integrity test on id data request
+ */
+export interface CommitIntegrityTestRequest{
+  setup: SetupRequest,
+  registry: {
+    nin: DojahNINResponse,
+    bvn: DojahBVNResponse,
+  },
+  liveliness: EdenModel
 };

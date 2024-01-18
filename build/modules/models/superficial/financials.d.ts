@@ -4,6 +4,10 @@
 export declare class FinancialData {
     paymentAccounts: Record<string, unknown>[];
     primaryAccount: Record<string, unknown>;
+    bvn: string;
+    bvnBank: string;
+    bvnIAT: number | undefined;
+    bvnLevel: string;
     /**
      * Change record to FinancialData class
      *

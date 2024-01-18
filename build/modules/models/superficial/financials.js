@@ -8,6 +8,11 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.FinancialData = void 0;
 const class_transformer_1 = require("class-transformer");
+// export interface BVN {
+//   bank: string,
+//   level: string,
+//   iat: number
+// }
 /**
  * FinancialData class
 */
@@ -16,6 +21,9 @@ class FinancialData {
         /* eslint new-cap: ["error", { "capIsNew": false }]*/
         this.paymentAccounts = [];
         this.primaryAccount = {};
+        this.bvn = "";
+        this.bvnBank = "";
+        this.bvnLevel = "";
     }
     /**
      * Change record to FinancialData class
@@ -70,5 +78,17 @@ __decorate([
 __decorate([
     (0, class_transformer_1.Expose)()
 ], FinancialData.prototype, "primaryAccount", void 0);
+__decorate([
+    (0, class_transformer_1.Expose)()
+], FinancialData.prototype, "bvn", void 0);
+__decorate([
+    (0, class_transformer_1.Expose)()
+], FinancialData.prototype, "bvnBank", void 0);
+__decorate([
+    (0, class_transformer_1.Expose)()
+], FinancialData.prototype, "bvnIAT", void 0);
+__decorate([
+    (0, class_transformer_1.Expose)()
+], FinancialData.prototype, "bvnLevel", void 0);
 exports.FinancialData = FinancialData;
 //# sourceMappingURL=financials.js.map

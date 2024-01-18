@@ -6,6 +6,7 @@ import {FinancialData} from "../superficial/financials";
 import {NationalityData} from "../superficial/nationality";
 import {StandaloneBankID} from "./standaloneIds";
 import {VendorModel} from "./vendors";
+import { IDCardsData } from "../superficial/idcards";
 
 /**
  * Single BankID Model
@@ -34,9 +35,10 @@ export class IdentificationModel {
   @Expose() validTo: number | undefined;
 
   /**
-   * Verification claim could be biometrics via nin or bvn
+   * How was this user verified
+   * i.e [passport, bvn, nin]
    */
-  @Expose() source = "";
+  @Expose() source: string[] = [];
   /**
    * bankids this user has meaning one nin can own multiple id
    */
@@ -50,11 +52,14 @@ export class IdentificationModel {
   @Expose() address: Record<string, unknown> = {};
   @Expose() nationality: Record<string, unknown> = {};
   @Expose() bio: Record<string, unknown> = {};
+  @Expose() idcards: Record<string, unknown> = {};
   @Expose() financial: Record<string, unknown> | undefined;
   @Expose() naming: Record<string, unknown> = {};
 
   @Exclude()
-    contactData: ContactData | undefined;
+  contactData: ContactData | undefined;
+  @Exclude()
+    idCardData: IDCardsData | undefined;
   @Exclude()
     addressData: AddressData | undefined;
   @Exclude()
@@ -108,6 +113,7 @@ export class IdentificationModel {
    */
   public resolveMaps(): void {
     this.contactData = ContactData.fromJson(this.contact);
+    this.idCardData = IDCardsData.fromJson(this.idcards);
     this.addressData = AddressData.fromJson(this.address);
     if (this.financial) {
       this.financialData = FinancialData.
@@ -128,6 +134,7 @@ export class IdentificationModel {
     if (this.financialData) this.financial = this.financialData.toMap();
     if (this.bioData) this.bio = this.bioData.toMap();
     if (this.nameData) this.naming = this.nameData.toMap();
+    if (this.idCardData) this.idcards = this.idCardData.toMap();
     if (this.nationalityData) this.nationality = this.nationalityData.toMap();
   }
 
@@ -142,6 +149,8 @@ export class IdentificationModel {
     const bio: string[] = []; const contact: string[] = [];
     const address: string[] = []; const naming: string[] = [];
     const nationality: string[] = [];
+    const cards: string[] = [];
+    const financial: string[] = [];
 
     for (let i = 0; i < claims.length; i++) {
       const word = claims[i];
@@ -155,6 +164,10 @@ export class IdentificationModel {
         naming.push(word.split(".")[1].trim());
       } else if (word.startsWith("nationality")) {
         nationality.push(word.split(".")[1].trim());
+      }else if (word.startsWith("ids")) {
+        cards.push(word.split(".")[1].trim());
+      }else if (word.startsWith("finance")) {
+        financial.push(word.split(".")[1].trim());
       } else {
         continue;
       }
@@ -169,12 +182,18 @@ export class IdentificationModel {
       NamingData.grabClaim(naming, this.nameData) : undefined;
     const nationalityclaim = this.nationalityData ?
       NationalityData.grabClaim(nationality, this.nationalityData) : undefined;
+    const idClaims = this.idCardData ?
+      IDCardsData.grabClaim(cards, this.idCardData) : undefined;
+    const financeClaims = this.financialData ?
+      FinancialData.grabClaim(cards, this.financialData) : undefined;
 
     if (bioclaim) result["bio"] = bioclaim;
     if (contactclaim) result["contact"] = contactclaim;
     if (addressclaim) result["address"] = addressclaim;
     if (namingclaim) result["naming"] = namingclaim;
     if (nationalityclaim) result["nationality"] = nationalityclaim;
+    if (idClaims) result["ids"] = idClaims;
+    if (financeClaims) result["finance"] = financeClaims;
 
     // console.log(`Exited with: ${JSON.stringify(result)}`);
     return result;
@@ -197,6 +216,7 @@ export class IdentificationModel {
     const res = JSON.parse(this.toJsonString());
     delete res["addressData"];
     delete res["nameData"];
+    delete res["idCardData"];
     delete res["contactData"];
     delete res["bioData"];
     delete res["nationalityData"];

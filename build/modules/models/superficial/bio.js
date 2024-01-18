@@ -15,13 +15,20 @@ class BioData {
     constructor() {
         /* eslint new-cap: ["error", { "capIsNew": false }]*/
         this.birthdate = "";
+        this.photo = "";
         /**
         * Birth number is saved as a timestamp
         */
         this.birthnumber = 0;
+        /**
+         * Local government area
+         */
         this.birthplace = "";
+        /**
+         * State of origin
+         */
+        this.birthstate = "";
         this.maritalStatus = "";
-        this.age = 0;
         this.gender = "";
     }
     /**
@@ -76,19 +83,22 @@ __decorate([
 ], BioData.prototype, "birthdate", void 0);
 __decorate([
     (0, class_transformer_1.Expose)()
+], BioData.prototype, "photo", void 0);
+__decorate([
+    (0, class_transformer_1.Expose)()
 ], BioData.prototype, "birthnumber", void 0);
 __decorate([
     (0, class_transformer_1.Expose)()
 ], BioData.prototype, "birthplace", void 0);
 __decorate([
     (0, class_transformer_1.Expose)()
+], BioData.prototype, "birthstate", void 0);
+__decorate([
+    (0, class_transformer_1.Expose)()
 ], BioData.prototype, "dateOfDeath", void 0);
 __decorate([
     (0, class_transformer_1.Expose)()
 ], BioData.prototype, "maritalStatus", void 0);
-__decorate([
-    (0, class_transformer_1.Expose)()
-], BioData.prototype, "age", void 0);
 __decorate([
     (0, class_transformer_1.Expose)()
 ], BioData.prototype, "gender", void 0);

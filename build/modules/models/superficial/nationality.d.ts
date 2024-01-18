@@ -12,7 +12,8 @@ export declare class NationalityData {
     /**
     * Is politically exposed
     */
-    pep: boolean;
+    pep: boolean | undefined;
+    watchListed: boolean | undefined;
     /**
      * Change record to NationalityData class
      *

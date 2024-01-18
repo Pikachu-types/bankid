@@ -36,11 +36,30 @@ export declare class ContactData {
  * AddressData class
 */
 export declare class AddressData {
+    /**
+     * Local government of residence
+     */
     city: string;
     postCode: string;
+    /**
+     * State of residence
+     */
+    state: string;
+    /**
+     * A2 country code ex. [NG, ZA, GB]
+     */
     countryCode: string;
+    /**
+     * Country name ex [Nigeria, Gambia, Namibia, Zimbabwe]
+     */
     country: string;
+    /**
+     * Residential Address
+     */
     place: string;
+    /**
+     * Formatted address (place, state, country)
+     */
     formatted: string;
     longitude: number | undefined;
     latitude: number | undefined;

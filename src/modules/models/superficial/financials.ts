@@ -1,5 +1,11 @@
 import {plainToInstance, Expose} from "class-transformer";
 
+// export interface BVN {
+//   bank: string,
+//   level: string,
+//   iat: number
+// }
+
 /**
  * FinancialData class
 */
@@ -8,6 +14,11 @@ export class FinancialData {
 
   @Expose() paymentAccounts: Record<string, unknown>[] = [];
   @Expose() primaryAccount: Record<string, unknown> = {};
+  @Expose() bvn: string = "";
+  @Expose() bvnBank: string = "";
+  // date of registration
+  @Expose() bvnIAT: number | undefined;
+  @Expose() bvnLevel = "";
 
   /**
    * Change record to FinancialData class

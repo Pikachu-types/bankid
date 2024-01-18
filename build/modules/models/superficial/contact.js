@@ -87,11 +87,30 @@ exports.ContactData = ContactData;
 class AddressData {
     constructor() {
         /* eslint new-cap: ["error", { "capIsNew": false }]*/
+        /**
+         * Local government of residence
+         */
         this.city = "";
         this.postCode = "";
+        /**
+         * State of residence
+         */
+        this.state = "";
+        /**
+         * A2 country code ex. [NG, ZA, GB]
+         */
         this.countryCode = "";
+        /**
+         * Country name ex [Nigeria, Gambia, Namibia, Zimbabwe]
+         */
         this.country = "";
+        /**
+         * Residential Address
+         */
         this.place = "";
+        /**
+         * Formatted address (place, state, country)
+         */
         this.formatted = "";
     }
     /**
@@ -155,6 +174,9 @@ __decorate([
 __decorate([
     (0, class_transformer_1.Expose)()
 ], AddressData.prototype, "postCode", void 0);
+__decorate([
+    (0, class_transformer_1.Expose)()
+], AddressData.prototype, "state", void 0);
 __decorate([
     (0, class_transformer_1.Expose)()
 ], AddressData.prototype, "countryCode", void 0);

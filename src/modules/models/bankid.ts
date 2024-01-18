@@ -9,7 +9,8 @@ import { FunctionHelpers } from "../services/helper";
 export namespace BankID {
   export enum AppIdentifier {
     android = "ng.bankid.mobile",
-    uniLink = "ng.bankid://",
+    // uniLink = "ng.bankid://",
+    uniLink = "pasby://",
     ios = "ng.bankid.mobile",
     iosID = "", /// todo fill when gone live
   }

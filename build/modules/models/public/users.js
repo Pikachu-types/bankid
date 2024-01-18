@@ -13,6 +13,7 @@ const bio_1 = require("../superficial/bio");
 const naming_1 = require("../superficial/naming");
 const financials_1 = require("../superficial/financials");
 const nationality_1 = require("../superficial/nationality");
+const idcards_1 = require("../superficial/idcards");
 /**
  * IdentificationModel class
 */
@@ -27,9 +28,10 @@ class IdentificationModel {
         this.locale = "";
         this.test = false;
         /**
-         * Verification claim could be biometrics via nin or bvn
+         * How was this user verified
+         * i.e [passport, bvn, nin]
          */
-        this.source = "";
+        this.source = [];
         /**
          * bankids this user has meaning one nin can own multiple id
          */
@@ -42,6 +44,7 @@ class IdentificationModel {
         this.address = {};
         this.nationality = {};
         this.bio = {};
+        this.idcards = {};
         this.naming = {};
     }
     /**
@@ -76,6 +79,7 @@ class IdentificationModel {
      */
     resolveMaps() {
         this.contactData = contact_1.ContactData.fromJson(this.contact);
+        this.idCardData = idcards_1.IDCardsData.fromJson(this.idcards);
         this.addressData = contact_1.AddressData.fromJson(this.address);
         if (this.financial) {
             this.financialData = financials_1.FinancialData.
@@ -100,6 +104,8 @@ class IdentificationModel {
             this.bio = this.bioData.toMap();
         if (this.nameData)
             this.naming = this.nameData.toMap();
+        if (this.idCardData)
+            this.idcards = this.idCardData.toMap();
         if (this.nationalityData)
             this.nationality = this.nationalityData.toMap();
     }
@@ -116,6 +122,8 @@ class IdentificationModel {
         const address = [];
         const naming = [];
         const nationality = [];
+        const cards = [];
+        const financial = [];
         for (let i = 0; i < claims.length; i++) {
             const word = claims[i];
             if (word.startsWith("bio")) {
@@ -133,6 +141,12 @@ class IdentificationModel {
             else if (word.startsWith("nationality")) {
                 nationality.push(word.split(".")[1].trim());
             }
+            else if (word.startsWith("ids")) {
+                cards.push(word.split(".")[1].trim());
+            }
+            else if (word.startsWith("finance")) {
+                financial.push(word.split(".")[1].trim());
+            }
             else {
                 continue;
             }
@@ -147,6 +161,10 @@ class IdentificationModel {
             naming_1.NamingData.grabClaim(naming, this.nameData) : undefined;
         const nationalityclaim = this.nationalityData ?
             nationality_1.NationalityData.grabClaim(nationality, this.nationalityData) : undefined;
+        const idClaims = this.idCardData ?
+            idcards_1.IDCardsData.grabClaim(cards, this.idCardData) : undefined;
+        const financeClaims = this.financialData ?
+            financials_1.FinancialData.grabClaim(cards, this.financialData) : undefined;
         if (bioclaim)
             result["bio"] = bioclaim;
         if (contactclaim)
@@ -157,6 +175,10 @@ class IdentificationModel {
             result["naming"] = namingclaim;
         if (nationalityclaim)
             result["nationality"] = nationalityclaim;
+        if (idClaims)
+            result["ids"] = idClaims;
+        if (financeClaims)
+            result["finance"] = financeClaims;
         // console.log(`Exited with: ${JSON.stringify(result)}`);
         return result;
     }
@@ -175,6 +197,7 @@ class IdentificationModel {
         const res = JSON.parse(this.toJsonString());
         delete res["addressData"];
         delete res["nameData"];
+        delete res["idCardData"];
         delete res["contactData"];
         delete res["bioData"];
         delete res["nationalityData"];
@@ -226,6 +249,9 @@ __decorate([
 ], IdentificationModel.prototype, "bio", void 0);
 __decorate([
     (0, class_transformer_1.Expose)()
+], IdentificationModel.prototype, "idcards", void 0);
+__decorate([
+    (0, class_transformer_1.Expose)()
 ], IdentificationModel.prototype, "financial", void 0);
 __decorate([
     (0, class_transformer_1.Expose)()
@@ -233,6 +259,9 @@ __decorate([
 __decorate([
     (0, class_transformer_1.Exclude)()
 ], IdentificationModel.prototype, "contactData", void 0);
+__decorate([
+    (0, class_transformer_1.Exclude)()
+], IdentificationModel.prototype, "idCardData", void 0);
 __decorate([
     (0, class_transformer_1.Exclude)()
 ], IdentificationModel.prototype, "addressData", void 0);

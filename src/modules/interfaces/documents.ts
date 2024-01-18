@@ -30,6 +30,15 @@ export interface QuestionStructure {
 }
 
 /**
+ * API reference
+ */
+export interface ApiReference {
+  app: string,
+  public: string,
+  private: string,
+}
+
+/**
  * RSA Model
  *
 */
@@ -194,3 +203,24 @@ export interface RequestSignature {
   acquireClaims?: string[];
 }
 
+/**
+ * EdenModel
+ */
+export interface EdenModel {
+  status: string,
+  items: EdenConfidenceModel[],
+  cost: number,
+}
+
+/**
+ * EdenConfidenceModel
+ */
+export interface EdenConfidenceModel {
+  confidence: number,
+  bounding_box: {
+    top: number,
+    left: number,
+    height: number,
+    width: number,
+  }
+}

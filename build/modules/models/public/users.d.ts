@@ -5,6 +5,7 @@ import { FinancialData } from "../superficial/financials";
 import { NationalityData } from "../superficial/nationality";
 import { StandaloneBankID } from "./standaloneIds";
 import { VendorModel } from "./vendors";
+import { IDCardsData } from "../superficial/idcards";
 /**
  * Single BankID Model
  *
@@ -28,9 +29,10 @@ export declare class IdentificationModel {
     created: number | undefined;
     validTo: number | undefined;
     /**
-     * Verification claim could be biometrics via nin or bvn
+     * How was this user verified
+     * i.e [passport, bvn, nin]
      */
-    source: string;
+    source: string[];
     /**
      * bankids this user has meaning one nin can own multiple id
      */
@@ -44,9 +46,11 @@ export declare class IdentificationModel {
     address: Record<string, unknown>;
     nationality: Record<string, unknown>;
     bio: Record<string, unknown>;
+    idcards: Record<string, unknown>;
     financial: Record<string, unknown> | undefined;
     naming: Record<string, unknown>;
     contactData: ContactData | undefined;
+    idCardData: IDCardsData | undefined;
     addressData: AddressData | undefined;
     bioData: BioData | undefined;
     nameData: NamingData | undefined;

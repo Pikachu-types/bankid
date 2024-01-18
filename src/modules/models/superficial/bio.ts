@@ -7,15 +7,22 @@ export class BioData {
   /* eslint new-cap: ["error", { "capIsNew": false }]*/
 
   @Expose() birthdate = "";
+  @Expose() photo = "";
 
   /**
   * Birth number is saved as a timestamp
   */
   @Expose() birthnumber = 0;
+  /**
+   * Local government area
+   */
   @Expose() birthplace = "";
+  /**
+   * State of origin
+   */
+  @Expose() birthstate = "";
   @Expose() dateOfDeath: number | undefined;
   @Expose() maritalStatus = "";
-  @Expose() age = 0;
   @Expose() gender = "";
   /**
    * Change record to BioData class

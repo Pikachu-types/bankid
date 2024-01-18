@@ -3,14 +3,21 @@
 */
 export declare class BioData {
     birthdate: string;
+    photo: string;
     /**
     * Birth number is saved as a timestamp
     */
     birthnumber: number;
+    /**
+     * Local government area
+     */
     birthplace: string;
+    /**
+     * State of origin
+     */
+    birthstate: string;
     dateOfDeath: number | undefined;
     maritalStatus: string;
-    age: number;
     gender: string;
     /**
      * Change record to BioData class

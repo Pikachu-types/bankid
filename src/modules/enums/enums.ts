@@ -15,7 +15,7 @@ export enum DocumentReference {
   /**
    * Collection reference for all registered nins with bankIDs
    */
-  users = "bankids",
+  users = "ids",
   /**
    * SubCollection reference for all registered bankIDs
    */

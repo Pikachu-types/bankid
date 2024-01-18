@@ -70,11 +70,30 @@ export class ContactData {
 */
 export class AddressData {
   /* eslint new-cap: ["error", { "capIsNew": false }]*/
+  /**
+   * Local government of residence
+   */
   @Expose() city = "";
   @Expose() postCode = "";
+  /**
+   * State of residence
+   */
+  @Expose() state = "";
+  /**
+   * A2 country code ex. [NG, ZA, GB]
+   */
   @Expose() countryCode = "";
+  /**
+   * Country name ex [Nigeria, Gambia, Namibia, Zimbabwe]
+   */
   @Expose() country = "";
+  /**
+   * Residential Address
+   */
   @Expose() place = "";
+  /**
+   * Formatted address (place, state, country)
+   */
   @Expose() formatted = "";
   @Expose() longitude: number | undefined;
   @Expose() latitude: number | undefined;
