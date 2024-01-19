@@ -25,6 +25,7 @@ export * from "./models/public/documents";
 export * from "./models/portal/apps";
 export * from "./models/public/standaloneIds";
 export * from "./models/bankid";
+export * from "./models/twilo_data";
 export * from "./models/model_generator";
 export * from "./enums/shared";
 export * from "./enums/templates";

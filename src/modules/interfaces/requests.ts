@@ -200,3 +200,13 @@ export interface CommitIntegrityTestRequest{
   },
   liveliness: EdenModel
 };
+
+/**
+ * Text messages
+ */
+export interface SMSRequest{
+  // mobile number
+  to: string,
+  // message
+  message: string
+};

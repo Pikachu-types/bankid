@@ -177,3 +177,10 @@ export interface CommitIntegrityTestRequest {
     };
     liveliness: EdenModel;
 }
+/**
+ * Text messages
+ */
+export interface SMSRequest {
+    to: string;
+    message: string;
+}

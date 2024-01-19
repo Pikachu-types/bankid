@@ -41,6 +41,7 @@ __exportStar(require("./models/public/documents"), exports);
 __exportStar(require("./models/portal/apps"), exports);
 __exportStar(require("./models/public/standaloneIds"), exports);
 __exportStar(require("./models/bankid"), exports);
+__exportStar(require("./models/twilo_data"), exports);
 __exportStar(require("./models/model_generator"), exports);
 __exportStar(require("./enums/shared"), exports);
 __exportStar(require("./enums/templates"), exports);
