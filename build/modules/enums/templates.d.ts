@@ -5,5 +5,6 @@ export declare enum SendgridTemplates {
     EnrolmentNotification = "d-cc0935787c5f4245970e53d9c364de6c",
     MagicLoginEmail = "d-18bd887ad2014d7b981752641cce4573",
     ActivateAccount = "d-f34648800ce84280ba0498a557fac235",
-    InviteUser = "d-a9d6a4545e334d69a16caedaf5ee9691"
+    InviteUser = "d-a9d6a4545e334d69a16caedaf5ee9691",
+    VerifyEmail = "d-23359bb28ddb498dbc9e6a0035101414"
 }

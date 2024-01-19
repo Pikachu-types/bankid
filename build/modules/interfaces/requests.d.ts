@@ -55,6 +55,21 @@ export interface MagicTokenValidate {
     token: string;
 }
 /**
+ * Email verification Token
+ */
+export interface EmailVerificationToken {
+    token: string;
+}
+/**
+ * Email Token
+ */
+export interface EmailToken {
+    sub: string;
+    email: string;
+    iat: number;
+    exp: number;
+}
+/**
  * Database Action Request
  */
 export interface DatabaseActionRequest {

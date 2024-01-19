@@ -19,7 +19,8 @@ var BankID;
         Links["ipChecker"] = "https://ipapi.co";
         Links["oldIpChecker"] = "https://ipgeolocation.abstractapi.com/v1/";
         Links["consoleLocalhost"] = "http://localhost:5430";
-        Links["consoleDomain"] = "https://console.bankid.ng";
+        Links["consoleDomain"] = "https://console.pasby.africa";
+        Links["idDomain"] = "https://ids.pasby.africa";
         Links["signaturesDomain"] = "https://in.pasby.africa";
         Links["eDocsDomain"] = "https://in.pasby.africa/document-checker/";
         Links["connectedDomain"] = "https://in.pasby.africa/connected/";
@@ -37,6 +38,14 @@ var BankID;
         static buildLoginLink(token, debug = false, mode) {
             return `${debug ? Links.consoleLocalhost : Links.consoleDomain}` +
                 `/magic/${token}${mode === undefined ? '' : `?mode=${mode}`}`;
+        }
+        /**
+         * Create a request identifier
+         * @param {string} token magic verification token
+         * @return {string} returns value.
+         */
+        static buildEmailVerificationLink(token) {
+            return `${Links.idDomain}/email-verification/v1?token${token}`;
         }
         /**
          * Create a request identifier

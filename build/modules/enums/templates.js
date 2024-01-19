@@ -10,5 +10,6 @@ var SendgridTemplates;
     SendgridTemplates["MagicLoginEmail"] = "d-18bd887ad2014d7b981752641cce4573";
     SendgridTemplates["ActivateAccount"] = "d-f34648800ce84280ba0498a557fac235";
     SendgridTemplates["InviteUser"] = "d-a9d6a4545e334d69a16caedaf5ee9691";
+    SendgridTemplates["VerifyEmail"] = "d-23359bb28ddb498dbc9e6a0035101414";
 })(SendgridTemplates = exports.SendgridTemplates || (exports.SendgridTemplates = {}));
 //# sourceMappingURL=templates.js.map

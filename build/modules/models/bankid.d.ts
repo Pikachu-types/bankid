@@ -10,7 +10,8 @@ export declare namespace BankID {
         ipChecker = "https://ipapi.co",
         oldIpChecker = "https://ipgeolocation.abstractapi.com/v1/",
         consoleLocalhost = "http://localhost:5430",
-        consoleDomain = "https://console.bankid.ng",
+        consoleDomain = "https://console.pasby.africa",
+        idDomain = "https://ids.pasby.africa",
         signaturesDomain = "https://in.pasby.africa",
         eDocsDomain = "https://in.pasby.africa/document-checker/",
         connectedDomain = "https://in.pasby.africa/connected/",
@@ -26,6 +27,12 @@ export declare namespace BankID {
         * @return {string} returns sender
         */
         static buildLoginLink(token: string, debug?: boolean, mode?: MagicLinkModes): string;
+        /**
+         * Create a request identifier
+         * @param {string} token magic verification token
+         * @return {string} returns value.
+         */
+        static buildEmailVerificationLink(token: string): string;
         /**
          * Create a request identifier
          * @return {string} returns value.

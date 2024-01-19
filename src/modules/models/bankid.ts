@@ -18,7 +18,8 @@ export namespace BankID {
     ipChecker = "https://ipapi.co",
     oldIpChecker = "https://ipgeolocation.abstractapi.com/v1/",
     consoleLocalhost = "http://localhost:5430",
-    consoleDomain = "https://console.bankid.ng",
+    consoleDomain = "https://console.pasby.africa",
+    idDomain = "https://ids.pasby.africa",
     signaturesDomain = "https://in.pasby.africa",
     eDocsDomain = "https://in.pasby.africa/document-checker/",
     connectedDomain = "https://in.pasby.africa/connected/",
@@ -40,6 +41,15 @@ export namespace BankID {
         `/magic/${token}${mode === undefined ? '': `?mode=${mode}`}`;
     }
 
+    /**
+     * Create a request identifier
+     * @param {string} token magic verification token
+     * @return {string} returns value.
+     */
+    public static buildEmailVerificationLink(token:string): string {
+      return `${Links.idDomain}/email-verification/v1?token${token}`;
+    }
+    
     /**
      * Create a request identifier
      * @return {string} returns value.
