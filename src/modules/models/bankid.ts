@@ -47,7 +47,7 @@ export namespace BankID {
      * @return {string} returns value.
      */
     public static buildEmailVerificationLink(token:string): string {
-      return `${Links.idDomain}/email-verification/v1?token${token}`;
+      return `${Links.idDomain}/email-verification/v1?token=${token}`;
     }
     
     /**

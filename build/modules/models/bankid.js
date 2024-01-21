@@ -45,7 +45,7 @@ var BankID;
          * @return {string} returns value.
          */
         static buildEmailVerificationLink(token) {
-            return `${Links.idDomain}/email-verification/v1?token${token}`;
+            return `${Links.idDomain}/email-verification/v1?token=${token}`;
         }
         /**
          * Create a request identifier
