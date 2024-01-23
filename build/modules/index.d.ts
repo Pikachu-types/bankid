@@ -2,6 +2,7 @@ export * from "./services/helper";
 export * from "./services/dojah";
 export * from "./services/api_client";
 export * from "./services/generator";
+export * from "./services/client";
 export * from "./services/pdfs";
 export * from "./services/http";
 export * from "./interfaces/requests";

@@ -65,6 +65,16 @@ export declare enum RequestMode {
     Signature = "signature"
 }
 /**
+ * ActionType
+ */
+export declare enum ActionType {
+    login = "login",
+    signup = "signup",
+    confirm = "confirm",
+    link = "link",
+    sign = "sign"
+}
+/**
  * Bankid DB Types
  */
 export declare enum BankIDTypes {

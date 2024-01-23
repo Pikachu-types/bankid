@@ -39,7 +39,7 @@ export enum DocumentReference {
    * BankID NIN sessions wrapped in a history
    */
   history = "history",
-  
+
   userRef = "users",
   /**
    * Consumer apps reference
@@ -66,6 +66,18 @@ export enum RequestMode {
   Identification = "identification",
   Signature = "signature"
 }
+
+/**
+ * ActionType
+ */
+export enum ActionType {
+  login = "login",
+  signup = "signup",
+  confirm = "confirm",
+  link = "link",
+  sign = "sign"
+}
+
 
 /**
  * Bankid DB Types

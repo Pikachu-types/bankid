@@ -1,4 +1,4 @@
-import { RequestMode } from "../enums/enums";
+import { ActionType, RequestMode } from "../enums/enums";
 import { DeviceProfile } from "./documents";
 /**
  * Authentication request
@@ -31,6 +31,7 @@ export interface AuthRequest {
 export interface IDRequest {
     claims: string[];
     mode: RequestMode;
+    action: ActionType;
     user: string;
     payload: string;
     ip: string;
@@ -42,6 +43,7 @@ export interface IDRequest {
  */
 export interface SignatureRequest {
     mode: RequestMode;
+    action: ActionType;
     nin: string;
     webhook?: {
         host: string;

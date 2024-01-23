@@ -193,6 +193,7 @@ export interface RequestSignature {
   iat: number;
   exp: number;
   mode: string;
+  action: string,
   useragent: string;
   payload: string;
   ip: string;

@@ -14,6 +14,7 @@ export namespace BankID {
     ios = "ng.bankid.mobile",
     iosID = "", /// todo fill when gone live
   }
+  
   export enum Links {
     ipChecker = "https://ipapi.co",
     oldIpChecker = "https://ipgeolocation.abstractapi.com/v1/",

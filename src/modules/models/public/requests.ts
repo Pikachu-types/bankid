@@ -38,6 +38,11 @@ export class IdentificationRequest {
   @Expose() mode = "";
 
   /**
+   * ActionType [login, signup, confirm, link, sign]
+   */
+  @Expose() action = "";
+
+  /**
    * Json payload in a string format
    */
   @Expose() payload = "";

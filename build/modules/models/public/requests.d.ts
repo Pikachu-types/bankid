@@ -32,6 +32,10 @@ export declare class IdentificationRequest {
      */
     mode: string;
     /**
+     * ActionType [login, signup, confirm, link, sign]
+     */
+    action: string;
+    /**
      * Json payload in a string format
      */
     payload: string;

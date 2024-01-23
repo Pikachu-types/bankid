@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.RequestStatus = exports.RequestSources = exports.UserRoles = exports.DocumentAction = exports.ApiKeyPrefix = exports.AppTypeSecretRef = exports.AppVerificationStatus = exports.AppType = exports.DocumentTypes = exports.TFAProviders = exports.BankIDTypes = exports.RequestMode = exports.DocumentReference = void 0;
+exports.RequestStatus = exports.RequestSources = exports.UserRoles = exports.DocumentAction = exports.ApiKeyPrefix = exports.AppTypeSecretRef = exports.AppVerificationStatus = exports.AppType = exports.DocumentTypes = exports.TFAProviders = exports.BankIDTypes = exports.ActionType = exports.RequestMode = exports.DocumentReference = void 0;
 /**
  * Default database document references
  */
@@ -69,6 +69,17 @@ var RequestMode;
     RequestMode["Identification"] = "identification";
     RequestMode["Signature"] = "signature";
 })(RequestMode = exports.RequestMode || (exports.RequestMode = {}));
+/**
+ * ActionType
+ */
+var ActionType;
+(function (ActionType) {
+    ActionType["login"] = "login";
+    ActionType["signup"] = "signup";
+    ActionType["confirm"] = "confirm";
+    ActionType["link"] = "link";
+    ActionType["sign"] = "sign";
+})(ActionType = exports.ActionType || (exports.ActionType = {}));
 /**
  * Bankid DB Types
  */

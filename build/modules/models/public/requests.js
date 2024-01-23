@@ -31,6 +31,10 @@ class IdentificationRequest {
          */
         this.mode = "";
         /**
+         * ActionType [login, signup, confirm, link, sign]
+         */
+        this.action = "";
+        /**
          * Json payload in a string format
          */
         this.payload = "";
@@ -110,6 +114,9 @@ __decorate([
 __decorate([
     (0, class_transformer_1.Expose)()
 ], IdentificationRequest.prototype, "mode", void 0);
+__decorate([
+    (0, class_transformer_1.Expose)()
+], IdentificationRequest.prototype, "action", void 0);
 __decorate([
     (0, class_transformer_1.Expose)()
 ], IdentificationRequest.prototype, "payload", void 0);

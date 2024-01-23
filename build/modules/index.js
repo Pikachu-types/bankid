@@ -18,6 +18,7 @@ __exportStar(require("./services/helper"), exports);
 __exportStar(require("./services/dojah"), exports);
 __exportStar(require("./services/api_client"), exports);
 __exportStar(require("./services/generator"), exports);
+__exportStar(require("./services/client"), exports);
 __exportStar(require("./services/pdfs"), exports);
 __exportStar(require("./services/http"), exports);
 __exportStar(require("./interfaces/requests"), exports);
