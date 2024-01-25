@@ -88,6 +88,9 @@ __decorate([
 ], StandaloneBankID.prototype, "dateDisabled", void 0);
 __decorate([
     (0, class_transformer_1.Expose)()
+], StandaloneBankID.prototype, "deactivationIP", void 0);
+__decorate([
+    (0, class_transformer_1.Expose)()
 ], StandaloneBankID.prototype, "lut", void 0);
 __decorate([
     (0, class_transformer_1.Expose)()

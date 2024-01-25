@@ -12,6 +12,10 @@ export declare class StandaloneBankID {
     dateActivated: number | undefined;
     dateDisabled: number | undefined;
     /**
+     * Where did the deactivation occur from
+     */
+    deactivationIP: string | undefined;
+    /**
      * last updated time
      */
     lut: number;

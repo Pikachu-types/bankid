@@ -15,6 +15,10 @@ export class StandaloneBankID {
     @Expose() dateActivated: number | undefined;
     @Expose() dateDisabled: number | undefined;
     /**
+     * Where did the deactivation occur from
+     */
+    @Expose() deactivationIP: string | undefined;
+    /**
      * last updated time
      */
     @Expose() lut = 0;
