@@ -1,6 +1,6 @@
 {
   "name": "@bukadirect/bankid",
-  "version": "0.2.6",
+  "version": "0.2.7",
   "description": "This package/library servers as a share point for the mono repo structure javascript projects infrastructure is built upon.",
   "main": "build/index.js",
   "files": [

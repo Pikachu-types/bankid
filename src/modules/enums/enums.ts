@@ -53,7 +53,7 @@ export enum DocumentReference {
   /**
     * A request has just been handled
     */
-  requestLogged = "bankids/{users}/history/{doc}",
+  requestLogged = "ids/{users}/history/{doc}",
   signatureAdded = "documents/{doc}/signatures/{identifier}",
   requestUpdated = "requests/{doc}",
   eDocumentsUpdated = "documents/{doc}",

@@ -56,7 +56,7 @@ var DocumentReference;
     /**
       * A request has just been handled
       */
-    DocumentReference["requestLogged"] = "bankids/{users}/history/{doc}";
+    DocumentReference["requestLogged"] = "ids/{users}/history/{doc}";
     DocumentReference["signatureAdded"] = "documents/{doc}/signatures/{identifier}";
     DocumentReference["requestUpdated"] = "requests/{doc}";
     DocumentReference["eDocumentsUpdated"] = "documents/{doc}";
