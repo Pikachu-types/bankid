@@ -4,6 +4,7 @@ import {
 // import { generateKeyPair } from "crypto";
 import * as crypto from "crypto";
 import { Requests } from "../models/public/requests";
+import { BankID } from "../models/bankid";
 
 /**
  * Generator service class
@@ -19,7 +20,7 @@ export class Generator {
    */
   public static appLink(mode: string,
     request: Requests, source: string, nin?:string): string {
-    return `https://mobil.bankid.ng/auth/?mode=${mode}` +
+    return `${BankID.Links.uniDomain}/auth/?mode=${mode}` +
       `&id=${request.id}&source=${source}${nin !== undefined ?
         `&nin=${nin}` :""}`;
   }

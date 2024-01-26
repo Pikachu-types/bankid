@@ -26,6 +26,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.Generator = void 0;
 // import { generateKeyPair } from "crypto";
 const crypto = __importStar(require("crypto"));
+const bankid_1 = require("../models/bankid");
 /**
  * Generator service class
  */
@@ -39,7 +40,7 @@ class Generator {
      * @return {string} returns value.
      */
     static appLink(mode, request, source, nin) {
-        return `https://mobil.bankid.ng/auth/?mode=${mode}` +
+        return `${bankid_1.BankID.Links.uniDomain}/auth/?mode=${mode}` +
             `&id=${request.id}&source=${source}${nin !== undefined ?
                 `&nin=${nin}` : ""}`;
     }

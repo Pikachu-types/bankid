@@ -17,6 +17,8 @@ var BankID;
     let Links;
     (function (Links) {
         Links["ipChecker"] = "https://ipapi.co";
+        Links["oldDomain"] = "https://mobil.bankid.ng";
+        Links["uniDomain"] = "https://open.pasby.africa";
         Links["oldIpChecker"] = "https://ipgeolocation.abstractapi.com/v1/";
         Links["consoleLocalhost"] = "http://localhost:5430";
         Links["consoleDomain"] = "https://console.pasby.africa";

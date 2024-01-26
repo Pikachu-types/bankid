@@ -8,6 +8,8 @@ export declare namespace BankID {
     }
     enum Links {
         ipChecker = "https://ipapi.co",
+        oldDomain = "https://mobil.bankid.ng",
+        uniDomain = "https://open.pasby.africa",
         oldIpChecker = "https://ipgeolocation.abstractapi.com/v1/",
         consoleLocalhost = "http://localhost:5430",
         consoleDomain = "https://console.pasby.africa",
