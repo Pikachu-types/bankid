@@ -103,7 +103,7 @@ export declare class ConsumerModel {
      * finally hash api keys for db storing
      * @return {void} generated api keys
      */
-    hashAPIKeys(): Promise<void>;
+    hashAPIKeys(): void;
     /**
      * Validate if api key is valid
      * @param {string} other string value to compare

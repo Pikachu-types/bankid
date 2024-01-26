@@ -27,7 +27,8 @@ export namespace BankID {
     eDocsDomain = "https://in.pasby.africa/document-checker/",
     connectedDomain = "https://in.pasby.africa/connected/",
     connectUri = "https://connect.bankid.ng/",
-    authUri = "https://connect.bankid.ng/authorization/grant/v1",
+    apiUri = "https://api.pasby.africa",
+    authUri = `https://api.pasby.africa/authorization/grant/v1`,
   }
 
   export class helpers {

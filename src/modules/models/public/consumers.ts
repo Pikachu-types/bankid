@@ -259,16 +259,12 @@ export class ConsumerModel {
    * finally hash api keys for db storing
    * @return {void} generated api keys
    */
-  public async hashAPIKeys(): Promise<void> {
-    if (this.apis?.live === undefined || this.apis.live.length < 1) {
-      throw new CustomError("Api keys haven't been created");
-    }
-    const live = await FunctionHelpers.generateApiKey(this.apis.live);
-    const test = await FunctionHelpers.generateApiKey(this.apis.test);
+  public hashAPIKeys(): void {
+    if (!this.apis) return;
     this.apis = {
-      live: live,
-      test: test,
-    };
+      live: FunctionHelpers.hashAPIKey(this.apis.live),
+      test: FunctionHelpers.hashAPIKey(this.apis.test),
+    }
     this.apiKey = this.apis.live;
   }
   
@@ -282,8 +278,9 @@ export class ConsumerModel {
     if (this.apiKey.length < 1) {
       return false;
     }
-    if (this.apis?.live === other) return true;
-    if (this.apis?.test === other) return true;
+    const hash = FunctionHelpers.hashAPIKey(other);
+    if (this.apis?.live === hash) return true;
+    if (this.apis?.test === hash) return true;
     return false;
   }
 }

@@ -27,7 +27,8 @@ var BankID;
         Links["eDocsDomain"] = "https://in.pasby.africa/document-checker/";
         Links["connectedDomain"] = "https://in.pasby.africa/connected/";
         Links["connectUri"] = "https://connect.bankid.ng/";
-        Links["authUri"] = "https://connect.bankid.ng/authorization/grant/v1";
+        Links["apiUri"] = "https://api.pasby.africa";
+        Links["authUri"] = "https://api.pasby.africa/authorization/grant/v1";
     })(Links = BankID.Links || (BankID.Links = {}));
     class helpers {
         /**

@@ -68,6 +68,12 @@ export declare class FunctionHelpers {
      */
     static changeCipherStringToModel(source: string): CipherType;
     /**
+     * Hash api keys
+     * @param {string} key api key
+     * @return {string} return hash value
+     */
+    static hashAPIKey(key: string): string;
+    /**
      * Verify the requester of a http request
      * @param {string} cipherKey cipher secret key
      * @param {string} source authorization key found in header

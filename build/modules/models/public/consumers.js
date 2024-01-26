@@ -250,19 +250,13 @@ class ConsumerModel {
      * @return {void} generated api keys
      */
     hashAPIKeys() {
-        var _a;
-        return __awaiter(this, void 0, void 0, function* () {
-            if (((_a = this.apis) === null || _a === void 0 ? void 0 : _a.live) === undefined || this.apis.live.length < 1) {
-                throw new labs_sharable_1.CustomError("Api keys haven't been created");
-            }
-            const live = yield helper_1.FunctionHelpers.generateApiKey(this.apis.live);
-            const test = yield helper_1.FunctionHelpers.generateApiKey(this.apis.test);
-            this.apis = {
-                live: live,
-                test: test,
-            };
-            this.apiKey = this.apis.live;
-        });
+        if (!this.apis)
+            return;
+        this.apis = {
+            live: helper_1.FunctionHelpers.hashAPIKey(this.apis.live),
+            test: helper_1.FunctionHelpers.hashAPIKey(this.apis.test),
+        };
+        this.apiKey = this.apis.live;
     }
     /**
      * Validate if api key is valid
@@ -274,9 +268,10 @@ class ConsumerModel {
         if (this.apiKey.length < 1) {
             return false;
         }
-        if (((_a = this.apis) === null || _a === void 0 ? void 0 : _a.live) === other)
+        const hash = helper_1.FunctionHelpers.hashAPIKey(other);
+        if (((_a = this.apis) === null || _a === void 0 ? void 0 : _a.live) === hash)
             return true;
-        if (((_b = this.apis) === null || _b === void 0 ? void 0 : _b.test) === other)
+        if (((_b = this.apis) === null || _b === void 0 ? void 0 : _b.test) === hash)
             return true;
         return false;
     }

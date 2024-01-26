@@ -12,6 +12,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.FunctionHelpers = void 0;
 const labs_sharable_1 = require("labs-sharable");
 const approvedClients_1 = require("../models/public/approvedClients");
+const crypto_1 = require("crypto");
 /**
  * Callable Function Helper class
  */
@@ -144,6 +145,15 @@ class FunctionHelpers {
             iv: cipher[1].replace("(", "").replace(")", ""),
             content: cipher[0],
         };
+    }
+    /**
+     * Hash api keys
+     * @param {string} key api key
+     * @return {string} return hash value
+     */
+    static hashAPIKey(key) {
+        const hashedAPIKey = (0, crypto_1.createHash)('sha256').update(key).digest('hex');
+        return hashedAPIKey;
     }
     /**
      * Verify the requester of a http request

@@ -1,6 +1,7 @@
 import {CipherType, CustomError, LabsCipher} from "labs-sharable";
 import { ApprovedClients } from "../models/public/approvedClients";
 import { Request } from "express";
+import { createHash } from "crypto";
 
 /**
  * Callable Function Helper class
@@ -148,7 +149,16 @@ export class FunctionHelpers {
     };
   }
 
-
+  /**
+   * Hash api keys
+   * @param {string} key api key
+   * @return {string} return hash value
+   */
+  public static hashAPIKey(key: string)
+    : string {
+    const hashedAPIKey: string = createHash('sha256').update(key).digest('hex');
+    return hashedAPIKey;
+  }
   /**
    * Verify the requester of a http request
    * @param {string} cipherKey cipher secret key
