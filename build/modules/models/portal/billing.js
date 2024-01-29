@@ -23,6 +23,10 @@ class BillingModel {
          */
         this.cost = 0;
         this.count = 0;
+        /**
+         * month-year
+         */
+        this.timeline = "";
     }
     /**
      * Change record to BillingModel class
@@ -34,6 +38,20 @@ class BillingModel {
         const result = (0, class_transformer_1.plainToInstance)(BillingModel, obj, { excludeExtraneousValues: true });
         // result.resolveMaps();
         return result;
+    }
+    /**
+     * Helper class function to find one specific object based on id
+     *
+     * @param {BillingModel[]} list an array to sort from and find given
+     * @param {string} id provide the needed id to match for
+     * @return {BillingModel | undefined} found object else undefined
+     */
+    static findOne(list, id) {
+        for (let i = 0; i < list.length; i++) {
+            if (list[i].timeline === id)
+                return list[i];
+        }
+        return;
     }
     /**
      * This class handler to json
@@ -48,7 +66,7 @@ class BillingModel {
      */
     static generateDocID() {
         const date = (0, labs_sharable_1.convertUnixToDate)((0, labs_sharable_1.unixTimeStampNow)());
-        return `${date.getMonth()}-${date.getFullYear()}`;
+        return `${date.getMonth() + 1}-${date.getFullYear()}`;
     }
     /**
     * get document in map format
@@ -73,6 +91,12 @@ __decorate([
 ], BillingModel.prototype, "count", void 0);
 __decorate([
     (0, class_transformer_1.Expose)()
+], BillingModel.prototype, "timeline", void 0);
+__decorate([
+    (0, class_transformer_1.Expose)()
 ], BillingModel.prototype, "lut", void 0);
+__decorate([
+    (0, class_transformer_1.Expose)()
+], BillingModel.prototype, "paidAt", void 0);
 exports.BillingModel = BillingModel;
 //# sourceMappingURL=billing.js.map

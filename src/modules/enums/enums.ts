@@ -25,6 +25,7 @@ export enum DocumentReference {
    * [signature or identification]
    */
   requests = "requests",
+  bill = "billing",
   /**
    * Collection reference for console users
    * These are real persons who operate a developer-publisher
@@ -122,6 +123,8 @@ export enum DocumentTypes {
    * BankID requests
    */
   requests = "req_",
+
+  billing = "bill_",
   /**
    * Standalone bankids for
    * BankID mobile, desktop and watch

@@ -2,6 +2,7 @@ import { DefaultResponseAndStatus, MessageCallback, eDocSignRequests } from "../
 import { AuthorizationGrantRequest, CancelFlowRequest, PingFlowRequest } from "./interfaces/flow.interfaces";
 import { IdentificationFlowRequest } from "./interfaces/identification.interfaces";
 import { SignatureFlowRequest } from "./interfaces/signature.interfaces";
+import { UsageRecording } from "./interfaces/billing.interfaces";
 /**
  * Helper class to handle all needed api communication between
  * our micro-services and the main backend
@@ -18,6 +19,7 @@ export declare class MicroServiceBackendAxios {
     private readonly cancellationEndpoint;
     private readonly wildcardEndpoint;
     private readonly documentSigningEndpoint;
+    private readonly useReportEndpoint;
     /**
      * Class main constructor
      * @param {string} dbURI initialize with dbURI
@@ -96,4 +98,12 @@ export declare class MicroServiceBackendAxios {
      * @return {Promise<DefaultResponseAndStatus>} returns response.
      */
     documentSigningFlow(request: eDocSignRequests, onError?: MessageCallback, version?: string): Promise<DefaultResponseAndStatus | undefined>;
+    /**
+     * Document signing flow db backend caller
+     * @param {UsageRecording} request data map of request
+     * @param {MessageCallback} onError get feedback on any error logs
+     * @param {string} version what api version would you want to interface with
+     * @return {Promise<DefaultResponseAndStatus>} returns response.
+     */
+    logApiUsage(request: UsageRecording, onError?: MessageCallback, version?: string): Promise<DefaultResponseAndStatus | undefined>;
 }

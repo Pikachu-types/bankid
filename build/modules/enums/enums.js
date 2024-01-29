@@ -29,6 +29,7 @@ var DocumentReference;
      * [signature or identification]
      */
     DocumentReference["requests"] = "requests";
+    DocumentReference["bill"] = "billing";
     /**
      * Collection reference for console users
      * These are real persons who operate a developer-publisher
@@ -124,6 +125,7 @@ var DocumentTypes;
      * BankID requests
      */
     DocumentTypes["requests"] = "req_";
+    DocumentTypes["billing"] = "bill_";
     /**
      * Standalone bankids for
      * BankID mobile, desktop and watch

@@ -10,6 +10,7 @@ import {
 } from "./interfaces/flow.interfaces";
 import { IdentificationFlowRequest } from "./interfaces/identification.interfaces";
 import { SignatureFlowRequest } from "./interfaces/signature.interfaces";
+import { UsageRecording } from "./interfaces/billing.interfaces";
 
 /**
  * Helper class to handle all needed api communication between
@@ -27,6 +28,7 @@ export class MicroServiceBackendAxios {
   private readonly cancellationEndpoint = "/request-cancellation";
   private readonly wildcardEndpoint = "/wildcard-identification";
   private readonly documentSigningEndpoint = "/doc-signature";
+  private readonly useReportEndpoint = "/usage-report";
 
   /**
    * Class main constructor
@@ -320,6 +322,36 @@ export class MicroServiceBackendAxios {
             'Accept': 'application/json',
             'x-requested-with': this.app,
             'x-access-token': request.token,
+          },
+        }
+      );
+      return {
+        response: data,
+        status: status,
+      };
+    }, onError);
+  }
+
+  /**
+   * Document signing flow db backend caller
+   * @param {UsageRecording} request data map of request
+   * @param {MessageCallback} onError get feedback on any error logs
+   * @param {string} version what api version would you want to interface with
+   * @return {Promise<DefaultResponseAndStatus>} returns response.
+   */
+  public async logApiUsage(
+    request: UsageRecording,
+    onError?: MessageCallback,
+    version: string = "v1"
+  ) {
+    return await httpClient(async () => {
+      const url = `${this.db}${this.useReportEndpoint}/${version}`;
+      const { data, status } = await axios.post<DefaultResponse>(
+        url, JSON.parse(JSON.stringify(request)),
+        {
+          headers: {
+            'Accept': 'application/json',
+            'x-requested-with': this.app,
           },
         }
       );

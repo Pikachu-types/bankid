@@ -35,6 +35,7 @@ class MicroServiceBackendAxios {
         this.cancellationEndpoint = "/request-cancellation";
         this.wildcardEndpoint = "/wildcard-identification";
         this.documentSigningEndpoint = "/doc-signature";
+        this.useReportEndpoint = "/usage-report";
         this.db = dbURI;
         this.app = appkey;
     }
@@ -264,6 +265,30 @@ class MicroServiceBackendAxios {
                         'Accept': 'application/json',
                         'x-requested-with': this.app,
                         'x-access-token': request.token,
+                    },
+                });
+                return {
+                    response: data,
+                    status: status,
+                };
+            }), onError);
+        });
+    }
+    /**
+     * Document signing flow db backend caller
+     * @param {UsageRecording} request data map of request
+     * @param {MessageCallback} onError get feedback on any error logs
+     * @param {string} version what api version would you want to interface with
+     * @return {Promise<DefaultResponseAndStatus>} returns response.
+     */
+    logApiUsage(request, onError, version = "v1") {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield (0, client_1.default)(() => __awaiter(this, void 0, void 0, function* () {
+                const url = `${this.db}${this.useReportEndpoint}/${version}`;
+                const { data, status } = yield axios_1.default.post(url, JSON.parse(JSON.stringify(request)), {
+                    headers: {
+                        'Accept': 'application/json',
+                        'x-requested-with': this.app,
                     },
                 });
                 return {

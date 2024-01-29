@@ -9,13 +9,18 @@ import { convertUnixToDate, unixTimeStampNow } from "labs-sharable";
 export class BillingModel {
   /* eslint new-cap: ["error", { "capIsNew": false }]*/
   @Expose() paid = false;
-  @Expose() endpoints: Record<string, unknown> = {};
+  @Expose() endpoints: Record<string, number> = {};
   /**
    * Total racked up now
    */
   @Expose() cost = 0;
   @Expose() count = 0;
+  /**
+   * month-year
+   */
+  @Expose() timeline = "";
   @Expose() lut: number | undefined;
+  @Expose() paidAt: number | undefined;
   
   /**
    * Change record to BillingModel class
@@ -32,6 +37,21 @@ export class BillingModel {
   }
 
   /**
+   * Helper class function to find one specific object based on id
+   *
+   * @param {BillingModel[]} list an array to sort from and find given
+   * @param {string} id provide the needed id to match for
+   * @return {BillingModel | undefined} found object else undefined
+   */
+  public static findOne(list: BillingModel[], id: string)
+    : BillingModel | undefined {
+    for (let i = 0; i < list.length; i++) {
+      if (list[i].timeline === id) return list[i];
+    }
+    return;
+  }
+
+  /**
    * This class handler to json
    * @return {string} text
    */
@@ -45,7 +65,7 @@ export class BillingModel {
    */
   public static generateDocID(): string {
     const date = convertUnixToDate(unixTimeStampNow());
-    return `${date.getMonth()}-${date.getFullYear()}`;
+    return `${date.getMonth()+1}-${date.getFullYear()}`;
   }
 
   /**
