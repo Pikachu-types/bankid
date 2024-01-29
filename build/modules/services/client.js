@@ -10,9 +10,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const axios_1 = require("axios");
-const labs_sharable_1 = require("labs-sharable");
 const httpClient = (request, onError) => __awaiter(void 0, void 0, void 0, function* () {
-    var _a, _b, _c, _d;
     try {
         return yield request();
     }
@@ -20,24 +18,23 @@ const httpClient = (request, onError) => __awaiter(void 0, void 0, void 0, funct
         if ((0, axios_1.isAxiosError)(error)) {
             const response = error.response;
             if (onError) {
-                onError(`Axios error of status code: ${(_a = error.response) === null || _a === void 0 ? void 0 : _a.status} ||` +
-                    ` Body : ${JSON.stringify((_b = error.response) === null || _b === void 0 ? void 0 : _b.data)}`);
-            }
-            const body = JSON.parse(JSON.stringify((_c = error.response) === null || _c === void 0 ? void 0 : _c.data));
-            if (response && body.reason) {
-                throw new labs_sharable_1.CustomError("", response.status, undefined, body);
-            }
-            else {
-                throw new labs_sharable_1.CustomError(error.message, (_d = error.status) !== null && _d !== void 0 ? _d : 500);
+                onError({
+                    message: (response === null || response === void 0 ? void 0 : response.data) ?
+                        JSON.stringify(response === null || response === void 0 ? void 0 : response.data) : "Http request errored",
+                    statusCode: response === null || response === void 0 ? void 0 : response.status,
+                });
             }
         }
         else {
             if (onError) {
-                onError(`Unexpected error: ${error}`);
+                onError({
+                    message: `Unexpected error: ${error}`,
+                    statusCode: 500,
+                });
             }
-            throw new labs_sharable_1.CustomError("An unexpected error occurred", 500);
         }
     }
+    return undefined;
 });
 exports.default = httpClient;
 //# sourceMappingURL=client.js.map

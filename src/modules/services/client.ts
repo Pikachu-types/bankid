@@ -7,7 +7,7 @@ import { DefaultResponse } from "../interfaces/documents";
  */
 export type HttpCallback = () => Promise<DefaultResponseAndStatus>;
 
-export type MessageCallback = (error: string) => Promise<unknown>;
+export type MessageCallback = (error: {message: string, statusCode?: number}) => Promise<unknown>;
 
 /**
  * Authorization grant request
@@ -18,30 +18,29 @@ export interface DefaultResponseAndStatus {
 }
 
 const httpClient = async (request: HttpCallback, onError?: MessageCallback):
-  Promise<DefaultResponseAndStatus> => {
+  Promise<DefaultResponseAndStatus | undefined> => {
   try {
     return await request();
   } catch (error) {
     if (isAxiosError(error)) {
       const response = error.response;
       if (onError) {
-        onError(`Axios error of status code: ${error.response?.status} ||` +
-          ` Body : ${JSON.stringify(error.response?.data)}`);
-      }
-      const body = JSON.parse(JSON.stringify(error.response?.data));
-      if (response && body.reason) {
-        throw new CustomError(
-          "", response.status, undefined, body);
-      } else {
-        throw new CustomError(error.message, error.status ?? 500);
+        onError({
+          message: response?.data ?
+            JSON.stringify(response?.data): "Http request errored",
+          statusCode: response?.status,
+        });
       }
     } else {
       if (onError) {
-        onError(`Unexpected error: ${error}`);
+        onError({
+          message: `Unexpected error: ${error}`,
+          statusCode: 500,
+        });
       }
-      throw new CustomError("An unexpected error occurred", 500);
     }
   }
+  return undefined;
 }
 
 export default httpClient;

@@ -1,0 +1,333 @@
+import axios from "axios";
+import {
+  DefaultResponse,
+  DefaultResponseAndStatus, MessageCallback, eDocSignRequests
+} from "../modules";
+import httpClient from "../modules/services/client";
+import {
+  AuthorizationGrantRequest,
+  CancelFlowRequest, PingFlowRequest
+} from "./interfaces/flow.interfaces";
+import { IdentificationFlowRequest } from "./interfaces/identification.interfaces";
+import { SignatureFlowRequest } from "./interfaces/signature.interfaces";
+
+/**
+ * Helper class to handle all needed api communication between
+ * our micro-services and the main backend
+ */
+export class MicroServiceBackendAxios {
+  db: string;
+  app: string;
+  private readonly authorizationEndpoint = "/authenticate";
+  private readonly webIDEndpoint = "/web-identification";
+  private readonly mobileIDEndpoint = "/mobile-identification";
+  private readonly mobileSignatureEndpoint = "/mobile-signature";
+  private readonly webSignatureEndpoint = "/web-signature";
+  private readonly pingEndpoint = "/request-ping";
+  private readonly cancellationEndpoint = "/request-cancellation";
+  private readonly wildcardEndpoint = "/wildcard-identification";
+  private readonly documentSigningEndpoint = "/doc-signature";
+
+  /**
+   * Class main constructor
+   * @param {string} dbURI initialize with dbURI
+   * @param {string} appkey microservice identifier
+   */
+  constructor(dbURI: string, appkey: string) {
+    this.db = dbURI;
+    this.app = appkey;
+  }
+
+  /**
+   * Grant api authorization to consumer app
+   * @param {AuthorizationGrantRequest} request data map of request
+   * @param {MessageCallback} onError get feedback on any error logs
+   * @param {string} version what api version would you want to interface with
+   * @return {Promise<DefaultResponseAndStatus>} returns response.
+   */
+  public async clientAuthorization(
+    request: AuthorizationGrantRequest,
+    onError?: MessageCallback,
+    version: string = "v1",
+  ) {
+    return await httpClient(async () => {
+      let query = `sub=${request.sub}&app=${request.app}` +
+        `&apikey=${request.apikey}&secret=${request.secret}`;
+      if (request.token) {
+        query = query + `&old=${request.token}`;
+      }
+      const url = `${this.db}${this.authorizationEndpoint}/${version}?${query}`;
+      const { data, status } = await axios.get<DefaultResponse>(
+        url,
+        {
+          headers: {
+            'Accept': 'application/json',
+            'x-requested-with': this.app
+          }
+        }
+      );
+      return {
+        response: data,
+        status: status,
+      };
+    }, onError);
+  }
+
+  /**
+   * Identification flow db backend caller
+   * @param {IdentificationFlowRequest} request data map of request
+   * @param {MessageCallback} onError get feedback on any error logs
+   * @param {string} version what api version would you want to interface with
+   * @return {Promise<DefaultResponseAndStatus>} returns response.
+   */
+  public async identificationFlow(
+    request: IdentificationFlowRequest,
+    onError?: MessageCallback,
+    version: string = "v1") {
+    return await httpClient(async () => {
+      const url = `${this.db}${this.webIDEndpoint}/${version}`;
+      const { data, status } = await axios.post<DefaultResponse>(
+        url, JSON.parse(JSON.stringify(request)),
+        {
+          headers: {
+            'Accept': 'application/json',
+            'x-requested-with': this.app,
+            'x-access-token': request.token,
+            'x-api-key': request.apikey,
+            'x-access-secret': request.secret,
+          },
+        }
+      );
+      return {
+        response: data,
+        status: status,
+      };
+    }, onError);
+  }
+
+  /**
+   * Identification flow for same devices db backend caller
+   * @param {IdentificationFlowRequest} request data map of request
+   * @param {MessageCallback} onError get feedback on any error logs
+   * @param {string} version what api version would you want to interface. [note: do not use v1]
+   * @return {Promise<DefaultResponseAndStatus>} returns response.
+   */
+  public async mobIdentificationFlow(
+    request: IdentificationFlowRequest,
+    onError?: MessageCallback,
+    version: string = "v2"
+  ) {
+    return await httpClient(async () => {
+      const url = `${this.db}${this.mobileIDEndpoint}/${version}`;
+      const { data, status } = await axios.post<DefaultResponse>(
+        url, JSON.parse(JSON.stringify(request)),
+        {
+          headers: {
+            'Accept': 'application/json',
+            'x-requested-with': this.app,
+            'x-access-token': request.token,
+            'x-api-key': request.apikey,
+            'x-access-secret': request.secret,
+          },
+        }
+      );
+      return {
+        response: data,
+        status: status,
+      };
+    }, onError);
+  }
+
+
+  /**
+   * Signature flow for same devices db backend caller
+   * @param {SignatureFlowRequest} request data map of request
+   * @param {MessageCallback} onError get feedback on any error logs
+   * @param {string} version what api version would you want to interface. [note: do not use v1]
+   * @return {Promise<DefaultResponseAndStatus>} returns response.
+   */
+  public async mobSignatureFlow(
+    request: SignatureFlowRequest,
+    onError?: MessageCallback,
+    version: string = "v2"
+  ) {
+    return await httpClient(async () => {
+      const url = `${this.db}${this.mobileSignatureEndpoint}/${version}`;
+      const { data, status } = await axios.post<DefaultResponse>(
+        url, JSON.parse(JSON.stringify(request)),
+        {
+          headers: {
+            'Accept': 'application/json',
+            'x-requested-with': this.app,
+            'x-access-token': request.token,
+            'x-api-key': request.apikey,
+            'x-access-secret': request.secret,
+          },
+        }
+      );
+      return {
+        response: data,
+        status: status,
+      };
+    }, onError);
+  }
+
+
+  /**
+   * Cancel a flow db backend caller
+   * @param {CancelFlowRequest} request data map of request
+   * @param {MessageCallback} onError get feedback on any error logs
+   * @param {string} version what api version would you want to interface
+   * @return {Promise<DefaultResponseAndStatus>} returns response.
+   */
+  public async cancelFlow(
+    request: CancelFlowRequest,
+    onError?: MessageCallback,
+    version: string = "v1"
+  ) {
+    return await httpClient(async () => {
+      const url = `${this.db}${this.cancellationEndpoint}/${version}`;
+      const { data, status } = await axios.post<DefaultResponse>(
+        url, JSON.parse(JSON.stringify(request)),
+        {
+          headers: {
+            'Accept': 'application/json',
+            'x-requested-with': this.app,
+            'x-access-token': request.token,
+          },
+        }
+      );
+      return {
+        response: data,
+        status: status,
+      };
+    }, onError);
+  }
+
+  /**
+   * Ping a flow db backend caller
+   * @param {PingFlowRequest} request data map of request
+   * @param {MessageCallback} onError get feedback on any error logs
+   * @param {string} version what api version would you want to interface.
+   * @return {Promise<DefaultResponseAndStatus>} returns response.
+   */
+  public async pingFlow(
+    request: PingFlowRequest,
+    onError?: MessageCallback,
+    version: string = "v1"
+  ) {
+    return await httpClient(async () => {
+      const url = `${this.db}${this.pingEndpoint}/${version}`;
+      const { data, status } = await axios.post<DefaultResponse>(
+        url, JSON.parse(JSON.stringify(request)),
+        {
+          headers: {
+            'Accept': 'application/json',
+            'x-requested-with': this.app,
+            'x-access-token': request.token,
+          },
+        }
+      );
+      return {
+        response: data,
+        status: status,
+      };
+    }, onError);
+  }
+
+
+  /**
+   * Signature flow db backend caller
+   * @param {SignatureFlowRequest} request data map of request
+   * @param {MessageCallback} onError get feedback on any error logs
+   * @param {string} version what api version would you want to interface with
+   * @return {Promise<DefaultResponseAndStatus>} returns response.
+   */
+  public async signatureFlow(
+    request: SignatureFlowRequest,
+    onError?: MessageCallback,
+    version: string = "v1"
+  ) {
+    return await httpClient(async () => {
+      const url = `${this.db}${this.webSignatureEndpoint}/${version}`;
+      const { data, status } = await axios.post<DefaultResponse>(
+        url, JSON.parse(JSON.stringify(request)),
+        {
+          headers: {
+            'Accept': 'application/json',
+            'x-requested-with': this.app,
+            'x-access-token': request.token,
+          },
+        }
+      );
+      return {
+        response: data,
+        status: status,
+      };
+    }, onError);
+  }
+
+
+  /**
+   * Wildcard flow db backend caller
+   * @param {IdentificationFlowRequest} request data map of request
+   * @param {MessageCallback} onError get feedback on any error logs
+   * @param {string} version what api version would you want to interface with
+   * @return {Promise<DefaultResponseAndStatus>} returns response.
+   */
+  public async wildCardIdentificationFlow(
+    request: IdentificationFlowRequest,
+    onError?: MessageCallback,
+    version: string = "v1"
+  ) {
+    return await httpClient(async () => {
+      const url = `${this.db}${this.wildcardEndpoint}/${version}`;
+      const { data, status } = await axios.post<DefaultResponse>(
+        url, JSON.parse(JSON.stringify(request)),
+        {
+          headers: {
+            'Accept': 'application/json',
+            'x-requested-with': this.app,
+            'x-access-token': request.token,
+          },
+        }
+      );
+      return {
+        response: data,
+        status: status,
+      };
+    }, onError);
+  }
+
+  /**
+   * Document signing flow db backend caller
+   * @param {eDocSignRequests} request data map of request
+   * @param {MessageCallback} onError get feedback on any error logs
+   * @param {string} version what api version would you want to interface with
+   * @return {Promise<DefaultResponseAndStatus>} returns response.
+   */
+  public async documentSigningFlow(
+    request: eDocSignRequests,
+    onError?: MessageCallback,
+    version: string = "v1"
+  ) {
+    return await httpClient(async () => {
+      const url = `${this.db}${this.documentSigningEndpoint}/${version}`;
+      const { data, status } = await axios.post<DefaultResponse>(
+        url, JSON.parse(JSON.stringify(request)),
+        {
+          headers: {
+            'Accept': 'application/json',
+            'x-requested-with': this.app,
+            'x-access-token': request.token,
+          },
+        }
+      );
+      return {
+        response: data,
+        status: status,
+      };
+    }, onError);
+  }
+
+}

@@ -62,6 +62,8 @@ export type PostRequest = {
 export interface DefaultResponse {
   status: string;
   reason?: string;
+  cost?: number;
+  version?: string;
   data?: Record<string, unknown>;
 };
 

@@ -71,6 +71,7 @@ export interface eDocSignRequests {
     };
     useragent: string;
     ip: string;
+    token?: string;
 }
 /**
  * Ping request
