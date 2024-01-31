@@ -31,10 +31,25 @@ export declare class BillingModel {
      */
     static findOne(list: BillingModel[], id: string): BillingModel | undefined;
     /**
+     * Helper class function to return timeline
+     *
+     * @param {BillingModel[]} list an array to sort from and find given
+     * @param {Date} begin provide beginning
+     * @param {Date} end provide ending
+     * @return {BillingModel[]} found objects
+     */
+    static returnTimeline(list: BillingModel[], begin: Date, end: Date): BillingModel[];
+    /**
      * This class handler to json
      * @return {string} text
      */
     toJsonString(): string;
+    /**
+     * Change timeline to date
+     * @param {string} timeline ex [1-2024]
+     * @return {Date} text
+     */
+    static timelineToDate(timeline: string): Date;
     /**
      * Generate document id
      * @return {string} text

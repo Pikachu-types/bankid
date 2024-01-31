@@ -227,6 +227,9 @@ __decorate([
 ], ClientApp.prototype, "created", void 0);
 __decorate([
     (0, class_transformer_1.Expose)()
+], ClientApp.prototype, "information", void 0);
+__decorate([
+    (0, class_transformer_1.Expose)()
 ], ClientApp.prototype, "secrets", void 0);
 __decorate([
     (0, class_transformer_1.Expose)()

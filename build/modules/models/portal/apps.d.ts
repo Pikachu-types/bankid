@@ -17,6 +17,7 @@ export declare class ClientApp {
     displayName: string;
     lut: number;
     created: number;
+    information?: AppVerificationInfoModel;
     secrets: AppDataSecret[];
     keys: RSAKeys;
     keyData: AuthenticateKeysData | undefined;
@@ -99,4 +100,14 @@ export declare class ClientApp {
      * @return {boolean} generated uid
      */
     testApp(): boolean;
+}
+/**
+ * App Verification InfoModel
+ */
+export interface AppVerificationInfoModel {
+    description: string;
+    category?: string;
+    regulated?: boolean;
+    verified: boolean;
+    requestsCount?: string;
 }

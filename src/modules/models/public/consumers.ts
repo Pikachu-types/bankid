@@ -28,6 +28,7 @@ export class ConsumerModel {
   @Expose() created: number | undefined;
   @Expose() lut: number | undefined;
   @Expose() tier = 1;
+  @Expose() information?: ConsumerVerificationInfoModel;
   @Expose() contact: Record<string, unknown> = {};
   @Expose() keys: Record<string, unknown> = {};
   @Expose() apis: APIKeys | undefined;
@@ -283,4 +284,19 @@ export class ConsumerModel {
     if (this.apis?.test === hash) return true;
     return false;
   }
+}
+
+/**
+ * App Verification InfoModel
+ */
+export interface ConsumerVerificationInfoModel {
+  legalName: string,
+  domain: string,
+  rcNumber: string,
+  vat: string,
+  description: string,
+  address: string,
+  country?: string,
+  industry?: string,
+  verified: boolean,
 }

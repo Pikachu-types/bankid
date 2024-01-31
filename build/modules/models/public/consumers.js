@@ -308,6 +308,9 @@ __decorate([
 ], ConsumerModel.prototype, "tier", void 0);
 __decorate([
     (0, class_transformer_1.Expose)()
+], ConsumerModel.prototype, "information", void 0);
+__decorate([
+    (0, class_transformer_1.Expose)()
 ], ConsumerModel.prototype, "contact", void 0);
 __decorate([
     (0, class_transformer_1.Expose)()

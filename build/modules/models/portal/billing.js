@@ -54,11 +54,44 @@ class BillingModel {
         return;
     }
     /**
+     * Helper class function to return timeline
+     *
+     * @param {BillingModel[]} list an array to sort from and find given
+     * @param {Date} begin provide beginning
+     * @param {Date} end provide ending
+     * @return {BillingModel[]} found objects
+     */
+    static returnTimeline(list, begin, end) {
+        let res = [];
+        for (let i = 0; i < list.length; i++) {
+            const bill = list[i];
+            var date = this.timelineToDate(bill.timeline);
+            if (date <= end && date >= begin) {
+                res.push(bill);
+            }
+        }
+        return res;
+    }
+    /**
      * This class handler to json
      * @return {string} text
      */
     toJsonString() {
         return JSON.stringify(this);
+    }
+    /**
+     * Change timeline to date
+     * @param {string} timeline ex [1-2024]
+     * @return {Date} text
+     */
+    static timelineToDate(timeline) {
+        const values = timeline.split("-");
+        if (values.length !== 2)
+            throw new labs_sharable_1.CustomError("Invalid timeline");
+        const month = values[0];
+        const year = values[1];
+        const date = `${year}-${month}-01`;
+        return new Date(date);
     }
     /**
      * Generate document id

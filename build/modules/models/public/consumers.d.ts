@@ -18,6 +18,7 @@ export declare class ConsumerModel {
     created: number | undefined;
     lut: number | undefined;
     tier: number;
+    information?: ConsumerVerificationInfoModel;
     contact: Record<string, unknown>;
     keys: Record<string, unknown>;
     apis: APIKeys | undefined;
@@ -110,4 +111,18 @@ export declare class ConsumerModel {
      * @return {boolean} valid or not
      */
     validateApiKey(other: string): boolean;
+}
+/**
+ * App Verification InfoModel
+ */
+export interface ConsumerVerificationInfoModel {
+    legalName: string;
+    domain: string;
+    rcNumber: string;
+    vat: string;
+    description: string;
+    address: string;
+    country?: string;
+    industry?: string;
+    verified: boolean;
 }

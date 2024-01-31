@@ -1,5 +1,5 @@
 import { plainToInstance, Expose } from "class-transformer";
-import { convertUnixToDate, unixTimeStampNow } from "labs-sharable";
+import { CustomError, convertUnixToDate, unixTimeStampNow } from "labs-sharable";
 
 // each month first 100 calls free
 
@@ -52,11 +52,47 @@ export class BillingModel {
   }
 
   /**
+   * Helper class function to return timeline
+   *
+   * @param {BillingModel[]} list an array to sort from and find given
+   * @param {Date} begin provide beginning
+   * @param {Date} end provide ending
+   * @return {BillingModel[]} found objects
+   */
+  public static returnTimeline(list: BillingModel[], begin: Date, end: Date)
+    : BillingModel[] {
+    let res: BillingModel[] = [];
+    for (let i = 0; i < list.length; i++) {
+      const bill = list[i];
+      var date = this.timelineToDate(bill.timeline);
+      if (date <= end && date >= begin) {
+        res.push(bill);
+      }
+    }
+    return res;
+  }
+
+  /**
    * This class handler to json
    * @return {string} text
    */
   public toJsonString(): string {
     return JSON.stringify(this);
+  }
+
+  /**
+   * Change timeline to date
+   * @param {string} timeline ex [1-2024]
+   * @return {Date} text
+   */
+  public static timelineToDate(timeline: string): Date {
+    const values: string[] = timeline.split("-");
+    if (values.length !== 2) throw new CustomError("Invalid timeline");
+
+    const month = values[0];
+    const year = values[1];
+    const date = `${year}-${month}-01`;
+    return new Date(date);
   }
 
   /**

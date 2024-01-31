@@ -5,7 +5,7 @@ import { AppDataSecret } from "../../interfaces/documents";
 import { AuthenticateKeysData } from "../superficial/contact";
 import { Generator } from "../../services/generator";
 import { FunctionHelpers } from "../../services/helper";
-import { CustomError, RSAKeys, delay, equalToIgnoreCase, generateRandomAlphaNumeric, unixTimeStampNow } from "labs-sharable";
+import { CustomError, RSAKeys, delay, generateRandomAlphaNumeric, unixTimeStampNow } from "labs-sharable";
 /**
  * ClientApp class
 */
@@ -23,6 +23,7 @@ export class ClientApp {
   @Expose() displayName = "";
   @Expose() lut = 0;
   @Expose() created = 0;
+  @Expose() information?: AppVerificationInfoModel;
   @Expose() secrets: AppDataSecret[] = [];
   @Expose() keys: RSAKeys = {private: "", public: ""};
   
@@ -204,4 +205,15 @@ export class ClientApp {
   public testApp(): boolean {
     return this.type === AppType.test;
   }
+}
+
+/**
+ * App Verification InfoModel
+ */
+export interface AppVerificationInfoModel {
+  description: string,
+  category?: string,
+  regulated?: boolean,
+  verified: boolean,
+  requestsCount?: string,
 }
