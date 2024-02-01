@@ -1,9 +1,8 @@
 import axios from "axios";
 import {
   DefaultResponse,
-  DefaultResponseAndStatus, MessageCallback, eDocSignRequests
+  MessageCallback, eDocSignRequests, httpClient
 } from "../modules";
-import httpClient from "../modules/services/client";
 import {
   AuthorizationGrantRequest,
   CancelFlowRequest, PingFlowRequest

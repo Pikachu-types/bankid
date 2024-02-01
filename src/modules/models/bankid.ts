@@ -21,8 +21,11 @@ export namespace BankID {
     uniDomain = "https://open.pasby.africa",
     oldIpChecker = "https://ipgeolocation.abstractapi.com/v1/",
     consoleLocalhost = "http://localhost:5430",
+    debugPortalManagementHost = "http://127.0.0.1:5001/bankid-project/us-central1/portal-api",
     consoleDomain = "https://console.pasby.africa",
     idDomain = "https://ids.pasby.africa",
+    commsDomain = "https://comms.pasby.africa",
+    portalApiDomain = "https://api.bankid.ng",
     signaturesDomain = "https://in.pasby.africa",
     eDocsDomain = "https://in.pasby.africa/document-checker/",
     connectedDomain = "https://in.pasby.africa/connected/",
@@ -43,6 +46,18 @@ export namespace BankID {
       debug: boolean = false, mode?: MagicLinkModes): string {
       return `${debug ? Links.consoleLocalhost : Links.consoleDomain}` +
         `/magic/${token}${mode === undefined ? '': `?mode=${mode}`}`;
+    }
+    
+    /**
+    * generate billing verification email sender
+    * @param {string} token magic token
+    * @param {boolean} debug set to true if you are using localhost
+    * @return {string} returns sender
+    */
+    public static buildBillingVerificationLink(token: string,
+      debug: boolean = false): string {
+      return `${debug ? Links.debugPortalManagementHost : Links.portalApiDomain}` +
+        `/billing-contact/v1/verify?token=${token}`;
     }
 
     /**

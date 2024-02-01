@@ -21,8 +21,11 @@ var BankID;
         Links["uniDomain"] = "https://open.pasby.africa";
         Links["oldIpChecker"] = "https://ipgeolocation.abstractapi.com/v1/";
         Links["consoleLocalhost"] = "http://localhost:5430";
+        Links["debugPortalManagementHost"] = "http://127.0.0.1:5001/bankid-project/us-central1/portal-api";
         Links["consoleDomain"] = "https://console.pasby.africa";
         Links["idDomain"] = "https://ids.pasby.africa";
+        Links["commsDomain"] = "https://comms.pasby.africa";
+        Links["portalApiDomain"] = "https://api.bankid.ng";
         Links["signaturesDomain"] = "https://in.pasby.africa";
         Links["eDocsDomain"] = "https://in.pasby.africa/document-checker/";
         Links["connectedDomain"] = "https://in.pasby.africa/connected/";
@@ -41,6 +44,16 @@ var BankID;
         static buildLoginLink(token, debug = false, mode) {
             return `${debug ? Links.consoleLocalhost : Links.consoleDomain}` +
                 `/magic/${token}${mode === undefined ? '' : `?mode=${mode}`}`;
+        }
+        /**
+        * generate billing verification email sender
+        * @param {string} token magic token
+        * @param {boolean} debug set to true if you are using localhost
+        * @return {string} returns sender
+        */
+        static buildBillingVerificationLink(token, debug = false) {
+            return `${debug ? Links.debugPortalManagementHost : Links.portalApiDomain}` +
+                `/billing-contact/v1/verify?token=${token}`;
         }
         /**
          * Create a request identifier

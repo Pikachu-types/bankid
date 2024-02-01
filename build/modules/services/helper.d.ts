@@ -93,3 +93,4 @@ export declare class FunctionHelpers {
     */
     static getIPAddress(request: Request): string;
 }
+export declare function parseInterface(data: any): any;

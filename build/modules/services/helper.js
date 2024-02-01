@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.FunctionHelpers = void 0;
+exports.parseInterface = exports.FunctionHelpers = void 0;
 const labs_sharable_1 = require("labs-sharable");
 const approvedClients_1 = require("../models/public/approvedClients");
 const crypto_1 = require("crypto");
@@ -205,4 +205,9 @@ class FunctionHelpers {
     }
 }
 exports.FunctionHelpers = FunctionHelpers;
+/* eslint-disable */
+function parseInterface(data) {
+    return JSON.parse(JSON.stringify(data));
+}
+exports.parseInterface = parseInterface;
 //# sourceMappingURL=helper.js.map

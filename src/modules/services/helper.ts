@@ -212,5 +212,9 @@ export class FunctionHelpers {
       return '';
    }
   }
+}
 
+/* eslint-disable */
+export function parseInterface(data: any) {
+  return JSON.parse(JSON.stringify(data));
 }

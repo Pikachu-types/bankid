@@ -14,7 +14,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.MicroServiceBackendAxios = void 0;
 const axios_1 = __importDefault(require("axios"));
-const client_1 = __importDefault(require("../modules/services/client"));
+const modules_1 = require("../modules");
 /**
  * Helper class to handle all needed api communication between
  * our micro-services and the main backend
@@ -48,7 +48,7 @@ class MicroServiceBackendAxios {
      */
     clientAuthorization(request, onError, version = "v1") {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield (0, client_1.default)(() => __awaiter(this, void 0, void 0, function* () {
+            return yield (0, modules_1.httpClient)(() => __awaiter(this, void 0, void 0, function* () {
                 let query = `sub=${request.sub}&app=${request.app}` +
                     `&apikey=${request.apikey}&secret=${request.secret}`;
                 if (request.token) {
@@ -77,7 +77,7 @@ class MicroServiceBackendAxios {
      */
     identificationFlow(request, onError, version = "v1") {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield (0, client_1.default)(() => __awaiter(this, void 0, void 0, function* () {
+            return yield (0, modules_1.httpClient)(() => __awaiter(this, void 0, void 0, function* () {
                 const url = `${this.db}${this.webIDEndpoint}/${version}`;
                 const { data, status } = yield axios_1.default.post(url, JSON.parse(JSON.stringify(request)), {
                     headers: {
@@ -104,7 +104,7 @@ class MicroServiceBackendAxios {
      */
     mobIdentificationFlow(request, onError, version = "v2") {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield (0, client_1.default)(() => __awaiter(this, void 0, void 0, function* () {
+            return yield (0, modules_1.httpClient)(() => __awaiter(this, void 0, void 0, function* () {
                 const url = `${this.db}${this.mobileIDEndpoint}/${version}`;
                 const { data, status } = yield axios_1.default.post(url, JSON.parse(JSON.stringify(request)), {
                     headers: {
@@ -131,7 +131,7 @@ class MicroServiceBackendAxios {
      */
     mobSignatureFlow(request, onError, version = "v2") {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield (0, client_1.default)(() => __awaiter(this, void 0, void 0, function* () {
+            return yield (0, modules_1.httpClient)(() => __awaiter(this, void 0, void 0, function* () {
                 const url = `${this.db}${this.mobileSignatureEndpoint}/${version}`;
                 const { data, status } = yield axios_1.default.post(url, JSON.parse(JSON.stringify(request)), {
                     headers: {
@@ -158,7 +158,7 @@ class MicroServiceBackendAxios {
      */
     cancelFlow(request, onError, version = "v1") {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield (0, client_1.default)(() => __awaiter(this, void 0, void 0, function* () {
+            return yield (0, modules_1.httpClient)(() => __awaiter(this, void 0, void 0, function* () {
                 const url = `${this.db}${this.cancellationEndpoint}/${version}`;
                 const { data, status } = yield axios_1.default.post(url, JSON.parse(JSON.stringify(request)), {
                     headers: {
@@ -183,7 +183,7 @@ class MicroServiceBackendAxios {
      */
     pingFlow(request, onError, version = "v1") {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield (0, client_1.default)(() => __awaiter(this, void 0, void 0, function* () {
+            return yield (0, modules_1.httpClient)(() => __awaiter(this, void 0, void 0, function* () {
                 const url = `${this.db}${this.pingEndpoint}/${version}`;
                 const { data, status } = yield axios_1.default.post(url, JSON.parse(JSON.stringify(request)), {
                     headers: {
@@ -208,7 +208,7 @@ class MicroServiceBackendAxios {
      */
     signatureFlow(request, onError, version = "v1") {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield (0, client_1.default)(() => __awaiter(this, void 0, void 0, function* () {
+            return yield (0, modules_1.httpClient)(() => __awaiter(this, void 0, void 0, function* () {
                 const url = `${this.db}${this.webSignatureEndpoint}/${version}`;
                 const { data, status } = yield axios_1.default.post(url, JSON.parse(JSON.stringify(request)), {
                     headers: {
@@ -233,7 +233,7 @@ class MicroServiceBackendAxios {
      */
     wildCardIdentificationFlow(request, onError, version = "v1") {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield (0, client_1.default)(() => __awaiter(this, void 0, void 0, function* () {
+            return yield (0, modules_1.httpClient)(() => __awaiter(this, void 0, void 0, function* () {
                 const url = `${this.db}${this.wildcardEndpoint}/${version}`;
                 const { data, status } = yield axios_1.default.post(url, JSON.parse(JSON.stringify(request)), {
                     headers: {
@@ -258,7 +258,7 @@ class MicroServiceBackendAxios {
      */
     documentSigningFlow(request, onError, version = "v1") {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield (0, client_1.default)(() => __awaiter(this, void 0, void 0, function* () {
+            return yield (0, modules_1.httpClient)(() => __awaiter(this, void 0, void 0, function* () {
                 const url = `${this.db}${this.documentSigningEndpoint}/${version}`;
                 const { data, status } = yield axios_1.default.post(url, JSON.parse(JSON.stringify(request)), {
                     headers: {
@@ -283,7 +283,7 @@ class MicroServiceBackendAxios {
      */
     logApiUsage(request, onError, version = "v1") {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield (0, client_1.default)(() => __awaiter(this, void 0, void 0, function* () {
+            return yield (0, modules_1.httpClient)(() => __awaiter(this, void 0, void 0, function* () {
                 const url = `${this.db}${this.useReportEndpoint}/${version}`;
                 const { data, status } = yield axios_1.default.post(url, JSON.parse(JSON.stringify(request)), {
                     headers: {
