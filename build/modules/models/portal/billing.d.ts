@@ -1,8 +1,26 @@
+export interface BillInvoice {
+    id: number;
+    iat: number;
+    due: number;
+    url: string;
+    /**
+     * Checkout url
+     */
+    checkout: string;
+    paystack: {
+        id: number;
+        code: string;
+        customer: string;
+        due_date: string;
+        amount: number;
+    };
+}
 /**
  * Billing model class
 */
 export declare class BillingModel {
     paid: boolean;
+    invoice?: BillInvoice | undefined;
     endpoints: Record<string, number>;
     /**
      * Total racked up now

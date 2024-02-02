@@ -6,6 +6,10 @@ export declare namespace BankID {
         ios = "ng.bankid.mobile",
         iosID = ""
     }
+    class ApiFees {
+        static live: number;
+        static test: number;
+    }
     enum Links {
         ipChecker = "https://ipapi.co",
         oldDomain = "https://mobil.bankid.ng",

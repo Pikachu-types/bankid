@@ -1,7 +1,25 @@
 import { plainToInstance, Expose } from "class-transformer";
 import { CustomError, convertUnixToDate, unixTimeStampNow } from "labs-sharable";
 
-// each month first 100 calls free
+// <100 calls are free each month
+
+export interface BillInvoice {
+  id: number;
+  iat: number;
+  due: number;
+  url: string;
+  /**
+   * Checkout url
+   */
+  checkout: string,
+  paystack: {
+    id: number;
+    code: string;
+    customer: string;
+    due_date: string;
+    amount: number;
+  }
+}
 
 /**
  * Billing model class
@@ -9,6 +27,7 @@ import { CustomError, convertUnixToDate, unixTimeStampNow } from "labs-sharable"
 export class BillingModel {
   /* eslint new-cap: ["error", { "capIsNew": false }]*/
   @Expose() paid = false;
+  @Expose() invoice?: BillInvoice | undefined;
   @Expose() endpoints: Record<string, number> = {};
   /**
    * Total racked up now

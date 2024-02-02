@@ -9,7 +9,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.BillingModel = void 0;
 const class_transformer_1 = require("class-transformer");
 const labs_sharable_1 = require("labs-sharable");
-// each month first 100 calls free
 /**
  * Billing model class
 */
@@ -113,6 +112,9 @@ class BillingModel {
 __decorate([
     (0, class_transformer_1.Expose)()
 ], BillingModel.prototype, "paid", void 0);
+__decorate([
+    (0, class_transformer_1.Expose)()
+], BillingModel.prototype, "invoice", void 0);
 __decorate([
     (0, class_transformer_1.Expose)()
 ], BillingModel.prototype, "endpoints", void 0);

@@ -14,6 +14,11 @@ export namespace BankID {
     ios = "ng.bankid.mobile",
     iosID = "", /// todo fill when gone live
   }
+
+  export class ApiFees {
+    public static live = 0.5;
+    public static test = 0.1;
+  }
   
   export enum Links {
     ipChecker = "https://ipapi.co",

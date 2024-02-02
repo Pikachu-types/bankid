@@ -14,6 +14,11 @@ var BankID;
         AppIdentifier["ios"] = "ng.bankid.mobile";
         AppIdentifier["iosID"] = "";
     })(AppIdentifier = BankID.AppIdentifier || (BankID.AppIdentifier = {}));
+    class ApiFees {
+    }
+    ApiFees.live = 0.5;
+    ApiFees.test = 0.1;
+    BankID.ApiFees = ApiFees;
     let Links;
     (function (Links) {
         Links["ipChecker"] = "https://ipapi.co";
