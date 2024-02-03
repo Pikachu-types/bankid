@@ -55,6 +55,10 @@ var DocumentReference;
      */
     DocumentReference["signatures"] = "signatures";
     /**
+     * Operations logic collection
+     */
+    DocumentReference["operations"] = "ops";
+    /**
       * A request has just been handled
       */
     DocumentReference["requestLogged"] = "ids/{users}/history/{doc}";

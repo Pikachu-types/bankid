@@ -36,7 +36,7 @@ var BankID;
         Links["connectedDomain"] = "https://in.pasby.africa/connected/";
         Links["connectUri"] = "https://connect.bankid.ng/";
         Links["apiUri"] = "https://api.pasby.africa";
-        Links["authUri"] = "https://api.pasby.africa/authorization/grant/v1";
+        Links["authUri"] = "https://api.pasby.africa/api/v1/flow/authorize";
     })(Links = BankID.Links || (BankID.Links = {}));
     class helpers {
         /**

@@ -19,6 +19,15 @@ export namespace BankID {
     public static live = 0.5;
     public static test = 0.1;
   }
+
+  export interface Logs {
+    id: string,
+    title: string,
+    description: string,
+    link: string,
+    tags: string[],
+    iat: number,
+  }
   
   export enum Links {
     ipChecker = "https://ipapi.co",
@@ -36,7 +45,7 @@ export namespace BankID {
     connectedDomain = "https://in.pasby.africa/connected/",
     connectUri = "https://connect.bankid.ng/",
     apiUri = "https://api.pasby.africa",
-    authUri = `https://api.pasby.africa/authorization/grant/v1`,
+    authUri = `https://api.pasby.africa/api/v1/flow/authorize`,
   }
 
   export class helpers {

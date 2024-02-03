@@ -51,6 +51,10 @@ export declare enum DocumentReference {
      */
     signatures = "signatures",
     /**
+     * Operations logic collection
+     */
+    operations = "ops",
+    /**
       * A request has just been handled
       */
     requestLogged = "ids/{users}/history/{doc}",

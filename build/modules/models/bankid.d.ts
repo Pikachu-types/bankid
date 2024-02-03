@@ -10,6 +10,14 @@ export declare namespace BankID {
         static live: number;
         static test: number;
     }
+    interface Logs {
+        id: string;
+        title: string;
+        description: string;
+        link: string;
+        tags: string[];
+        iat: number;
+    }
     enum Links {
         ipChecker = "https://ipapi.co",
         oldDomain = "https://mobil.bankid.ng",
@@ -26,7 +34,7 @@ export declare namespace BankID {
         connectedDomain = "https://in.pasby.africa/connected/",
         connectUri = "https://connect.bankid.ng/",
         apiUri = "https://api.pasby.africa",
-        authUri = "https://api.pasby.africa/authorization/grant/v1"
+        authUri = "https://api.pasby.africa/api/v1/flow/authorize"
     }
     class helpers {
         /**

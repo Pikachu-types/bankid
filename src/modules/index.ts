@@ -24,6 +24,7 @@ export * from "./models/public/vendors";
 export * from "./models/public/users";
 export * from "./models/public/documents";
 export * from "./models/portal/apps";
+export * from "./models/portal/dash_content";
 export * from "./models/portal/billing";
 export * from "./models/public/standaloneIds";
 export * from "./models/bankid";
