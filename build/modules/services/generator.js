@@ -40,7 +40,7 @@ class Generator {
      * @return {string} returns value.
      */
     static appLink(mode, request, source, nin) {
-        return `${bankid_1.BankID.Links.uniDomain}/auth/?mode=${mode}` +
+        return `${bankid_1.BankID.Links.uniDomain}/app/?mode=${mode}` +
             `&id=${request.id}&source=${source}${nin !== undefined ?
                 `&nin=${nin}` : ""}`;
     }
