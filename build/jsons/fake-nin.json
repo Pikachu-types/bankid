@@ -1,0 +1,119 @@
+[
+    {
+        "address": {
+            "country": "Nigeria",
+            "city": "Lorem",
+            "countryCode": "NG",
+            "formatted": "Lorem ipsum dolor 14, Lorem Rd, 000100, Lorem Island, Nigeria.",
+            "latitude": null,
+            "postCode": "000100",
+            "place": "Lorem ipsum dolor 14, Lorem Rd",
+            "longitude": null
+        },
+        "fake": true,
+        "created": 1683757060,
+        "financial": null,
+        "bio": {
+            "birthdate": "Mon Jan 20 2025 11:27:05 GMT+0000",
+            "gender": "male",
+            "birthplace": "Lorem Island",
+            "dateOfDeath": null,
+            "birthnumber": 1737372425,
+            "maritalStatus": "single"
+        },
+        "source": [
+            "nin",
+            "passport"
+        ],
+        "locale": "en",
+        "nin": "10000000000",
+        "nationality": {
+            "pep": false,
+            "nationalities": [
+                "Nigeria"
+            ],
+            "residence": "Nigeria",
+            "primary": "Nigerian"
+        },
+        "vendor": "vnd_osgcq5i8n379axrbtlkd0eh4v1mufj",
+        "contact": {
+            "emailVerified": true,
+            "phone": "+23481811870442",
+            "phoneVerified": true,
+            "email": "example@email.com"
+        },
+        "naming": {
+            "titleSuffix": null,
+            "given": "Ipsum",
+            "middle": "Vestum",
+            "preferredUsername": "",
+            "nickname": "Mollis",
+            "name": "Ipsum Vestibulum",
+            "titlePrefix": null,
+            "family": "Vestibulum",
+            "title": "Mr."
+        },
+        "id": "bid_10000000000",
+        "updatedAt": 1683757060,
+        "iDs": [
+            "std_10000000000-3LKPca"
+        ]
+    },
+    {
+        "address": {
+            "country": "Nigeria",
+            "city": "Bonny",
+            "countryCode": "NG",
+            "formatted": "Jackmay Street 01, 503101, Bonny Island, Nigeria.",
+            "latitude": null,
+            "postCode": "503101",
+            "place": "Jackmay Street 01",
+            "longitude": null
+        },
+        "created": 1683757060,
+        "financial": {},
+        "bio": {
+            "birthdate": "Sun Feb 20 2000 22:17:40 GMT+0000",
+            "gender": "male",
+            "birthplace": "Bonny",
+            "dateOfDeath": null,
+            "birthnumber": 951085060,
+            "maritalStatus": "single"
+        },
+        "source": [
+            "nin",
+            "passport"
+        ],
+        "locale": "en",
+        "nin": "73567929300",
+        "nationality": {
+            "pep": false,
+            "nationalities": [
+                "Nigeria"
+            ],
+            "residence": "Nigeria",
+            "primary": "Nigerian"
+        },
+        "vendor": "vnd_osgcq5i8n379axrbtlkd0eh4v1mufj",
+        "contact": {
+            "emailVerified": true,
+            "phone": "+234804931239239",
+            "phoneVerified": true,
+            "email": "email@email.com"
+        },
+        "naming": {
+            "titleSuffix": null,
+            "given": "Test Account",
+            "middle": "Digital ID",
+            "preferredUsername": "",
+            "nickname": "TDS",
+            "name": "Test Digital ID",
+            "titlePrefix": null,
+            "family": "Finsel-Test",
+            "title": "Mr."
+        },
+        "iDs": [],
+        "id": "bid_73567929300",
+        "updatedAt": 1683757060
+    }
+]

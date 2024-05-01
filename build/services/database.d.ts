@@ -1,0 +1,198 @@
+import * as admin from "firebase-admin";
+import { BillingModel, ClientApp, ConsumerModel, DocumentAction, Documents, IdentificationModel, IdentificationRequest, Requests, StandaloneBankID, VendorModel, eSignature } from "..";
+export declare namespace DatabaseFunctions {
+    /**
+    * Database helper class
+    */
+    class Getters {
+        readonly db: admin.firestore.Firestore;
+        constructor(admin: admin.firestore.Firestore);
+        /**
+         * Go to database vendor collection and get all
+         * available vendors
+         * @param {string} cipher encryption key
+         * @return {Promise<VendorModel[]>} returns list.
+         */
+        retrieveVendors(cipher: string): Promise<VendorModel[]>;
+        /**
+         * Go to database ids collection and get all
+         * registered social security numbers nin
+         * @param {string} cipher encryption key
+         * @return {Promise<IdentificationModel[]>} returns list.
+         */
+        retrieveRegisteredNINs(cipher: string): Promise<IdentificationModel[]>;
+        /**
+         * Go to database ids collection and get all
+         * issued bankids
+         * @param {string} ref registered nin to check for issued bank ids
+         * @return {Promise<StandaloneBankID[]>} returns list.
+         */
+        retrieveIssuedBankIDs(ref: string): Promise<StandaloneBankID[]>;
+        /**
+         * Go to database consumer collection and get all
+         * available consumers
+         * @return {Promise<ConsumerModel[]>} returns list.
+         */
+        retrieveConsumers(): Promise<ConsumerModel[]>;
+        /**
+         * Get consumer apps
+         * @param {string} id consumer id
+         * @return {Promise<ClientApp[]>} returns list.
+         */
+        getConsumerApps(id: string): Promise<ClientApp[]>;
+        /**
+         * Go to database request collection and
+         * encrypted identification request
+         * @param {string} jwt provide encryption key for jwt decoding
+         * @return {Promise<IdentificationRequest[]>} returns list.
+         */
+        retrieveIdentificationRequests(jwt: string): Promise<IdentificationRequest[]>;
+        /**
+         * Go to database request collection and get raw requests
+         * @return {Promise<Requests[]>} returns list.
+         */
+        retrieveRawIdentificationRequests(): Promise<Requests[]>;
+        /**
+         * Get users signing history
+         * @param {string} user registered user
+         * @return {Promise<IdentificationRequest[]>} returns list.
+         */
+        getSigningHistory(user: string): Promise<IdentificationRequest[]>;
+        /**
+         * Get consumers billing history
+         * @param {string} consumer registered is
+         * @return {Promise<IdentificationRequest[]>} returns list.
+         */
+        getApiBillingUsages(consumer: string): Promise<BillingModel[]>;
+        /**
+         * Get e-documents
+         * @return {Promise<Documents[]>} returns list.
+         */
+        getEDocs(): Promise<Documents[]>;
+        /**
+         * A power function used to check if firestore document exist
+         * @param {string} docID reference id
+         * @param {string} collectionPath string path of collection
+         *  i.e users/{user}/notification
+         * @return {Promise<boolean>} nothing
+         */
+        doesDocumentExist(docID: string, collectionPath: string): Promise<boolean>;
+        /**
+         * A power function used to check if firestore sub document exist
+         * i.e consumers/{docID}/apps/{subID}
+         * @param {string} subID main document in sub collection being looked for
+         * @param {string} docID reference id
+         * @param {string} collectionPath string path of collection
+         * @param {string} subCollectionPath string path of sub collection
+         * @return {Promise<boolean>} nothing
+         */
+        doesSubDocumentExist(subID: string, docID: string, collectionPath: string, subCollectionPath: string): Promise<boolean>;
+    }
+    /**
+     * Database management setters, updates and deletes
+     */
+    class Management {
+        readonly db: admin.firestore.Firestore;
+        constructor(admin: admin.firestore.Firestore);
+        /**
+         * Upload identification request to database
+         * @param {Record<string, unknown>} data model structure
+         * @param {DocumentAction} action type of document action
+         * @return {Promise<void>} void.
+         */
+        manageIdentificationRequest(data: Requests, action: DocumentAction): Promise<void>;
+        /**
+         * Enrol a new nin for BankIDs
+         * @param {Record<string, unknown>} params required arguments
+         * @return {Promise<void>} returns list.
+         */
+        enrolNIN(params: {
+            /**
+             * owner of the new pasby
+             */
+            person: IdentificationModel;
+            /**
+             * encryption key
+             */
+            cipher: string;
+        }): Promise<void>;
+        /**
+         * Create a standalone
+          * @param {IdentificationModel} person owner of the new BankID
+          * @param {StandaloneBankID} id BankID to be created
+         * @return {Promise<void>} returns list.
+         */
+        createBankID(person: IdentificationModel, id: StandaloneBankID): Promise<void>;
+        /**
+         * Log image of stored nin
+          * @param {IdentificationModel} person owner of the new BankID
+          * @param {string} image base 64 content
+         * @return {Promise<void>} returns list.
+         */
+        logRegisteredNinImage(person: IdentificationModel, image: string): Promise<void>;
+        /**
+         * Modify identification request in database
+         * @param {IdentificationRequest} data model structure
+         * @param {boolean} setter leave as true if
+         * function is to create a new instance of
+         * document else edit the request
+         * @return {Promise<void>} void.
+         */
+        updateFlowHistory(data: IdentificationRequest, setter?: boolean): Promise<void>;
+        /**
+         * Modify consumer billing history on console
+         * @param {BillingModel} data model structure
+         * @param {ConsumerModel} consumer model structure
+         * @param {boolean} setter leave as true if function is to create a new instance of document else edit the request
+         * @return {Promise<void>} void.
+         */
+        updateConsumerBillingHistory(data: BillingModel, consumer: ConsumerModel, setter: boolean): Promise<void>;
+        /**
+         * Add e-signature for document sign flow
+         * @param {string} id document id
+         * @param {eSignature} data map entry
+         * @return {Promise<void>} void.
+         */
+        addEDocSign(id: string, data: eSignature): Promise<void>;
+        /**
+         * Modify e-signature request in database
+         * @param {Documents} data model structure
+         * @param {boolean} setter leave as true if
+         * function is to create a new instance of
+         * document else edit the request
+         * @return {Promise<void>} void.
+         */
+        modifyEDocument(data: Documents, setter?: boolean): Promise<void>;
+        /**
+         * Manage new issued digital BankID/pasby
+         * @param {string} ref registered nin to check for issued bank ids
+         * @param {StandaloneBankID} data model structure
+         * @param {boolean} modify true if create new doc else false
+         * @return {Promise<void>} void.
+         */
+        manageIssuedBankID(ref: string, data: StandaloneBankID, modify?: boolean): Promise<void>;
+        /**
+         * modify identification model (bankid) to database
+         * @param {Record<string, unknown>} params arguments
+         * @param {boolean} create true if user model never exists else false and we create one
+         * @return {Promise<void>} void.
+         */
+        modifyIdentificationCollection(params: {
+            /**
+             * model structure
+             */
+            data: IdentificationModel;
+            cipher: string;
+        }, create?: boolean): Promise<void>;
+        /**
+         * modify consumer model  to database
+         * @param {VendorModel} data model structure
+         * @param {boolean} create true if user model never exists else false and we create one
+         * @return {Promise<void>} void.
+         */
+        modifyVendorsCollection(params: {
+            data: VendorModel;
+            cipher: string;
+        }, create?: boolean): Promise<void>;
+    }
+}

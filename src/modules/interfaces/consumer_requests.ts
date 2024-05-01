@@ -1,5 +1,5 @@
 import { ActionType, RequestMode } from "../enums/enums";
-import { DeviceProfile } from "./documents";
+import { AuthToken, DeviceProfile } from "./documents";
 
 /**
  * Authentication request
@@ -146,4 +146,19 @@ export interface ModifyBankiD {
    * Device information
    */
   device?: DeviceProfile;
+}
+
+
+/**
+ * MobileAppsResponse
+ */
+export interface ConsumerAppsResponse {
+  /**
+   * JWT token string
+   */
+  token: string,
+  /**
+   * token Model
+   */
+  model: AuthToken
 }

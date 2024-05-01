@@ -1,6 +1,6 @@
 {
   "name": "@bukadirect/bankid",
-  "version": "0.3.2",
+  "version": "0.3.3",
   "description": "This package/library servers as a share point for the mono repo structure javascript projects infrastructure is built upon.",
   "main": "build/index.js",
   "files": [
@@ -23,8 +23,9 @@
     "url": "https://github.com/Finsel-DGI/bankid/issues"
   },
   "homepage": "https://github.com/Finsel-DGI/bankid#readme",
-  "license": "ISC",
+  "license": "MIT",
   "dependencies": {
+    "firebase-admin": "^11.8.0",
     "axios": "^1.4.0",
     "bwip-js": "^4.1.2",
     "class-transformer": "^0.5.1",

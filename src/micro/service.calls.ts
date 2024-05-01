@@ -19,15 +19,15 @@ export class MicroServiceBackendAxios {
   db: string;
   app: string;
   private readonly authorizationEndpoint = "/authenticate";
-  private readonly webIDEndpoint = "/web-identification";
-  private readonly mobileIDEndpoint = "/mobile-identification";
-  private readonly mobileSignatureEndpoint = "/mobile-signature";
-  private readonly webSignatureEndpoint = "/web-signature";
-  private readonly pingEndpoint = "/request-ping";
-  private readonly cancellationEndpoint = "/request-cancellation";
-  private readonly wildcardEndpoint = "/wildcard-identification";
-  private readonly documentSigningEndpoint = "/doc-signature";
-  private readonly useReportEndpoint = "/usage-report";
+  private readonly webIDEndpoint = "/identification/different";
+  private readonly mobileIDEndpoint = "/identification/same";
+  private readonly mobileSignatureEndpoint = "/signing/same";
+  private readonly webSignatureEndpoint = "/signing/different";
+  private readonly pingEndpoint = "/flow/ping";
+  private readonly cancellationEndpoint = "/flow/cancel";
+  private readonly wildcardEndpoint = "/identification/wildcard";
+  private readonly documentSigningEndpoint = "/signing/document";
+  private readonly useReportEndpoint = "/reporting";
 
   /**
    * Class main constructor
@@ -57,7 +57,7 @@ export class MicroServiceBackendAxios {
       if (request.token) {
         query = query + `&old=${request.token}`;
       }
-      const url = `${this.db}${this.authorizationEndpoint}/${version}?${query}`;
+      const url = `${this.db.replace("[version]", version)}${this.authorizationEndpoint}/?${query}`;
       const { data, status } = await axios.get<DefaultResponse>(
         url,
         {
@@ -86,7 +86,7 @@ export class MicroServiceBackendAxios {
     onError?: MessageCallback,
     version: string = "v1") {
     return await httpClient(async () => {
-      const url = `${this.db}${this.webIDEndpoint}/${version}`;
+      const url = `${this.db.replace("[version]", version)}${this.webIDEndpoint}/${version}`;
       const { data, status } = await axios.post<DefaultResponse>(
         url, JSON.parse(JSON.stringify(request)),
         {
@@ -116,10 +116,10 @@ export class MicroServiceBackendAxios {
   public async mobIdentificationFlow(
     request: IdentificationFlowRequest,
     onError?: MessageCallback,
-    version: string = "v2"
+    version: string = "v1"
   ) {
     return await httpClient(async () => {
-      const url = `${this.db}${this.mobileIDEndpoint}/${version}`;
+      const url = `${this.db.replace("[version]", version)}${this.mobileIDEndpoint}`;
       const { data, status } = await axios.post<DefaultResponse>(
         url, JSON.parse(JSON.stringify(request)),
         {
@@ -150,10 +150,10 @@ export class MicroServiceBackendAxios {
   public async mobSignatureFlow(
     request: SignatureFlowRequest,
     onError?: MessageCallback,
-    version: string = "v2"
+    version: string = "v1"
   ) {
     return await httpClient(async () => {
-      const url = `${this.db}${this.mobileSignatureEndpoint}/${version}`;
+      const url = `${this.db.replace("[version]", version)}${this.mobileSignatureEndpoint}`;
       const { data, status } = await axios.post<DefaultResponse>(
         url, JSON.parse(JSON.stringify(request)),
         {
@@ -187,7 +187,7 @@ export class MicroServiceBackendAxios {
     version: string = "v1"
   ) {
     return await httpClient(async () => {
-      const url = `${this.db}${this.cancellationEndpoint}/${version}`;
+      const url = `${this.db.replace("[version]", version)}${this.cancellationEndpoint}`;
       const { data, status } = await axios.post<DefaultResponse>(
         url, JSON.parse(JSON.stringify(request)),
         {
@@ -218,7 +218,7 @@ export class MicroServiceBackendAxios {
     version: string = "v1"
   ) {
     return await httpClient(async () => {
-      const url = `${this.db}${this.pingEndpoint}/${version}`;
+      const url = `${this.db.replace("[version]", version)}${this.pingEndpoint}`;
       const { data, status } = await axios.post<DefaultResponse>(
         url, JSON.parse(JSON.stringify(request)),
         {
@@ -250,7 +250,7 @@ export class MicroServiceBackendAxios {
     version: string = "v1"
   ) {
     return await httpClient(async () => {
-      const url = `${this.db}${this.webSignatureEndpoint}/${version}`;
+      const url = `${this.db.replace("[version]", version)}${this.webSignatureEndpoint}`;
       const { data, status } = await axios.post<DefaultResponse>(
         url, JSON.parse(JSON.stringify(request)),
         {
@@ -282,7 +282,7 @@ export class MicroServiceBackendAxios {
     version: string = "v1"
   ) {
     return await httpClient(async () => {
-      const url = `${this.db}${this.wildcardEndpoint}/${version}`;
+      const url = `${this.db.replace("[version]", version)}${this.wildcardEndpoint}`;
       const { data, status } = await axios.post<DefaultResponse>(
         url, JSON.parse(JSON.stringify(request)),
         {
@@ -313,7 +313,7 @@ export class MicroServiceBackendAxios {
     version: string = "v1"
   ) {
     return await httpClient(async () => {
-      const url = `${this.db}${this.documentSigningEndpoint}/${version}`;
+      const url = `${this.db.replace("[version]", version)}${this.documentSigningEndpoint}`;
       const { data, status } = await axios.post<DefaultResponse>(
         url, JSON.parse(JSON.stringify(request)),
         {
@@ -344,7 +344,7 @@ export class MicroServiceBackendAxios {
     version: string = "v1"
   ) {
     return await httpClient(async () => {
-      const url = `${this.db}${this.useReportEndpoint}/${version}`;
+      const url = `${this.db.replace("[version]", version)}${this.useReportEndpoint}`;
       const { data, status } = await axios.post<DefaultResponse>(
         url, JSON.parse(JSON.stringify(request)),
         {

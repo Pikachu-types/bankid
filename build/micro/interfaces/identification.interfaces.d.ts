@@ -40,11 +40,11 @@ export type IdentificationFlowRequest = {
      */
     useragent: string;
     /**
-     * App secret from header (v2 and above)
+     * App secret from header (v2 and above) [NOW REQUIRED EACH-TIME]
      */
     secret?: string;
     /**
-     * Consumer api key (v2 and above)
+     * Consumer api key (v2 and above) [NOW REQUIRED EACH-TIME]
      */
     apikey?: string;
 };

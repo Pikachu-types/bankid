@@ -33,6 +33,7 @@ export * from "./models/model_generator";
 export * from "./enums/shared";
 export * from "./enums/templates";
 export * from "./utils/e_signatures";
+export * from "./utils/consumer.helper";
 export * from "./enums/enums";
 export * from "./models/portal/consoleuser";
 export * from "./models/portal/sessions";
