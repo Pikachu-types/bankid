@@ -1,7 +1,7 @@
 {
   "name": "@bukadirect/bankid",
-  "version": "0.3.3",
-  "description": "This package/library servers as a share point for the mono repo structure javascript projects infrastructure is built upon.",
+  "version": "0.3.5",
+  "description": "Finsel DGI team shared typescript helper module for pasby",
   "main": "build/index.js",
   "files": [
     "/build"

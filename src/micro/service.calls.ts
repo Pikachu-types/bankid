@@ -86,7 +86,7 @@ export class MicroServiceBackendAxios {
     onError?: MessageCallback,
     version: string = "v1") {
     return await httpClient(async () => {
-      const url = `${this.db.replace("[version]", version)}${this.webIDEndpoint}/${version}`;
+      const url = `${this.db.replace("[version]", version)}${this.webIDEndpoint}`;
       const { data, status } = await axios.post<DefaultResponse>(
         url, JSON.parse(JSON.stringify(request)),
         {

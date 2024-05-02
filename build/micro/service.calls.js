@@ -78,7 +78,7 @@ class MicroServiceBackendAxios {
     identificationFlow(request, onError, version = "v1") {
         return __awaiter(this, void 0, void 0, function* () {
             return yield (0, modules_1.httpClient)(() => __awaiter(this, void 0, void 0, function* () {
-                const url = `${this.db.replace("[version]", version)}${this.webIDEndpoint}/${version}`;
+                const url = `${this.db.replace("[version]", version)}${this.webIDEndpoint}`;
                 const { data, status } = yield axios_1.default.post(url, JSON.parse(JSON.stringify(request)), {
                     headers: {
                         'Accept': 'application/json',
