@@ -195,6 +195,8 @@ export class MicroServiceBackendAxios {
             'Accept': 'application/json',
             'x-requested-with': this.app,
             'x-access-token': request.token,
+            'x-api-key': request.apikey,
+            'x-access-secret': request.secret,
           },
         }
       );
@@ -226,6 +228,8 @@ export class MicroServiceBackendAxios {
             'Accept': 'application/json',
             'x-requested-with': this.app,
             'x-access-token': request.token,
+            'x-api-key': request.apikey,
+            'x-access-secret': request.secret,
           },
         }
       );
@@ -258,6 +262,8 @@ export class MicroServiceBackendAxios {
             'Accept': 'application/json',
             'x-requested-with': this.app,
             'x-access-token': request.token,
+            'x-api-key': request.apikey,
+            'x-access-secret': request.secret,
           },
         }
       );
@@ -290,6 +296,8 @@ export class MicroServiceBackendAxios {
             'Accept': 'application/json',
             'x-requested-with': this.app,
             'x-access-token': request.token,
+            'x-api-key': request.apikey,
+            'x-access-secret': request.secret,
           },
         }
       );
@@ -321,6 +329,8 @@ export class MicroServiceBackendAxios {
             'Accept': 'application/json',
             'x-requested-with': this.app,
             'x-access-token': request.token,
+            'x-api-key': request.apikey,
+            'x-access-secret': request.secret,
           },
         }
       );
@@ -335,16 +345,15 @@ export class MicroServiceBackendAxios {
    * Document signing flow db backend caller
    * @param {UsageRecording} request data map of request
    * @param {MessageCallback} onError get feedback on any error logs
-   * @param {string} version what api version would you want to interface with
    * @return {Promise<DefaultResponseAndStatus>} returns response.
    */
   public async logApiUsage(
     request: UsageRecording,
     onError?: MessageCallback,
-    version: string = "v1"
+    // version: string = "v2"
   ) {
     return await httpClient(async () => {
-      const url = `${this.db.replace("[version]", version)}${this.useReportEndpoint}`;
+      const url = `${this.db.replace("[version]", "v2")}${this.useReportEndpoint}`;
       const { data, status } = await axios.post<DefaultResponse>(
         url, JSON.parse(JSON.stringify(request)),
         {

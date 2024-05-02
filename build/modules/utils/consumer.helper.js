@@ -53,8 +53,7 @@ class ConsumerHelper {
      */
     static validateIDRequest(req) {
         if (req.claims === undefined) {
-            throw new labs_sharable_1.CustomError("Requester needs to " +
-                "state identification claims", 428);
+            throw new labs_sharable_1.CustomError("Requester needs to state identification claims", 428);
         }
         if (req.mode !== __1.RequestMode.Identification) {
             throw new labs_sharable_1.CustomError("Forbidden request: Mode mismatch", 403);

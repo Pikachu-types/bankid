@@ -38,7 +38,15 @@ export type CancelFlowRequest = {
   /**
   * attach any old tokens
   */
-  token: string;
+  token?: string;
+  /**
+   * Consumer api key
+   */
+  apikey: string;
+  /**
+   * App secret key
+   */
+  secret: string;
 }
 
 
@@ -53,5 +61,13 @@ export type PingFlowRequest = {
   /**
   * attach any old tokens
   */
-  token: string;
+  token?: string;
+  /**
+   * Consumer api key
+   */
+  apikey: string;
+  /**
+   * App secret key
+   */
+  secret: string;
 }

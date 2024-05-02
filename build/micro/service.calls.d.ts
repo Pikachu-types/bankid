@@ -102,8 +102,7 @@ export declare class MicroServiceBackendAxios {
      * Document signing flow db backend caller
      * @param {UsageRecording} request data map of request
      * @param {MessageCallback} onError get feedback on any error logs
-     * @param {string} version what api version would you want to interface with
      * @return {Promise<DefaultResponseAndStatus>} returns response.
      */
-    logApiUsage(request: UsageRecording, onError?: MessageCallback, version?: string): Promise<import("../modules").DefaultResponseAndStatus | undefined>;
+    logApiUsage(request: UsageRecording, onError?: MessageCallback): Promise<import("../modules").DefaultResponseAndStatus | undefined>;
 }

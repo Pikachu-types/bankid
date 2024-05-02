@@ -49,8 +49,7 @@ export class ConsumerHelper {
   public static validateIDRequest(req: IDRequest)
     : void {
     if (req.claims === undefined) {
-      throw new CustomError("Requester needs to " +
-        "state identification claims", 428);
+      throw new CustomError("Requester needs to state identification claims", 428);
     }
     if (req.mode !== RequestMode.Identification) {
       throw new CustomError("Forbidden request: Mode mismatch", 403);

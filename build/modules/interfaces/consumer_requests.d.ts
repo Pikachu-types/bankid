@@ -72,6 +72,14 @@ export interface eDocSignRequests {
     useragent: string;
     ip: string;
     token?: string;
+    /**
+     * Consumer api key
+     */
+    apikey: string;
+    /**
+     * App secret key
+     */
+    secret: string;
 }
 /**
  * Ping request

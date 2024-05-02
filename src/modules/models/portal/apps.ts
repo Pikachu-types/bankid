@@ -79,7 +79,7 @@ export class ClientApp {
     for (let i = 0; i < this.secrets.length; i++){
       var secret = FunctionHelpers.bankidCipherToString(cipher,
         this.secrets[i].secret);
-      if (secret === other) {
+      if (secret === other && !this.secrets[i].revoked) {
         flag = true;
         break;
       }
