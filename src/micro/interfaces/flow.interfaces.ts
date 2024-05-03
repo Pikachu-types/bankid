@@ -42,11 +42,11 @@ export type CancelFlowRequest = {
   /**
    * Consumer api key
    */
-  apikey: string;
+  apikey?: string;
   /**
    * App secret key
    */
-  secret: string;
+  secret?: string;
 }
 
 
@@ -65,9 +65,9 @@ export type PingFlowRequest = {
   /**
    * Consumer api key
    */
-  apikey: string;
+  apikey?: string;
   /**
    * App secret key
    */
-  secret: string;
+  secret?: string;
 }

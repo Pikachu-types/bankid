@@ -62,19 +62,26 @@ class ConsumerHelper {
     /**
      * Validate request and return request
      * @param {string} id request id
-     * @param {Record<string, unknown>} param arguments
+     * @param {Record<string, unknown>} params arguments
      * @return {Promise<Requests>} returns request if okay
      */
     static validateRequest(id, params) {
         return __awaiter(this, void 0, void 0, function* () {
             const sign = __1.Requests.findOne(yield params.db.retrieveRawIdentificationRequests(), id);
             if (sign === undefined) {
-                throw new labs_sharable_1.CustomError("Request with such id does not exists", 404);
+                throw new labs_sharable_1.CustomError("Flow request with such id does not exists", 404);
             }
             if (sign.cancelled) {
-                throw new labs_sharable_1.CustomError("Request has been cancelled", 208);
+                throw new labs_sharable_1.CustomError("Flow request has been cancelled", 208);
             }
-            return sign;
+            const decode = yield this.decodeRequest(sign, { jwt: params.jwt });
+            if (decode.app !== params.app.app) {
+                throw new labs_sharable_1.CustomError("You are forbidden to make this inquiry", 406);
+            }
+            return {
+                signature: decode,
+                request: sign,
+            };
         });
     }
     /**
@@ -106,6 +113,28 @@ class ConsumerHelper {
             return nin;
         else
             return `${__1.DocumentTypes.user}${nin}`;
+    }
+    /**
+     * Decode request
+     * @param {Requests} req flow request
+     * @param {Record<string, unknown>} params arguments
+     * @return {RequestSignature} signature data
+     */
+    static decodeRequest(req, params) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                return labs_sharable_1.LabsCipher.
+                    jwtDecode(req.request, params.jwt);
+            }
+            catch (error) {
+                if (error.name == "TokenExpiredError") {
+                    throw new labs_sharable_1.CustomError("Request has expired", 401);
+                }
+                else {
+                    throw new labs_sharable_1.CustomError("Request has expired", 401);
+                }
+            }
+        });
     }
 }
 exports.ConsumerHelper = ConsumerHelper;

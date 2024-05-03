@@ -1,7 +1,7 @@
 import { MessageCallback, eDocSignRequests } from "../modules";
 import { AuthorizationGrantRequest, CancelFlowRequest, PingFlowRequest } from "./interfaces/flow.interfaces";
 import { IdentificationFlowRequest } from "./interfaces/identification.interfaces";
-import { SignatureFlowRequest } from "./interfaces/signature.interfaces";
+import { SignatureFlowRequest, WildcardSignatureFlowRequest } from "./interfaces/signature.interfaces";
 import { UsageRecording } from "./interfaces/billing.interfaces";
 /**
  * Helper class to handle all needed api communication between
@@ -17,7 +17,8 @@ export declare class MicroServiceBackendAxios {
     private readonly webSignatureEndpoint;
     private readonly pingEndpoint;
     private readonly cancellationEndpoint;
-    private readonly wildcardEndpoint;
+    private readonly wildcardIdentificationEndpoint;
+    private readonly wildcardSignatureEndpoint;
     private readonly documentSigningEndpoint;
     private readonly useReportEndpoint;
     /**
@@ -58,6 +59,14 @@ export declare class MicroServiceBackendAxios {
      * @return {Promise<DefaultResponseAndStatus>} returns response.
      */
     mobSignatureFlow(request: SignatureFlowRequest, onError?: MessageCallback, version?: string): Promise<import("../modules").DefaultResponseAndStatus | undefined>;
+    /**
+     * Signature flow for a wildcard audience db backend caller
+     * @param {SignatureFlowRequest} request data map of request
+     * @param {MessageCallback} onError get feedback on any error logs
+     * @param {string} version what api version would you want to interface. [note: do not use v1]
+     * @return {Promise<DefaultResponseAndStatus>} returns response.
+     */
+    wildcardSignatureFlow(request: WildcardSignatureFlowRequest, onError?: MessageCallback, version?: string): Promise<import("../modules").DefaultResponseAndStatus | undefined>;
     /**
      * Cancel a flow db backend caller
      * @param {CancelFlowRequest} request data map of request

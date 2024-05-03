@@ -58,6 +58,22 @@ export interface SignatureRequest {
 }
 
 /**
+ * Wildcard Signature request
+ */
+export interface WildcardSignatureRequest {
+  mode: RequestMode;
+  action: ActionType;
+  webhook?: {
+    host: string;
+    reference: string;
+  };
+  useragent: string;
+  payload: string;
+  ip: string;
+  seeds: number;
+}
+
+/**
  * electronic document signature request
  */
 export interface eDocSignRequests {

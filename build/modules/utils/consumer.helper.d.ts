@@ -1,5 +1,5 @@
-import { AuthToken } from "../interfaces/documents";
-import { IDRequest, Requests, SignatureRequest } from "..";
+import { AuthToken, RequestSignature } from "../interfaces/documents";
+import { IDRequest, Requests, Signing } from "..";
 import { DatabaseFunctions } from "../../services";
 export declare class ConsumerHelper {
     /**
@@ -14,7 +14,7 @@ export declare class ConsumerHelper {
      * @param {SignatureRequest} req signature request
      * @return {void} function
      */
-    static validateSignatureRequest(req: SignatureRequest): void;
+    static validateSignatureRequest(req: Signing): void;
     /**
      * Validate request
      * @param {IDRequest} req identification request
@@ -24,12 +24,17 @@ export declare class ConsumerHelper {
     /**
      * Validate request and return request
      * @param {string} id request id
-     * @param {Record<string, unknown>} param arguments
+     * @param {Record<string, unknown>} params arguments
      * @return {Promise<Requests>} returns request if okay
      */
     static validateRequest(id: string, params: {
         db: DatabaseFunctions.Getters;
-    }): Promise<Requests>;
+        app: AuthToken;
+        jwt: string;
+    }): Promise<{
+        signature: RequestSignature;
+        request: Requests;
+    }>;
     /**
      * Create expiration time
      * @param {number} duration length of time
@@ -44,4 +49,13 @@ export declare class ConsumerHelper {
      * @return {string}
      */
     static stringifyNIN(nin: string): string;
+    /**
+     * Decode request
+     * @param {Requests} req flow request
+     * @param {Record<string, unknown>} params arguments
+     * @return {RequestSignature} signature data
+     */
+    static decodeRequest(req: Requests, params: {
+        jwt: string;
+    }): Promise<RequestSignature>;
 }

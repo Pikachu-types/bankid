@@ -8,7 +8,7 @@ import {
   CancelFlowRequest, PingFlowRequest
 } from "./interfaces/flow.interfaces";
 import { IdentificationFlowRequest } from "./interfaces/identification.interfaces";
-import { SignatureFlowRequest } from "./interfaces/signature.interfaces";
+import { SignatureFlowRequest, WildcardSignatureFlowRequest } from "./interfaces/signature.interfaces";
 import { UsageRecording } from "./interfaces/billing.interfaces";
 
 /**
@@ -25,7 +25,8 @@ export class MicroServiceBackendAxios {
   private readonly webSignatureEndpoint = "/signing/different";
   private readonly pingEndpoint = "/flow/ping";
   private readonly cancellationEndpoint = "/flow/cancel";
-  private readonly wildcardEndpoint = "/identification/wildcard";
+  private readonly wildcardIdentificationEndpoint = "/identification/wildcard";
+  private readonly wildcardSignatureEndpoint = "/signing/wildcard";
   private readonly documentSigningEndpoint = "/signing/document";
   private readonly useReportEndpoint = "/reporting";
 
@@ -175,6 +176,40 @@ export class MicroServiceBackendAxios {
 
 
   /**
+   * Signature flow for a wildcard audience db backend caller
+   * @param {SignatureFlowRequest} request data map of request
+   * @param {MessageCallback} onError get feedback on any error logs
+   * @param {string} version what api version would you want to interface. [note: do not use v1]
+   * @return {Promise<DefaultResponseAndStatus>} returns response.
+   */
+  public async wildcardSignatureFlow(
+    request: WildcardSignatureFlowRequest,
+    onError?: MessageCallback,
+    version: string = "v2" // no v1
+  ) {
+    return await httpClient(async () => {
+      const url = `${this.db.replace("[version]", version)}${this.wildcardSignatureEndpoint}`;
+      const { data, status } = await axios.post<DefaultResponse>(
+        url, JSON.parse(JSON.stringify(request)),
+        {
+          headers: {
+            'Accept': 'application/json',
+            'x-requested-with': this.app,
+            'x-access-token': request.token,
+            'x-api-key': request.apikey,
+            'x-access-secret': request.secret,
+          },
+        }
+      );
+      return {
+        response: data,
+        status: status,
+      };
+    }, onError);
+  }
+
+
+  /**
    * Cancel a flow db backend caller
    * @param {CancelFlowRequest} request data map of request
    * @param {MessageCallback} onError get feedback on any error logs
@@ -288,7 +323,7 @@ export class MicroServiceBackendAxios {
     version: string = "v1"
   ) {
     return await httpClient(async () => {
-      const url = `${this.db.replace("[version]", version)}${this.wildcardEndpoint}`;
+      const url = `${this.db.replace("[version]", version)}${this.wildcardIdentificationEndpoint}`;
       const { data, status } = await axios.post<DefaultResponse>(
         url, JSON.parse(JSON.stringify(request)),
         {

@@ -3,6 +3,7 @@ import { ConsoleUser, ConsumerUserReference } from "../models/portal/consoleuser
 import { ConsumerModel } from "../models/public/consumers";
 import { ClientApp } from "../models/portal/apps";
 import { IdentificationModel } from "../models/public/users";
+import { SignatureRequest, WildcardSignatureRequest } from "./consumer_requests";
 
 /**
  *  Define a type alias for the callback function
@@ -21,7 +22,12 @@ export type EndpointCallback = (request: Request,
     response: Response) => Promise<unknown>
 
 /**
- * BankID Account type
+ * pasby Account type
  */
 export type BAccount = ConsoleUser | ConsumerModel | ClientApp |
     IdentificationModel | ConsumerUserReference;
+
+/**
+* pasby signature Flow types
+*/
+export type Signing = SignatureRequest | WildcardSignatureRequest;

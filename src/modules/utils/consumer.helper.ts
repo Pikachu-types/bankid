@@ -1,7 +1,8 @@
 import { LabsCipher, CustomError, RequestStatus, convertDateToUnix } from "labs-sharable";
-import { AuthToken } from "../interfaces/documents";
-import { ActionType, DocumentTypes, IDRequest, RequestMode, Requests, SignatureRequest } from "..";
-import { DatabaseFunctions } from "../../services";
+import { AuthToken, RequestSignature } from "../interfaces/documents";
+import { ActionType, DocumentTypes, IDRequest, RequestMode, Requests, SignatureRequest, Signing } from "..";
+import { Accounts, DatabaseFunctions } from "../../services";
+import { JsonWebTokenError } from "jsonwebtoken";
 
 export class ConsumerHelper {
   /**
@@ -30,7 +31,7 @@ export class ConsumerHelper {
    * @param {SignatureRequest} req signature request
    * @return {void} function
    */
-  public static validateSignatureRequest(req: SignatureRequest)
+  public static validateSignatureRequest(req: Signing)
     : void {
     if (req.mode !== RequestMode.Signature) {
       throw new CustomError("Forbidden request: This is a signature request endpoint", 403);
@@ -59,24 +60,35 @@ export class ConsumerHelper {
   /**
    * Validate request and return request
    * @param {string} id request id
-   * @param {Record<string, unknown>} param arguments
+   * @param {Record<string, unknown>} params arguments
    * @return {Promise<Requests>} returns request if okay
    */
   public static async validateRequest(id: string, params: {
-    db: DatabaseFunctions.Getters
+    db: DatabaseFunctions.Getters,
+    app: AuthToken,
+    jwt: string
   })
-    : Promise<Requests> {
+    : Promise<{ signature: RequestSignature, request: Requests}> {
     const sign = Requests.findOne(await
       params.db.retrieveRawIdentificationRequests(),
       id);
 
     if (sign === undefined) {
-      throw new CustomError("Request with such id does not exists", 404);
+      throw new CustomError("Flow request with such id does not exists", 404);
     }
     if (sign.cancelled) {
-      throw new CustomError("Request has been cancelled", 208);
+      throw new CustomError("Flow request has been cancelled", 208);
     }
-    return sign;
+
+    const decode = await this.decodeRequest(sign, {jwt: params.jwt});
+
+    if (decode.app !== params.app.app) {
+      throw new CustomError("You are forbidden to make this inquiry", 406);
+    }
+    return {
+      signature: decode,
+      request: sign,
+    };
   }
 
   /**
@@ -111,5 +123,27 @@ export class ConsumerHelper {
     if (nin.startsWith(DocumentTypes.user)) return nin;
     else return `${DocumentTypes.user}${nin}`;
   }
-  
+
+  /**
+   * Decode request
+   * @param {Requests} req flow request
+   * @param {Record<string, unknown>} params arguments
+   * @return {RequestSignature} signature data
+   */
+  public static async decodeRequest(req: Requests, params: {
+    jwt: string
+  })
+    : Promise<RequestSignature> {
+    try {
+      return LabsCipher.
+        jwtDecode(req.request, params.jwt) as RequestSignature;
+    } catch (error) {
+      if ((error as JsonWebTokenError).name == "TokenExpiredError") {
+        throw new CustomError("Request has expired", 401);
+      } else {
+        throw new CustomError("Request has expired", 401);
+      }
+    }
+  }
+
 }
