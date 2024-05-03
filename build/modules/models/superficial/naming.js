@@ -59,7 +59,7 @@ class NamingData {
      * @return {string}full name of user
      */
     fullname() {
-        return `${this.given}${this.middle.length > 0 ? `${this.middle} ` : " "}${this.family}`;
+        return `${this.given}${this.middle.length > 0 ? ` ${this.middle} ` : " "}${this.family}`;
         // return this.given + " " + this.family;
     }
     /**
