@@ -10,9 +10,9 @@ var BankID;
     (function (AppIdentifier) {
         AppIdentifier["android"] = "ng.bankid.mobile";
         // uniLink = "ng.bankid://",
-        AppIdentifier["uniLink"] = "pasby://";
+        AppIdentifier["uniLink"] = "pasby://africa.id";
         AppIdentifier["ios"] = "ng.bankid.mobile";
-        AppIdentifier["iosID"] = "";
+        AppIdentifier["iosID"] = "6450365525";
     })(AppIdentifier = BankID.AppIdentifier || (BankID.AppIdentifier = {}));
     class ApiFees {
     }

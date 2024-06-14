@@ -2,9 +2,9 @@ import { MagicLinkModes } from "../enums/shared";
 export declare namespace BankID {
     enum AppIdentifier {
         android = "ng.bankid.mobile",
-        uniLink = "pasby://",
+        uniLink = "pasby://africa.id",
         ios = "ng.bankid.mobile",
-        iosID = ""
+        iosID = "6450365525"
     }
     class ApiFees {
         static live: number;

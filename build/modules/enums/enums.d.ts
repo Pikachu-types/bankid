@@ -201,8 +201,10 @@ export declare enum RequestSources {
  */
 export declare enum RequestStatus {
     failed = "failed",
+    extreme = "extreme",
     expiration = "expiration",
     unauthorized = "unauthorized",
     tokenMismatch = "token-mismatch",
+    mismatch = "mismatch",
     success = "successful"
 }

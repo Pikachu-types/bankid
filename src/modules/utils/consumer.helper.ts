@@ -1,7 +1,7 @@
 import { LabsCipher, CustomError, RequestStatus, convertDateToUnix } from "labs-sharable";
 import { AuthToken, RequestSignature } from "../interfaces/documents";
-import { ActionType, DocumentTypes, IDRequest, RequestMode, Requests, SignatureRequest, Signing } from "..";
-import { Accounts, DatabaseFunctions } from "../../services";
+import { ActionType, DocumentTypes, IDRequest, RequestMode, Requests, Signing } from "..";
+import { DatabaseFunctions } from "../../services";
 import { JsonWebTokenError } from "jsonwebtoken";
 
 export class ConsumerHelper {
@@ -65,7 +65,8 @@ export class ConsumerHelper {
    */
   public static async validateRequest(id: string, params: {
     db: DatabaseFunctions.Getters,
-    app: AuthToken,
+    app?: AuthToken,
+    admin?: boolean
     jwt: string
   })
     : Promise<{ signature: RequestSignature, request: Requests}> {
@@ -80,10 +81,14 @@ export class ConsumerHelper {
       throw new CustomError("Flow request has been cancelled", 208);
     }
 
-    const decode = await this.decodeRequest(sign, {jwt: params.jwt});
+    const decode = await this.decodeRequest(sign, { jwt: params.jwt });
+    
 
-    if (decode.app !== params.app.app) {
+    if (params.app && decode.app !== params.app.app && !params.admin) {
       throw new CustomError("You are forbidden to make this inquiry", 406);
+    }
+    if (!params.admin) {
+      throw new CustomError("You need special privileges to access this resource.");
     }
     return {
       signature: decode,

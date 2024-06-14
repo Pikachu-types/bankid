@@ -75,8 +75,11 @@ class ConsumerHelper {
                 throw new labs_sharable_1.CustomError("Flow request has been cancelled", 208);
             }
             const decode = yield this.decodeRequest(sign, { jwt: params.jwt });
-            if (decode.app !== params.app.app) {
+            if (params.app && decode.app !== params.app.app && !params.admin) {
                 throw new labs_sharable_1.CustomError("You are forbidden to make this inquiry", 406);
+            }
+            if (!params.admin) {
+                throw new labs_sharable_1.CustomError("You need special privileges to access this resource.");
             }
             return {
                 signature: decode,

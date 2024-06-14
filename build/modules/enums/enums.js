@@ -218,9 +218,11 @@ var RequestSources;
 var RequestStatus;
 (function (RequestStatus) {
     RequestStatus["failed"] = "failed";
+    RequestStatus["extreme"] = "extreme";
     RequestStatus["expiration"] = "expiration";
     RequestStatus["unauthorized"] = "unauthorized";
     RequestStatus["tokenMismatch"] = "token-mismatch";
+    RequestStatus["mismatch"] = "mismatch";
     RequestStatus["success"] = "successful";
 })(RequestStatus = exports.RequestStatus || (exports.RequestStatus = {}));
 //# sourceMappingURL=enums.js.map

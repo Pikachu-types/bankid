@@ -29,7 +29,8 @@ export declare class ConsumerHelper {
      */
     static validateRequest(id: string, params: {
         db: DatabaseFunctions.Getters;
-        app: AuthToken;
+        app?: AuthToken;
+        admin?: boolean;
         jwt: string;
     }): Promise<{
         signature: RequestSignature;

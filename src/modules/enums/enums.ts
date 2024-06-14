@@ -216,9 +216,11 @@ export enum RequestSources {
  */
 export enum RequestStatus {
   failed = "failed",
+  extreme = "extreme",
   expiration = "expiration",
   unauthorized = "unauthorized",
   tokenMismatch = "token-mismatch",
+  mismatch = "mismatch",
   success = "successful",
 }
 

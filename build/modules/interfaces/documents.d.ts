@@ -88,6 +88,10 @@ export interface DeviceProfile {
     deviceID: string;
     platform: string;
     serialNumber?: number;
+    app: {
+        build: number;
+        version: string;
+    };
 }
 /**
  * App data secrets
