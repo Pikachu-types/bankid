@@ -22,6 +22,7 @@ export * from "./models//public/requests";
 export * from "./models/public/responses";
 export * from "./models/public/vendors";
 export * from "./models/public/users";
+export * from "./models/public//invitation:request";
 export * from "./models/public/documents";
 export * from "./models/portal/apps";
 export * from "./models/portal/dash_content";

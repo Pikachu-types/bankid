@@ -51,6 +51,10 @@ var DocumentReference;
     DocumentReference["apps"] = "apps";
     DocumentReference["documents"] = "documents";
     /**
+     * For nin invitation actions
+     */
+    DocumentReference["invitations"] = "invitations";
+    /**
      * Sub collection for documents/signatures
      */
     DocumentReference["signatures"] = "signatures";
@@ -148,6 +152,7 @@ var DocumentTypes;
      * Console session
      */
     DocumentTypes["session"] = "sess_";
+    DocumentTypes["invitation"] = "invite_";
 })(DocumentTypes = exports.DocumentTypes || (exports.DocumentTypes = {}));
 /**
  * AppTypes on BankID

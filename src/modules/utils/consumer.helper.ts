@@ -87,7 +87,7 @@ export class ConsumerHelper {
     if (params.app && decode.app !== params.app.app && !params.admin) {
       throw new CustomError("You are forbidden to make this inquiry", 406);
     }
-    if (!params.admin) {
+    if (!params.admin && !params.app) {
       throw new CustomError("You need special privileges to access this resource.");
     }
     return {

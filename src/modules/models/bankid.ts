@@ -10,7 +10,7 @@ export namespace BankID {
   export enum AppIdentifier {
     android = "ng.bankid.mobile",
     // uniLink = "ng.bankid://",
-    uniLink = "pasby://africa.id",
+    uniLink = "pasby://africa.id/",
     ios = "ng.bankid.mobile",
     iosID = "6450365525", /// todo fill when gone live
   }

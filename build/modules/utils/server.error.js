@@ -62,7 +62,7 @@ class SeverError extends Error {
     static handleError(err) {
         if (this.isSeverError(err))
             return err;
-        if (labs_sharable_1.CustomError.isCustomError(err)) {
+        if (err instanceof labs_sharable_1.CustomError) {
             return this.changeCustomErrorToServerError(err);
         }
         return new SeverError({

@@ -38,6 +38,7 @@ __exportStar(require("./models//public/requests"), exports);
 __exportStar(require("./models/public/responses"), exports);
 __exportStar(require("./models/public/vendors"), exports);
 __exportStar(require("./models/public/users"), exports);
+__exportStar(require("./models/public//invitation:request"), exports);
 __exportStar(require("./models/public/documents"), exports);
 __exportStar(require("./models/portal/apps"), exports);
 __exportStar(require("./models/portal/dash_content"), exports);

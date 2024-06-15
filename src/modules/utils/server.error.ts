@@ -81,7 +81,7 @@ export class SeverError extends Error {
 
     if (this.isSeverError(err)) return err as SeverError;
 
-    if (CustomError.isCustomError(err as Object)) {
+    if (err instanceof CustomError) {
       return this.changeCustomErrorToServerError(err as CustomError);
     }
 

@@ -47,6 +47,10 @@ export declare enum DocumentReference {
     apps = "apps",
     documents = "documents",
     /**
+     * For nin invitation actions
+     */
+    invitations = "invitations",
+    /**
      * Sub collection for documents/signatures
      */
     signatures = "signatures",
@@ -138,7 +142,8 @@ export declare enum DocumentTypes {
     /**
      * Console session
      */
-    session = "sess_"
+    session = "sess_",
+    invitation = "invite_"
 }
 /**
  * AppTypes on BankID

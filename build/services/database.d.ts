@@ -1,5 +1,5 @@
 import * as admin from "firebase-admin";
-import { BillingModel, ClientApp, ConsumerModel, DocumentAction, Documents, IdentificationModel, IdentificationRequest, Requests, StandaloneBankID, VendorModel, eSignature } from "..";
+import { BillingModel, ClientApp, ConsumerModel, DocumentAction, Documents, IdentificationModel, IdentificationRequest, InvitationRequest, Requests, StandaloneBankID, VendorModel, eSignature } from "..";
 export declare namespace DatabaseFunctions {
     /**
     * Database helper class
@@ -14,6 +14,11 @@ export declare namespace DatabaseFunctions {
          * @return {Promise<VendorModel[]>} returns list.
          */
         retrieveVendors(cipher: string): Promise<VendorModel[]>;
+        /**
+         * Go to database invitations collection and get all
+         * @return {Promise<VendorModel[]>} returns list.
+         */
+        retrieveNINInvitations(): Promise<InvitationRequest[]>;
         /**
          * Go to database ids collection and get all
          * registered social security numbers nin
@@ -123,6 +128,12 @@ export declare namespace DatabaseFunctions {
          * @return {Promise<void>} returns list.
          */
         createBankID(person: IdentificationModel, id: StandaloneBankID): Promise<void>;
+        /**
+         * Create nin invitation request
+          * @param {InvitationRequest} person owner of the new BankID
+         * @return {Promise<void>} returns list.
+         */
+        manageNINInvitationRequest(person: InvitationRequest, modify?: boolean): Promise<void>;
         /**
          * Log image of stored nin
           * @param {IdentificationModel} person owner of the new BankID

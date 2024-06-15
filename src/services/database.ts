@@ -3,7 +3,7 @@ import {
   BillingModel, ClientApp, ConsumerModel,
   DocumentAction, DocumentReference, Documents,
   FunctionHelpers, IdentificationModel,
-  IdentificationRequest, Requests,
+  IdentificationRequest, InvitationRequest, Requests,
   StandaloneBankID, VendorModel,
   eSignature
 } from "..";
@@ -39,6 +39,15 @@ export namespace DatabaseFunctions {
           return VendorModel.fromJson(e.data());
         }
       });
+    }
+    
+    /**
+     * Go to database invitations collection and get all
+     * @return {Promise<VendorModel[]>} returns list.
+     */
+    public async retrieveNINInvitations(): Promise<InvitationRequest[]> {
+      const source = await this.db.collection(DocumentReference.invitations).get();
+      return source.docs.map((e) => InvitationRequest.fromJson(e.data()));
     }
 
     /**
@@ -298,6 +307,23 @@ export namespace DatabaseFunctions {
         collection(DocumentReference.users).doc(person.id)
         .collection(DocumentReference.issuedIDs).doc(id.id)
         .set(id.toMap());
+    }
+  
+
+    /**
+     * Create nin invitation request
+      * @param {InvitationRequest} person owner of the new BankID
+     * @return {Promise<void>} returns list.
+     */
+    public async manageNINInvitationRequest(
+      person: InvitationRequest, modify = false)
+      : Promise<void> {
+      const query = this.db.collection(DocumentReference.invitations).doc(person.id);
+      if (modify) {
+        await query.update(person.toMap());
+      } else {
+        await query.set(person.toMap());
+      }
     }
 
 

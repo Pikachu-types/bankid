@@ -48,6 +48,10 @@ export enum DocumentReference {
   apps = "apps",
   documents = "documents",
   /**
+   * For nin invitation actions
+   */
+  invitations = "invitations",
+  /**
    * Sub collection for documents/signatures
    */
   signatures = "signatures",
@@ -147,6 +151,8 @@ export enum DocumentTypes {
    * Console session
    */
   session = "sess_",
+
+  invitation = "invite_",
 }
 
 /**

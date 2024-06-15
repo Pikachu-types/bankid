@@ -67,6 +67,16 @@ var DatabaseFunctions;
             });
         }
         /**
+         * Go to database invitations collection and get all
+         * @return {Promise<VendorModel[]>} returns list.
+         */
+        retrieveNINInvitations() {
+            return __awaiter(this, void 0, void 0, function* () {
+                const source = yield this.db.collection(__1.DocumentReference.invitations).get();
+                return source.docs.map((e) => __1.InvitationRequest.fromJson(e.data()));
+            });
+        }
+        /**
          * Go to database ids collection and get all
          * registered social security numbers nin
          * @param {string} cipher encryption key
@@ -307,6 +317,22 @@ var DatabaseFunctions;
                     collection(__1.DocumentReference.users).doc(person.id)
                     .collection(__1.DocumentReference.issuedIDs).doc(id.id)
                     .set(id.toMap());
+            });
+        }
+        /**
+         * Create nin invitation request
+          * @param {InvitationRequest} person owner of the new BankID
+         * @return {Promise<void>} returns list.
+         */
+        manageNINInvitationRequest(person, modify = false) {
+            return __awaiter(this, void 0, void 0, function* () {
+                const query = this.db.collection(__1.DocumentReference.invitations).doc(person.id);
+                if (modify) {
+                    yield query.update(person.toMap());
+                }
+                else {
+                    yield query.set(person.toMap());
+                }
             });
         }
         /**
