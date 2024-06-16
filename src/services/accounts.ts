@@ -211,7 +211,7 @@ export class Accounts {
     cipher: string,
   }): Promise<SingleBankIDModel> {
     if (!params.id.startsWith("std_") || (params.id.split("-").length != 2)) {
-      throw new CustomError("Invalid issued identifier");
+      throw new CustomError("Invalid standalone identifier");
     }
 
     const nin = params.id.split("-")[0].split("_")[1];
