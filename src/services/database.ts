@@ -3,7 +3,7 @@ import {
   BillingModel, ClientApp, ConsumerModel,
   DocumentAction, DocumentReference, Documents,
   FunctionHelpers, IdentificationModel,
-  IdentificationRequest, InvitationRequest, Requests,
+  IdentificationRequest, InvitationRequest, PendingApprovals, Requests,
   StandaloneBankID, VendorModel,
   eSignature
 } from "..";
@@ -48,6 +48,15 @@ export namespace DatabaseFunctions {
     public async retrieveNINInvitations(): Promise<InvitationRequest[]> {
       const source = await this.db.collection(DocumentReference.invitations).get();
       return source.docs.map((e) => InvitationRequest.fromJson(e.data()));
+    }    
+    
+    /**
+     * Go to database registration requests collection and get all
+     * @return {Promise<VendorModel[]>} returns list.
+     */
+    public async retrieveRegistrationRequests(): Promise<PendingApprovals[]> {
+      const source = await this.db.collection(DocumentReference.pending).get();
+      return source.docs.map((e) => PendingApprovals.fromJson(e.data()));
     }
 
     /**
@@ -326,6 +335,34 @@ export namespace DatabaseFunctions {
       }
     }
 
+    /**
+     * Create pasby request
+      * @param {PendingApprovals} person owner of the new BankID
+     * @return {Promise<void>} returns list.
+     */
+    public async manageRegistrationRequests(
+      person: PendingApprovals, modify = false)
+      : Promise<void> {
+      const query = this.db.collection(DocumentReference.pending).doc(person.nin);
+      if (modify) {
+        await query.update(person.toMap());
+      } else {
+        await query.set(person.toMap());
+      }
+    }
+    
+    /**
+     * Change pending to false for pasby with nin request
+      * @param {PendingApprovals} person owner of the new BankID
+     * @return {Promise<void>} returns list.
+     */
+    public async markRegistrationRequest(nin: string, completed: boolean)
+      : Promise<void> {
+      const query = this.db.collection(DocumentReference.pending).doc(nin);
+      await query.update({
+        pending: completed,
+      });
+    }
 
     /**
      * Log image of stored nin

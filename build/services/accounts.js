@@ -172,7 +172,7 @@ class Accounts {
     getIssuedBankID(params) {
         return __awaiter(this, void 0, void 0, function* () {
             if (!params.id.startsWith("std_") || (params.id.split("-").length != 2)) {
-                throw new labs_sharable_1.CustomError("Invalid issued identifier");
+                throw new labs_sharable_1.CustomError("Invalid standalone identifier");
             }
             const nin = params.id.split("-")[0].split("_")[1];
             const bid = `bid_${nin}`;

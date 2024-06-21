@@ -8,6 +8,10 @@ export declare enum DocumentReference {
      */
     vendor = "vendors",
     /**
+     * Pending requests
+     */
+    pending = "pending",
+    /**
      * Collection reference for authorized bank id consumers.
      * Meaning folks that can requests bankID information
      */

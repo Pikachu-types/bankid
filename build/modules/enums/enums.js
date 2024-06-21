@@ -12,6 +12,10 @@ var DocumentReference;
      */
     DocumentReference["vendor"] = "vendors";
     /**
+     * Pending requests
+     */
+    DocumentReference["pending"] = "pending";
+    /**
      * Collection reference for authorized bank id consumers.
      * Meaning folks that can requests bankID information
      */

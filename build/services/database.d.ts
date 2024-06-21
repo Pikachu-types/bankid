@@ -1,5 +1,5 @@
 import * as admin from "firebase-admin";
-import { BillingModel, ClientApp, ConsumerModel, DocumentAction, Documents, IdentificationModel, IdentificationRequest, InvitationRequest, Requests, StandaloneBankID, VendorModel, eSignature } from "..";
+import { BillingModel, ClientApp, ConsumerModel, DocumentAction, Documents, IdentificationModel, IdentificationRequest, InvitationRequest, PendingApprovals, Requests, StandaloneBankID, VendorModel, eSignature } from "..";
 export declare namespace DatabaseFunctions {
     /**
     * Database helper class
@@ -19,6 +19,11 @@ export declare namespace DatabaseFunctions {
          * @return {Promise<VendorModel[]>} returns list.
          */
         retrieveNINInvitations(): Promise<InvitationRequest[]>;
+        /**
+         * Go to database registration requests collection and get all
+         * @return {Promise<VendorModel[]>} returns list.
+         */
+        retrieveRegistrationRequests(): Promise<PendingApprovals[]>;
         /**
          * Go to database ids collection and get all
          * registered social security numbers nin
@@ -134,6 +139,18 @@ export declare namespace DatabaseFunctions {
          * @return {Promise<void>} returns list.
          */
         manageNINInvitationRequest(person: InvitationRequest, modify?: boolean): Promise<void>;
+        /**
+         * Create pasby request
+          * @param {PendingApprovals} person owner of the new BankID
+         * @return {Promise<void>} returns list.
+         */
+        manageRegistrationRequests(person: PendingApprovals, modify?: boolean): Promise<void>;
+        /**
+         * Change pending to false for pasby with nin request
+          * @param {PendingApprovals} person owner of the new BankID
+         * @return {Promise<void>} returns list.
+         */
+        markRegistrationRequest(nin: string, completed: boolean): Promise<void>;
         /**
          * Log image of stored nin
           * @param {IdentificationModel} person owner of the new BankID

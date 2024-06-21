@@ -77,6 +77,16 @@ var DatabaseFunctions;
             });
         }
         /**
+         * Go to database registration requests collection and get all
+         * @return {Promise<VendorModel[]>} returns list.
+         */
+        retrieveRegistrationRequests() {
+            return __awaiter(this, void 0, void 0, function* () {
+                const source = yield this.db.collection(__1.DocumentReference.pending).get();
+                return source.docs.map((e) => __1.PendingApprovals.fromJson(e.data()));
+            });
+        }
+        /**
          * Go to database ids collection and get all
          * registered social security numbers nin
          * @param {string} cipher encryption key
@@ -333,6 +343,35 @@ var DatabaseFunctions;
                 else {
                     yield query.set(person.toMap());
                 }
+            });
+        }
+        /**
+         * Create pasby request
+          * @param {PendingApprovals} person owner of the new BankID
+         * @return {Promise<void>} returns list.
+         */
+        manageRegistrationRequests(person, modify = false) {
+            return __awaiter(this, void 0, void 0, function* () {
+                const query = this.db.collection(__1.DocumentReference.pending).doc(person.nin);
+                if (modify) {
+                    yield query.update(person.toMap());
+                }
+                else {
+                    yield query.set(person.toMap());
+                }
+            });
+        }
+        /**
+         * Change pending to false for pasby with nin request
+          * @param {PendingApprovals} person owner of the new BankID
+         * @return {Promise<void>} returns list.
+         */
+        markRegistrationRequest(nin, completed) {
+            return __awaiter(this, void 0, void 0, function* () {
+                const query = this.db.collection(__1.DocumentReference.pending).doc(nin);
+                yield query.update({
+                    pending: completed,
+                });
             });
         }
         /**

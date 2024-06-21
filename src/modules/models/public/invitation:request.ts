@@ -3,6 +3,7 @@ import { randomUUID } from "crypto";
 import { equalToIgnoreCase, unixTimeStampNow } from "labs-sharable";
 import { DocumentTypes } from "../../enums/enums";
 import { ConsumerHelper } from "../../utils/consumer.helper";
+import { DojahNINResponse } from "../../services/dojah";
 
 /**
  * Get a pasby nin invitation request
@@ -83,4 +84,80 @@ export class InvitationRequest {
     return JSON.parse(this.toJsonString());
   }
 
+}
+
+
+/**
+ * Get a pasby nin invitation request
+*/
+export class PendingApprovals {
+  /* eslint new-cap: ["error", { "capIsNew": false }]*/
+  @Expose() nin = "";
+  @Expose() source: IPendingPasby | undefined;
+  @Expose() pending = true;
+
+  /**
+   * Change record to this class
+   *
+   * @param {Record<string, unknown>} obj  json object from db
+   * @return {PendingApprovals} this class
+   */
+  public static fromJson(obj: Record<string, unknown>)
+    : PendingApprovals {
+    const result: PendingApprovals = plainToInstance(PendingApprovals, obj,
+      { excludeExtraneousValues: true });
+    return result;
+  }
+
+  /**
+   * This class handler to json
+   * @return {string} text
+   */
+  public toJsonString(): string {
+    return JSON.stringify(this);
+  }
+
+  /**
+   * Helper class function to find one specific object based on id
+   *
+   * @param {PendingApprovals[]} list an array to sort from and find given
+   * @param {string} id provide the needed id to match for
+   * @return {PendingApprovals | undefined} found object else undefined
+   */
+  public static findOne(list: PendingApprovals[], id: string)
+    : PendingApprovals | undefined {
+    for (let i = 0; i < list.length; i++) {
+      if (equalToIgnoreCase(list[i].nin, id)) return list[i];
+    }
+    return;
+  }
+
+  /**
+  * get document in map format
+  * @return { Record<string, unknown>} returns doc map .
+  */
+  public toMap()
+    : Record<string, unknown> {
+    return JSON.parse(this.toJsonString());
+  }
+
+}
+
+
+export interface IPendingPasby {
+  data: DojahNINResponse,
+  extra: {
+    email: string,
+    name: string,
+    phone: string,
+    residence: {
+      city: string,
+      state: string,
+      address: string,
+    },
+    birth: {
+      place: string,
+      state: string,
+    }
+  }
 }
