@@ -92,6 +92,20 @@ export namespace DatabaseFunctions {
     }
 
     /**
+     * Go to database ids collection and get
+     * @param {string} ref registered nin to check for issued bank ids
+     * @param {string} pass standalone identifier
+     * @return {Promise<StandaloneBankID>} returns list.
+     */
+    public async getStandalonePass(ref: string, pass: string):
+      Promise<StandaloneBankID> {
+      const source = await this.db.collection(DocumentReference.users)
+        .doc(ref).collection(DocumentReference.issuedIDs).doc(pass).get();
+      if (!source.data()) throw new CustomError("The request pasby pass is invalid.");
+      return StandaloneBankID.fromJson((source.data() as Record<string, unknown>))
+    }
+
+    /**
      * Go to database consumer collection and get all
      * available consumers
      * @return {Promise<ConsumerModel[]>} returns list.
@@ -513,7 +527,6 @@ export namespace DatabaseFunctions {
 
     /**
      * modify consumer model  to database
-     * @param {VendorModel} data model structure
      * @param {boolean} create true if user model never exists else false and we create one
      * @return {Promise<void>} void.
      */

@@ -121,6 +121,21 @@ var DatabaseFunctions;
             });
         }
         /**
+         * Go to database ids collection and get
+         * @param {string} ref registered nin to check for issued bank ids
+         * @param {string} pass standalone identifier
+         * @return {Promise<StandaloneBankID>} returns list.
+         */
+        getStandalonePass(ref, pass) {
+            return __awaiter(this, void 0, void 0, function* () {
+                const source = yield this.db.collection(__1.DocumentReference.users)
+                    .doc(ref).collection(__1.DocumentReference.issuedIDs).doc(pass).get();
+                if (!source.data())
+                    throw new labs_sharable_1.CustomError("The request pasby pass is invalid.");
+                return __1.StandaloneBankID.fromJson(source.data());
+            });
+        }
+        /**
          * Go to database consumer collection and get all
          * available consumers
          * @return {Promise<ConsumerModel[]>} returns list.

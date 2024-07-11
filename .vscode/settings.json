@@ -22,6 +22,7 @@
         "nationalityclaim",
         "secretid",
         "sess",
+        "unixtimestamp",
         "uuidv"
     ]
 }

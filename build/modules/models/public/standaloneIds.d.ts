@@ -1,3 +1,31 @@
+import { VendorModel } from "./vendors";
+export interface IReleaseInformation {
+    place: string;
+    ip: string;
+}
+export interface IPassRecentHistory {
+    /**
+     * Last time used in unixtimestamp
+     */
+    lu: number;
+    ip: string;
+}
+export interface IDeviceForPass {
+    platform: string;
+    model: string;
+    identifier: string;
+}
+interface ManagePassResponse {
+    device: IDeviceForPass;
+    issuer: string;
+    activity?: IPassRecentHistory;
+    release?: IReleaseInformation;
+    id: string;
+    pass: {
+        iat: number;
+        exp: number;
+    };
+}
 /**
  * StandaloneBankID class
 */
@@ -20,6 +48,8 @@ export declare class StandaloneBankID {
      */
     lut: number;
     deviceInfo: Record<string, unknown> | undefined;
+    activity: IPassRecentHistory | undefined;
+    release: IReleaseInformation | undefined;
     test: boolean;
     activated: boolean;
     disabled: boolean;
@@ -39,6 +69,12 @@ export declare class StandaloneBankID {
      * @return {StandaloneBankID | undefined} found object else undefined
      */
     static findOne(list: StandaloneBankID[], id: string): StandaloneBankID | undefined;
+    /**
+     * This affects cu.pasby.africa
+     * @param {VendorModel[]} vendors recognised vendors
+     * @returns {ManagePassResponse}
+     */
+    manageObject(vendors: VendorModel[]): ManagePassResponse;
     /**
      * This class handler to json
      * @return {string} text
@@ -79,3 +115,4 @@ export declare class DeviceInfoData {
     */
     toMap(): Record<string, unknown>;
 }
+export {};

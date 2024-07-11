@@ -8,6 +8,8 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.DeviceInfoData = exports.StandaloneBankID = void 0;
 const class_transformer_1 = require("class-transformer");
+const vendors_1 = require("./vendors");
+const labs_sharable_1 = require("labs-sharable");
 /**
  * StandaloneBankID class
 */
@@ -54,6 +56,33 @@ class StandaloneBankID {
         return;
     }
     /**
+     * This affects cu.pasby.africa
+     * @param {VendorModel[]} vendors recognised vendors
+     * @returns {ManagePassResponse}
+     */
+    manageObject(vendors) {
+        var _a, _b, _c, _d;
+        if (!this.activated || this.disabled)
+            throw new labs_sharable_1.CustomError("This pass is no longer valid");
+        const id = this.id.split("-")[1];
+        const device = DeviceInfoData.fromJson((_a = this.deviceInfo) !== null && _a !== void 0 ? _a : {});
+        return {
+            id: id,
+            activity: this.activity,
+            release: this.release,
+            device: {
+                platform: device.platform,
+                identifier: device.deviceID,
+                model: device.model
+            },
+            pass: {
+                iat: this.created,
+                exp: (_b = this.validTo) !== null && _b !== void 0 ? _b : 0
+            },
+            issuer: (_d = (_c = vendors_1.VendorModel.findOne(vendors, this.vendor)) === null || _c === void 0 ? void 0 : _c.name) !== null && _d !== void 0 ? _d : ''
+        };
+    }
+    /**
      * This class handler to json
      * @return {string} text
      */
@@ -95,6 +124,12 @@ __decorate([
 __decorate([
     (0, class_transformer_1.Expose)()
 ], StandaloneBankID.prototype, "deviceInfo", void 0);
+__decorate([
+    (0, class_transformer_1.Expose)()
+], StandaloneBankID.prototype, "activity", void 0);
+__decorate([
+    (0, class_transformer_1.Expose)()
+], StandaloneBankID.prototype, "release", void 0);
 __decorate([
     (0, class_transformer_1.Expose)()
 ], StandaloneBankID.prototype, "test", void 0);

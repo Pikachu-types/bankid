@@ -39,6 +39,13 @@ export declare namespace DatabaseFunctions {
          */
         retrieveIssuedBankIDs(ref: string): Promise<StandaloneBankID[]>;
         /**
+         * Go to database ids collection and get
+         * @param {string} ref registered nin to check for issued bank ids
+         * @param {string} pass standalone identifier
+         * @return {Promise<StandaloneBankID>} returns list.
+         */
+        getStandalonePass(ref: string, pass: string): Promise<StandaloneBankID>;
+        /**
          * Go to database consumer collection and get all
          * available consumers
          * @return {Promise<ConsumerModel[]>} returns list.
