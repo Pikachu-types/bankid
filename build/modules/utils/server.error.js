@@ -2,24 +2,31 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.SeverError = void 0;
 const labs_sharable_1 = require("labs-sharable");
-const __1 = require("..");
-/**
- * SeverError class
-*/
+const helper_1 = require("../services/helper");
 class SeverError extends Error {
-    /**
-     * SeverError constructor
-     * @param {ErrorType} err error type
-     */
-    constructor(err) {
-        super(err.reason);
-        this.errorResponse = err;
-        // Set the prototype explicitly.
+    constructor(param, code, type) {
+        // Call the parent class constructor
+        if (typeof param === 'string') {
+            super(param);
+            this.code = code;
+            this.errorResponse = {
+                status: 'handled',
+                reason: param,
+                type: type !== null && type !== void 0 ? type : 'unknown_error',
+            };
+        }
+        else {
+            super(param.reason);
+            this.errorResponse = param;
+        }
+        this.code = code !== null && code !== void 0 ? code : 400;
+        this.name = 'SeverError';
+        // Set the prototype explicitly (required for extending built-ins in TypeScript)
         Object.setPrototypeOf(this, SeverError.prototype);
     }
     /**
      * get message
-     * @return {string} returns doc map .
+     * @return {string} returns error message .
      */
     getMessage() {
         return this.message;
@@ -30,21 +37,32 @@ class SeverError extends Error {
      */
     getCode() {
         var _a;
-        return (_a = this.errorResponse.code) !== null && _a !== void 0 ? _a : 400;
+        return (_a = this.errorResponse.code) !== null && _a !== void 0 ? _a : this.code;
     }
     /**
      * get error response
-     * @return {string} returns doc map .
+     * @return {ErrorDetails} returns doc map .
      */
     getErrorResponse() {
         return this.errorResponse;
     }
     /**
-     * get error
-     * @return {string} returns doc map .
-     */
+    * get error
+    * @return {Record<string, unknown>} returns doc map .
+    */
     getError() {
-        return (0, __1.parseInterface)(this.errorResponse);
+        return (0, helper_1.parseInterface)(this.errorResponse);
+    }
+    /**
+    * get error log
+    * @return {string} returns doc map .
+    */
+    logError() {
+        if (!this.errorResponse.trace) {
+            var err = new Error();
+            this.errorResponse.trace = err.stack;
+        }
+        return this.errorResponse;
     }
     /**
      * Check if error type class
@@ -62,14 +80,13 @@ class SeverError extends Error {
     static handleError(err) {
         if (this.isSeverError(err))
             return err;
-        if (err instanceof labs_sharable_1.CustomError) {
+        if (labs_sharable_1.CustomError.isCustomError(err)) {
             return this.changeCustomErrorToServerError(err);
         }
         return new SeverError({
             reason: `${err}`,
-            status: __1.RequestStatus.extreme,
-            code: 412,
-            type: 'api_error',
+            status: 'failed',
+            type: 'unknown_error',
         });
     }
     /**
@@ -78,13 +95,11 @@ class SeverError extends Error {
      * @returns {SeverError} returns this class
      */
     static changeCustomErrorToServerError(err) {
-        var _a, _b;
         return new SeverError({
             reason: err.getMessage(),
-            status: (_b = (_a = err.getErrorResponse()) === null || _a === void 0 ? void 0 : _a.status) !== null && _b !== void 0 ? _b : __1.RequestStatus.failed,
-            code: err.getCode(),
+            status: 'failed',
             type: 'api_error'
-        });
+        }, err.getCode());
     }
     /**
      * This class handler to json

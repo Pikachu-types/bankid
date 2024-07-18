@@ -1,11 +1,11 @@
-import { CustomError, LabsCipher, unixTimeStampNow } from "labs-sharable";
+import { LabsCipher, unixTimeStampNow } from "labs-sharable";
 import fakeNINs = require("../jsons/fake-nin.json");
 import {
   ApiKeyPrefix, AppConsumerReturn, AppType,
   AuthRequest, BAccount, BillingModel, ClientApp,
   ConsumerAppsResponse,
   ConsumerModel, DocumentReference, DocumentTypes,
-  IdentificationModel, SingleBankIDModel,
+  IdentificationModel, SeverError, SingleBankIDModel,
   StandaloneBankID, UsageRecording, VendorModel
 } from "..";
 import { DatabaseFunctions } from "./database";
@@ -44,11 +44,11 @@ export class Accounts {
     } else if (params.id.startsWith(DocumentTypes.user) && params.reference) {
       accounts = await this.getter.retrieveRegisteredNINs(params.cipher);
     } else {
-      throw new CustomError("Invalid account identifier");
+      throw new SeverError("Invalid account identifier");
     }
 
     if (accounts.length < 1) {
-      throw new CustomError("Found no accounts for such identifier");
+      throw new SeverError("Found no accounts for such identifier");
     }
 
     if (accounts[0] instanceof IdentificationModel) {
@@ -79,13 +79,13 @@ export class Accounts {
   }):
     Promise<IdentificationModel> {
     if (!params.id.startsWith("bid_")) {
-      throw new CustomError("Invalid identifier");
+      throw new SeverError("Invalid identifier");
     }
     const registeredNINs = await this.getter.retrieveRegisteredNINs(params.cipher);
     const user = IdentificationModel.findOne(registeredNINs,
       params.id);
     if (!user) {
-      throw new CustomError("National does not have a pasby™ digital ID", 404);
+      throw new SeverError("National does not have a pasby™ digital ID", 404);
     }
     return user;
   }
@@ -113,7 +113,7 @@ export class Accounts {
   }):
     Promise<AppConsumerReturn | undefined> {
     if (params.data.app === undefined) {
-      throw new CustomError("Missing app identifier", 403);
+      throw new SeverError("Missing app identifier", 403);
     }
     const consumer = await this.getConsumer(params.data.consumer, params.cipher);
     const app = await this.getApp(params.data.app, params.data.consumer, params.cipher);
@@ -121,12 +121,12 @@ export class Accounts {
       app.validateSecret(params.data.secret, params.cipher);
 
     if (!valid) {
-      throw new CustomError("Requester is not authorized", 401);
+      throw new SeverError("Requester is not authorized", 401);
     }
 
     if (params.data.key.startsWith(ApiKeyPrefix.test) &&
       app.type === AppType.production) {
-      throw new CustomError("Cannot apply a test key to a production type application", 403);
+      throw new SeverError("Cannot apply a test key to a production type application", 403);
     }
     return {
       consumer: consumer,
@@ -158,18 +158,18 @@ export class Accounts {
     const consumer = ConsumerModel.
       matchApiKey(await this.getter.retrieveConsumers(), params.apikey);
     if (consumer === undefined) {
-      throw new CustomError("Request forbidden: Api key not valid", 403);
+      throw new SeverError("Request forbidden: Api key not valid", 403);
     }
     const app = ClientApp.
       matchSecretKey(await this.getter.getConsumerApps(consumer.id), params.appSecret, params.cipher);
 
     if (app === undefined) {
-      throw new CustomError("Request forbidden: App secret not valid", 403);
+      throw new SeverError("Request forbidden: App secret not valid", 403);
     }
 
     if (params.apikey.startsWith(ApiKeyPrefix.test) &&
       app.type === AppType.production) {
-      throw new CustomError("Cannot apply a test key to a production type application", 403);
+      throw new SeverError("Cannot apply a test key to a production type application", 403);
     }
     const data = {
       sub: consumer.id,
@@ -194,7 +194,7 @@ export class Accounts {
   public async consumerExist(id: string): Promise<boolean> {
     const exists = await this.getter.doesDocumentExist(id, DocumentReference.
       consumers);
-    if (!exists) throw new CustomError("Client does not exist", 400);
+    if (!exists) throw new SeverError("Client does not exist", 400);
     else return true;
   }
 
@@ -211,7 +211,7 @@ export class Accounts {
     cipher: string,
   }): Promise<SingleBankIDModel> {
     if (!params.id.startsWith("std_") || (params.id.split("-").length != 2)) {
-      throw new CustomError("Invalid standalone identifier");
+      throw new SeverError("Invalid standalone identifier");
     }
 
     const nin = params.id.split("-")[0].split("_")[1];
@@ -227,14 +227,14 @@ export class Accounts {
     const user = IdentificationModel.findOne(registeredNINs, bid);
     const issued = StandaloneBankID.findOne(issuedIDs, params.id);
     if (!user) {
-      throw new CustomError("User not found");
+      throw new SeverError("User not found");
     }
     if (!issued) {
-      throw new CustomError("No such issued pasby");
+      throw new SeverError("No such issued pasby");
     }
     const vendor = VendorModel.findOne(vendors, issued.vendor);
     if (!vendor) {
-      throw new CustomError("This was issued by an unknown vendor");
+      throw new SeverError("This was issued by an unknown vendor");
     }
     return {
       issued: issued,
@@ -255,7 +255,7 @@ export class Accounts {
       cipher: cipher,
     });
     if (client === undefined || !(client instanceof ConsumerModel)) {
-      throw new CustomError("No such consumer", 400);
+      throw new SeverError("No such consumer", 400);
     } else {
       return client;
     }
@@ -275,7 +275,7 @@ export class Accounts {
       cipher: cipher,
     });
     if (app === undefined || !(app instanceof ClientApp)) {
-      throw new CustomError(`App id: ${id} no longer or never existed`, 400);
+      throw new SeverError(`App id: ${id} no longer or never existed`, 400);
     } else {
       return app;
     }

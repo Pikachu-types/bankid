@@ -35,8 +35,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.ExternalApiClient = void 0;
 const axios_1 = __importStar(require("axios"));
 const ip_1 = require("../models/superficial/ip");
-const labs_sharable_1 = require("labs-sharable");
 const bankid_1 = require("../models/bankid");
+const server_error_1 = require("../utils/server.error");
 /**
  * Api client helper
  */
@@ -62,7 +62,7 @@ class ExternalApiClient {
                     return ip_1.AbstractIPAdData.fromJson(data);
                 }
                 else {
-                    throw new labs_sharable_1.CustomError(JSON.stringify(data), status);
+                    throw new server_error_1.SeverError(JSON.stringify(data), status);
                 }
             }
             catch (error) {
@@ -70,14 +70,18 @@ class ExternalApiClient {
                     console.log("error message: ", error.message);
                     const response = error.response;
                     if (response) {
-                        throw new labs_sharable_1.CustomError("", response.status, response.data);
+                        throw new server_error_1.SeverError({
+                            body: response.data,
+                            reason: "Axios unknown error caught",
+                            status: 'failed'
+                        }, response.status);
                     }
                     else {
-                        throw new labs_sharable_1.CustomError(error.message, (_a = error.status) !== null && _a !== void 0 ? _a : 500);
+                        throw new server_error_1.SeverError(error.message, (_a = error.status) !== null && _a !== void 0 ? _a : 500);
                     }
                 }
                 else {
-                    throw new labs_sharable_1.CustomError("An unexpected error occurred", 500);
+                    throw new server_error_1.SeverError("An unexpected error occurred", 500);
                 }
             }
         });
@@ -103,7 +107,7 @@ class ExternalApiClient {
                     return ip_1.AbstractIPData.fromJson(data);
                 }
                 else {
-                    throw new labs_sharable_1.CustomError(JSON.stringify(data), status);
+                    throw new server_error_1.SeverError(JSON.stringify(data), status);
                 }
             }
             catch (error) {
@@ -111,14 +115,18 @@ class ExternalApiClient {
                     console.log("error message: ", error.message);
                     const response = error.response;
                     if (response) {
-                        throw new labs_sharable_1.CustomError("", response.status, response.data);
+                        throw new server_error_1.SeverError({
+                            body: response.data,
+                            reason: "Axios unknown error caught",
+                            status: 'failed'
+                        }, response.status);
                     }
                     else {
-                        throw new labs_sharable_1.CustomError(error.message, (_a = error.status) !== null && _a !== void 0 ? _a : 500);
+                        throw new server_error_1.SeverError(error.message, (_a = error.status) !== null && _a !== void 0 ? _a : 500);
                     }
                 }
                 else {
-                    throw new labs_sharable_1.CustomError("An unexpected error occurred", 500);
+                    throw new server_error_1.SeverError("An unexpected error occurred", 500);
                 }
             }
         });

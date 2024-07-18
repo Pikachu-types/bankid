@@ -19,6 +19,10 @@ export declare class ClientApp {
     created: number;
     information?: AppVerificationInfoModel;
     secrets: AppDataSecret[];
+    /**
+     * Whitelisted urls
+     */
+    urls: string[];
     keys: RSAKeys;
     keyData: AuthenticateKeysData | undefined;
     /**

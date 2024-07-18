@@ -1,7 +1,7 @@
 import axios, { isAxiosError } from "axios";
 import { ApiReference } from "../../interfaces/documents";
 import { DojahBVNResponse, DojahNINResponse } from "./responses";
-import { CustomError } from "labs-sharable";
+import { SeverError } from "../../utils/server.error";
 
 export class DojahIdentityCheck {
   private static baseURl = "https://api.dojah.io";
@@ -25,26 +25,29 @@ export class DojahIdentityCheck {
           }
         }
       );
-
       if (status == 200) {
         const entity = data['entity'];
         return entity as DojahBVNResponse;
       } else {
-        throw new CustomError(JSON.stringify(data), status);
+        throw new SeverError(JSON.stringify(data), status);
       }
     } catch (error) {
       if (isAxiosError(error)) {
         console.log("BVN extract error message: ", error.message);
         const response = error.response;
         if (response && (response.data['error'] as string).includes('not found')) {
-          throw new CustomError("BVN not found", 404);
+          throw new SeverError("BVN not found", 404);
         }else if (response) {
-          throw new CustomError("", response.status, response.data);
+          throw new SeverError({
+            body: response.data,
+            reason: "Axios unknown error caught",
+            status: 'failed'
+          }, response.status);
         } else {
-          throw new CustomError(error.message, error.status ?? 500);
+          throw new SeverError(error.message, error.status ?? 500);
         }
       } else {
-        throw new CustomError("Critical ID extract error", 500);
+        throw new SeverError("Critical ID extract error", 500);
       }
     }
   }
@@ -73,21 +76,25 @@ export class DojahIdentityCheck {
         const entity = data['entity'];
         return entity as DojahNINResponse;
       } else {
-        throw new CustomError(JSON.stringify(data), status);
+        throw new SeverError(JSON.stringify(data), status);
       }
     } catch (error) {
       if (isAxiosError(error)) {
         console.log("NIN extract error message: ", error.message);
         const response = error.response;
         if (response && (response.data['error'] as string).includes('not found')) {
-          throw new CustomError("NIN not found", 404);
+          throw new SeverError("NIN not found");
         } else if (response) {
-          throw new CustomError("", response.status, response.data);
+          throw new SeverError({
+            body: response.data,
+            reason: "Axios unknown error caught",
+            status: 'failed'
+          }, response.status);
         } else {
-          throw new CustomError(error.message, error.status ?? 500);
+          throw new SeverError(error.message, error.status ?? 500);
         }
       } else {
-        throw new CustomError("Critical ID extract error", 500);
+        throw new SeverError("Critical ID extract error", 500);
       }
     }
   }

@@ -27,8 +27,8 @@ class ConsumerHelper {
             }
             catch (error) {
                 const code = error instanceof labs_sharable_1.CustomError ? error.getCode() : 500;
-                throw new labs_sharable_1.CustomError(code == 401 ? labs_sharable_1.RequestStatus.expiration :
-                    labs_sharable_1.RequestStatus.tokenMismatch, code);
+                throw new __1.SeverError(code == 401 ? 'authorization is expired' :
+                    'there is an obvious token mismatch', code);
             }
             return decode;
         });
@@ -40,10 +40,10 @@ class ConsumerHelper {
      */
     static validateSignatureRequest(req) {
         if (req.mode !== __1.RequestMode.Signature) {
-            throw new labs_sharable_1.CustomError("Forbidden request: This is a signature request endpoint", 403);
+            throw new __1.SeverError("Forbidden request: This is a signature request endpoint", 403);
         }
         if (req.webhook === undefined && req.action === __1.ActionType.sign) {
-            throw new labs_sharable_1.CustomError("Requester needs to provide a web-hook map for us to handle such request", 428);
+            throw new __1.SeverError("Requester needs to provide a web-hook map for us to handle such request", 428);
         }
     }
     /**
@@ -53,10 +53,10 @@ class ConsumerHelper {
      */
     static validateIDRequest(req) {
         if (req.claims === undefined) {
-            throw new labs_sharable_1.CustomError("Requester needs to state identification claims", 428);
+            throw new __1.SeverError("Requester needs to state identification claims", 428);
         }
         if (req.mode !== __1.RequestMode.Identification) {
-            throw new labs_sharable_1.CustomError("Forbidden request: Mode mismatch", 403);
+            throw new __1.SeverError("Forbidden request: Mode mismatch", 403);
         }
     }
     /**
@@ -69,22 +69,54 @@ class ConsumerHelper {
         return __awaiter(this, void 0, void 0, function* () {
             const sign = __1.Requests.findOne(yield params.db.retrieveRawIdentificationRequests(), id);
             if (sign === undefined) {
-                throw new labs_sharable_1.CustomError("Flow request with such id does not exists", 404);
+                throw new __1.SeverError("Flow request with such id does not exists", 400);
             }
             if (sign.cancelled) {
-                throw new labs_sharable_1.CustomError("Flow request has been cancelled", 208);
+                throw new __1.SeverError("Flow request has been cancelled", 400);
             }
             const decode = yield this.decodeRequest(sign, { jwt: params.jwt });
             if (params.app && decode.app !== params.app.app && !params.admin) {
-                throw new labs_sharable_1.CustomError("You are forbidden to make this inquiry", 406);
+                throw new __1.SeverError("You are forbidden to make this inquiry", 401);
             }
             if (!params.admin && !params.app) {
-                throw new labs_sharable_1.CustomError("You need special privileges to access this resource.");
+                throw new __1.SeverError("You need special privileges to access this resource.");
             }
             return {
                 signature: decode,
                 request: sign,
             };
+        });
+    }
+    /**
+     * Validate authentication session
+     * @param {string} id request id
+     * @param {Record<string, unknown>} params arguments
+     * @return {Promise<Requests>} returns request if okay
+     */
+    static manageOidc(id, params) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const sign = yield params.db.retrieveRawIdentificationRequest(id);
+            if (sign === undefined) {
+                throw new __1.SeverError("Flow request with such id does not exists", 400);
+            }
+            const decode = yield this.decodeRequest(sign, { jwt: params.jwt });
+            if (decode.app !== params.app) {
+                throw new __1.SeverError("Flow was created by another app", 401, 'authorization_error');
+            }
+            else if (sign.cancelled) {
+                throw new __1.SeverError("Flow request has been cancelled", 400, 'session_cancel');
+            }
+            const app = yield params.db.getConsumerApp(decode.consumer, decode.app);
+            return {
+                app: app,
+                signature: decode,
+                request: sign,
+            };
+        });
+    }
+    static handshakeOidc(signature, param) {
+        return __awaiter(this, void 0, void 0, function* () {
+            // deconstruct signature
         });
     }
     /**
@@ -131,10 +163,18 @@ class ConsumerHelper {
             }
             catch (error) {
                 if (error.name == "TokenExpiredError") {
-                    throw new labs_sharable_1.CustomError("Request has expired", 401);
+                    throw new __1.SeverError({
+                        reason: "Session has expired",
+                        status: 'expiration',
+                        type: 'session_expiry'
+                    }, 401);
                 }
                 else {
-                    throw new labs_sharable_1.CustomError("Request has expired", 401);
+                    throw new __1.SeverError({
+                        reason: "Session is invalid or is expired",
+                        status: 'expiration',
+                        type: 'unknown_error',
+                    }, 401);
                 }
             }
         });

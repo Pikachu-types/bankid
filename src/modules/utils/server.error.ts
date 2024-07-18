@@ -1,39 +1,55 @@
 import { CustomError } from "labs-sharable";
-import { RequestStatus, parseInterface } from "..";
+import { parseInterface } from "../services/helper";
 
-/**
- * error response
- */
-export type ErrorType = {
-  status: RequestStatus | string;
+export type errorType = 'api_error' | 'param_error' | 'db_error' |
+  'external_service_error' | 'session_cancel' | 'unknown_error' |
+  'authorization_error' | 'session_expiry' | 'invalid_request';
+
+export type status = 'successful' | 'handled' |
+  'mismatch' | 'token-mismatch' | 'unauthorized' |
+  'expiration' | 'failed' | 'extreme'; 
+
+
+interface ErrorDetails {
+  status: status;
   reason: string;
-  code?: number;
-  type?: 'api_error' | 'param_error' | 'db_error' | 'external_service_error';
+  type?: errorType;
   label?: string;
+  code?: number;
   body?: Record<string, unknown>,
-  helper_url?: string
-};
+  helper_url?: string;
+  trace?: string;
+}
 
-/**
- * SeverError class
-*/
 export class SeverError extends Error {
-  private errorResponse: ErrorType;
+  private errorResponse: ErrorDetails;
+  code: number;
 
-  /**
-   * SeverError constructor
-   * @param {ErrorType} err error type 
-   */
-  constructor(err: ErrorType) {
-    super(err.reason);
-    this.errorResponse = err;
-    // Set the prototype explicitly.
+  constructor(param: string | ErrorDetails, code?: number, type?: errorType) {
+    // Call the parent class constructor
+    if (typeof param === 'string') {
+      super(param);
+      this.code = code as number;
+      this.errorResponse = {
+        status: 'handled',
+        reason: param,
+        type: type ?? 'unknown_error',
+      };
+    } else {
+      super(param.reason);
+      this.errorResponse = param;
+    }
+
+    this.code = code ?? 400;
+
+    this.name = 'SeverError'
+    // Set the prototype explicitly (required for extending built-ins in TypeScript)
     Object.setPrototypeOf(this, SeverError.prototype);
   }
 
   /**
    * get message
-   * @return {string} returns doc map .
+   * @return {string} returns error message .
    */
   getMessage(): string {
     return this.message;
@@ -44,23 +60,35 @@ export class SeverError extends Error {
    * @return {string} returns code .
    */
   getCode(): number {
-    return this.errorResponse.code ?? 400;
+    return this.errorResponse.code ?? this.code;
   }
 
   /**
    * get error response
-   * @return {string} returns doc map .
+   * @return {ErrorDetails} returns doc map .
    */
-  getErrorResponse(): ErrorType {
+  getErrorResponse(): ErrorDetails {
     return this.errorResponse;
   }
 
   /**
-   * get error
-   * @return {string} returns doc map .
-   */
+  * get error
+  * @return {Record<string, unknown>} returns doc map .
+  */
   getError(): Record<string, unknown> {
     return parseInterface(this.errorResponse);
+  }
+  
+  /**
+  * get error log
+  * @return {string} returns doc map .
+  */
+  logError(): ErrorDetails {
+    if (!this.errorResponse.trace) {
+      var err = new Error();
+      this.errorResponse.trace = err.stack;
+    }
+    return this.errorResponse; 
   }
 
   /**
@@ -81,15 +109,14 @@ export class SeverError extends Error {
 
     if (this.isSeverError(err)) return err as SeverError;
 
-    if (err instanceof CustomError) {
+    if (CustomError.isCustomError(err)) {
       return this.changeCustomErrorToServerError(err as CustomError);
     }
 
     return new SeverError({
       reason: `${err}`,
-      status: RequestStatus.extreme,
-      code: 412,
-      type: 'api_error',
+      status: 'failed',
+      type: 'unknown_error',
     });
   }
 
@@ -101,11 +128,9 @@ export class SeverError extends Error {
   public static changeCustomErrorToServerError(err: CustomError): SeverError {
     return new SeverError({
       reason: err.getMessage(),
-      status: err.getErrorResponse()?.status
-        ?? RequestStatus.failed,
-      code: err.getCode(),
+      status: 'failed',
       type: 'api_error'
-    });
+    }, err.getCode());
   }
 
   /**
@@ -115,5 +140,4 @@ export class SeverError extends Error {
   public toJsonString(): string {
     return JSON.stringify(this.errorResponse);
   }
-
 }

@@ -4,6 +4,7 @@ exports.BankID = void 0;
 const labs_sharable_1 = require("labs-sharable");
 const enums_1 = require("../enums/enums");
 const helper_1 = require("../services/helper");
+const server_error_1 = require("../utils/server.error");
 var BankID;
 (function (BankID) {
     let AppIdentifier;
@@ -89,8 +90,8 @@ var BankID;
          * @return {string} returns collection
          */
         static whatCollection(id) {
-            if (id.includes("_") === false) {
-                throw new labs_sharable_1.CustomError("");
+            if (!id.includes("_")) {
+                throw new server_error_1.SeverError("Collection does not exist");
             }
             let collection = `${id.split("_")[0]}_`;
             switch (collection) {

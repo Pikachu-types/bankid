@@ -1,6 +1,6 @@
 {
   "name": "@bukadirect/bankid",
-  "version": "0.4.1",
+  "version": "0.4.2",
   "description": "Finsel DGI team shared typescript helper module for pasby",
   "main": "build/index.js",
   "files": [
@@ -25,12 +25,13 @@
   "homepage": "https://github.com/Finsel-DGI/bankid#readme",
   "license": "MIT",
   "dependencies": {
-    "firebase-admin": "^11.8.0",
     "axios": "^1.4.0",
     "bwip-js": "^4.1.2",
     "class-transformer": "^0.5.1",
     "express": "^4.18.2",
-    "labs-sharable": "^1.6.4",
+    "firebase-admin": "^11.8.0",
+    "generate-api-key": "^1.0.2",
+    "labs-sharable": "^1.6.7",
     "pdf-lib": "^1.17.1",
     "pdf-parse": "^1.1.1",
     "reflect-metadata": "^0.1.13",

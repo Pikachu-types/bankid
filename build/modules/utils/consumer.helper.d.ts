@@ -1,5 +1,5 @@
 import { AuthToken, RequestSignature } from "../interfaces/documents";
-import { IDRequest, Requests, Signing } from "..";
+import { ClientApp, IDRequest, Requests, Signing } from "..";
 import { DatabaseFunctions } from "../../services";
 export declare class ConsumerHelper {
     /**
@@ -36,6 +36,26 @@ export declare class ConsumerHelper {
         signature: RequestSignature;
         request: Requests;
     }>;
+    /**
+     * Validate authentication session
+     * @param {string} id request id
+     * @param {Record<string, unknown>} params arguments
+     * @return {Promise<Requests>} returns request if okay
+     */
+    static manageOidc(id: string, params: {
+        db: DatabaseFunctions.Getters;
+        jwt: string;
+        app: string;
+        consumer: string;
+    }): Promise<{
+        signature: RequestSignature;
+        app: ClientApp;
+        request: Requests;
+    }>;
+    static handshakeOidc(signature: string, param: {
+        pb: string;
+        db: DatabaseFunctions.Getters;
+    }): Promise<void>;
     /**
      * Create expiration time
      * @param {number} duration length of time

@@ -34,7 +34,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.download = exports.Http = void 0;
 const axios_1 = __importStar(require("axios"));
-const labs_sharable_1 = require("labs-sharable");
+const server_error_1 = require("../utils/server.error");
 /**
  * HTTP client class
  */
@@ -56,7 +56,7 @@ class Http {
                 });
                 // console.log(JSON.stringify(data, null, 4));
                 if (status != 200) {
-                    throw new labs_sharable_1.CustomError(`Http post error: ${JSON.stringify(data)}`, status);
+                    throw new server_error_1.SeverError(`Http post error: ${JSON.stringify(data)}`, status);
                 }
             }
             catch (error) {
@@ -64,14 +64,18 @@ class Http {
                     console.log("error message: ", error.message);
                     const response = error.response;
                     if (response) {
-                        throw new labs_sharable_1.CustomError("", response.status, response.data);
+                        throw new server_error_1.SeverError({
+                            body: response.data,
+                            reason: "Axios unknown error caught",
+                            status: 'failed'
+                        }, response.status);
                     }
                     else {
-                        throw new labs_sharable_1.CustomError(error.message, (_a = error.status) !== null && _a !== void 0 ? _a : 500);
+                        throw new server_error_1.SeverError(error.message, (_a = error.status) !== null && _a !== void 0 ? _a : 500);
                     }
                 }
                 else {
-                    throw new labs_sharable_1.CustomError(`An unexpected error occurred. Error: ${error}`, 500);
+                    throw new server_error_1.SeverError("An unexpected error occurred", 500);
                 }
             }
         });

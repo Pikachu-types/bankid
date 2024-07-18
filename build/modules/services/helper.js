@@ -13,6 +13,7 @@ exports.parseInterface = exports.FunctionHelpers = void 0;
 const labs_sharable_1 = require("labs-sharable");
 const approvedClients_1 = require("../models/public/approvedClients");
 const crypto_1 = require("crypto");
+const server_error_1 = require("../utils/server.error");
 /**
  * Callable Function Helper class
  */
@@ -88,7 +89,7 @@ class FunctionHelpers {
             return labs_sharable_1.LabsCipher.decrypt(signature, cipherKey);
         }
         catch (e) {
-            throw new labs_sharable_1.CustomError(`${e}`);
+            throw new server_error_1.SeverError(`${e}`);
         }
     }
     /**
@@ -139,7 +140,7 @@ class FunctionHelpers {
     static changeCipherStringToModel(source) {
         const cipher = source.split("-vi");
         if (cipher.length != 2) {
-            throw new labs_sharable_1.CustomError("Invalid source string");
+            throw new server_error_1.SeverError("Invalid source string");
         }
         return {
             iv: cipher[1].replace("(", "").replace(")", ""),

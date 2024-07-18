@@ -2,6 +2,7 @@ import {CipherType, CustomError, LabsCipher} from "labs-sharable";
 import { ApprovedClients } from "../models/public/approvedClients";
 import { Request } from "express";
 import { createHash } from "crypto";
+import { SeverError } from "../utils/server.error";
 
 /**
  * Callable Function Helper class
@@ -85,7 +86,7 @@ export class FunctionHelpers {
         changeCipherStringToModel(source);
       return LabsCipher.decrypt(signature, cipherKey);
     } catch (e) {
-      throw new CustomError(`${e}`);
+      throw new SeverError(`${e}`);
     }
   }
 
@@ -140,7 +141,7 @@ export class FunctionHelpers {
     const cipher = source.split("-vi");
 
     if (cipher.length != 2) {
-      throw new CustomError("Invalid source string");
+      throw new SeverError("Invalid source string");
     }
 
     return {

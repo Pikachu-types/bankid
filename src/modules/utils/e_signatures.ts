@@ -9,6 +9,7 @@ import {
 } from 'pdf-lib';
 import { v3 as uuidv3, } from 'uuid';
 import { download } from '../services/http';
+import { SeverError } from './server.error';
 
 export namespace ESignatures {
   export interface SignatureRequest {
@@ -67,7 +68,7 @@ export namespace ESignatures {
       }).then((png) => {
         callback(png);
       }).catch((err) => {
-        throw new CustomError(`Matrix error - ${err}`);
+        throw new SeverError(`Matrix error - ${err}`);
       });
     }
 

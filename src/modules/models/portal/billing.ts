@@ -1,5 +1,6 @@
 import { plainToInstance, Expose } from "class-transformer";
 import { CustomError, convertUnixToDate, unixTimeStampNow } from "labs-sharable";
+import { SeverError } from "../../utils/server.error";
 
 // <100 calls are free each month
 
@@ -106,7 +107,7 @@ export class BillingModel {
    */
   public static timelineToDate(timeline: string): Date {
     const values: string[] = timeline.split("-");
-    if (values.length !== 2) throw new CustomError("Invalid timeline");
+    if (values.length !== 2) throw new SeverError("Invalid timeline");
 
     const month = values[0];
     const year = values[1];

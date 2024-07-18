@@ -131,7 +131,7 @@ var DatabaseFunctions;
                 const source = yield this.db.collection(__1.DocumentReference.users)
                     .doc(ref).collection(__1.DocumentReference.issuedIDs).doc(pass).get();
                 if (!source.data())
-                    throw new labs_sharable_1.CustomError("The request pasby pass is invalid.");
+                    throw new __1.SeverError("The request pasby pass is invalid.");
                 return __1.StandaloneBankID.fromJson(source.data());
             });
         }
@@ -157,6 +157,22 @@ var DatabaseFunctions;
                     collection(__1.DocumentReference.consumers).doc(id)
                     .collection(__1.DocumentReference.apps).get();
                 return source.docs.map((e) => __1.ClientApp.fromJson(e.data()));
+            });
+        }
+        /**
+         * Get consumer app
+         * @param {string} consumer organisation on console
+         * @param {string} app consumer app
+         * @return {Promise<ClientApp>} returns list.
+         */
+        getConsumerApp(consumer, app) {
+            return __awaiter(this, void 0, void 0, function* () {
+                const source = yield this.db.
+                    collection(__1.DocumentReference.consumers).doc(consumer)
+                    .collection(__1.DocumentReference.apps).doc(app).get();
+                if (!source.exists)
+                    throw new __1.SeverError("The requested app does not exists.", 400);
+                return __1.ClientApp.fromJson(source.data());
             });
         }
         /**
@@ -188,6 +204,21 @@ var DatabaseFunctions;
             });
         }
         /**
+         * Grab flow session
+         * @param {string} id the identifier
+         * @return {Promise<StandaloneBankID>} returns list.
+         */
+        retrieveRawIdentificationRequest(id) {
+            return __awaiter(this, void 0, void 0, function* () {
+                const source = yield this.db.collection(__1.DocumentReference.requests)
+                    .doc(id).get();
+                if (!source.exists) {
+                    return;
+                }
+                return __1.Requests.fromJson(source.data());
+            });
+        }
+        /**
          * Get users signing history
          * @param {string} user registered user
          * @return {Promise<IdentificationRequest[]>} returns list.
@@ -198,6 +229,22 @@ var DatabaseFunctions;
                     collection(__1.DocumentReference.users).doc(user)
                     .collection(__1.DocumentReference.history).get();
                 return source.docs.map((e) => __1.IdentificationRequest.fromJson(e.data()));
+            });
+        }
+        /**
+         * Get confirmed flow from user history
+         * @param {string} user registered user
+         * @param {string} flow session id
+         * @return {Promise<IdentificationRequest>} returns session.
+         */
+        getConfirmedSession(user, flow) {
+            return __awaiter(this, void 0, void 0, function* () {
+                const source = yield this.db.
+                    collection(__1.DocumentReference.users).doc(user)
+                    .collection(__1.DocumentReference.history).doc(flow).get();
+                if (!source.exists)
+                    throw new __1.SeverError("No such flow request or it has not been processed by any national.", 400);
+                return __1.IdentificationRequest.fromJson(source.data());
             });
         }
         /**
@@ -273,7 +320,7 @@ var DatabaseFunctions;
         manageIdentificationRequest(data, action) {
             return __awaiter(this, void 0, void 0, function* () {
                 if (data.id === undefined) {
-                    throw new labs_sharable_1.CustomError("Internal error: Invalid map object. No id found");
+                    throw new __1.SeverError("Internal error: Invalid map object. No id found");
                 }
                 const ref = this.db.
                     collection(__1.DocumentReference.requests)
@@ -318,7 +365,7 @@ var DatabaseFunctions;
                     // });
                     const getter = new Getters(this.db);
                     const exists = yield getter.doesDocumentExist(params.person.id, __1.DocumentReference.users);
-                    throw new labs_sharable_1.CustomError("NIN already exists");
+                    throw new __1.SeverError("NIN already exists");
                 }
                 catch (_) {
                     params.person.unResolveMaps();
@@ -527,7 +574,6 @@ var DatabaseFunctions;
         }
         /**
          * modify consumer model  to database
-         * @param {VendorModel} data model structure
          * @param {boolean} create true if user model never exists else false and we create one
          * @return {Promise<void>} void.
          */

@@ -23,6 +23,7 @@ const contact_1 = require("../superficial/contact");
 const generator_1 = require("../../services/generator");
 const helper_1 = require("../../services/helper");
 const labs_sharable_1 = require("labs-sharable");
+const server_error_1 = require("../../utils/server.error");
 /**
  * ClientApp class
 */
@@ -41,6 +42,10 @@ class ClientApp {
         this.lut = 0;
         this.created = 0;
         this.secrets = [];
+        /**
+         * Whitelisted urls
+         */
+        this.urls = [];
         this.keys = { private: "", public: "" };
     }
     /**
@@ -134,7 +139,7 @@ class ClientApp {
             const gen = generator_1.Generator.createRSAPairString();
             yield (0, labs_sharable_1.delay)(400);
             if (gen === undefined || !gen.private || !gen.public) {
-                throw new labs_sharable_1.CustomError("Could not generate RSA keys.");
+                throw new server_error_1.SeverError("Could not generate RSA keys.");
             }
             const publicKey = helper_1.FunctionHelpers.bankidCipherString(secret, gen.public);
             const privateKey = helper_1.FunctionHelpers.bankidCipherString(secret, gen.private);
@@ -231,6 +236,9 @@ __decorate([
 __decorate([
     (0, class_transformer_1.Expose)()
 ], ClientApp.prototype, "secrets", void 0);
+__decorate([
+    (0, class_transformer_1.Expose)()
+], ClientApp.prototype, "urls", void 0);
 __decorate([
     (0, class_transformer_1.Expose)()
 ], ClientApp.prototype, "keys", void 0);

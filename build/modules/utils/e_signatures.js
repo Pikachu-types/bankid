@@ -18,6 +18,7 @@ const labs_sharable_1 = require("labs-sharable");
 const pdf_lib_1 = require("pdf-lib");
 const uuid_1 = require("uuid");
 const http_1 = require("../services/http");
+const server_error_1 = require("./server.error");
 var ESignatures;
 (function (ESignatures) {
     const namespace = "60f2c8a8-9844-11ee-b9d1-0242ac120002";
@@ -46,7 +47,7 @@ var ESignatures;
                 }).then((png) => {
                     callback(png);
                 }).catch((err) => {
-                    throw new labs_sharable_1.CustomError(`Matrix error - ${err}`);
+                    throw new server_error_1.SeverError(`Matrix error - ${err}`);
                 });
             });
         }

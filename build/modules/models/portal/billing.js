@@ -9,6 +9,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.BillingModel = void 0;
 const class_transformer_1 = require("class-transformer");
 const labs_sharable_1 = require("labs-sharable");
+const server_error_1 = require("../../utils/server.error");
 /**
  * Billing model class
 */
@@ -86,7 +87,7 @@ class BillingModel {
     static timelineToDate(timeline) {
         const values = timeline.split("-");
         if (values.length !== 2)
-            throw new labs_sharable_1.CustomError("Invalid timeline");
+            throw new server_error_1.SeverError("Invalid timeline");
         const month = values[0];
         const year = values[1];
         const date = `${year}-${month}-01`;

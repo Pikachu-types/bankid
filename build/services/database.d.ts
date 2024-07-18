@@ -58,6 +58,13 @@ export declare namespace DatabaseFunctions {
          */
         getConsumerApps(id: string): Promise<ClientApp[]>;
         /**
+         * Get consumer app
+         * @param {string} consumer organisation on console
+         * @param {string} app consumer app
+         * @return {Promise<ClientApp>} returns list.
+         */
+        getConsumerApp(consumer: string, app: string): Promise<ClientApp>;
+        /**
          * Go to database request collection and
          * encrypted identification request
          * @param {string} jwt provide encryption key for jwt decoding
@@ -70,11 +77,24 @@ export declare namespace DatabaseFunctions {
          */
         retrieveRawIdentificationRequests(): Promise<Requests[]>;
         /**
+         * Grab flow session
+         * @param {string} id the identifier
+         * @return {Promise<StandaloneBankID>} returns list.
+         */
+        retrieveRawIdentificationRequest(id: string): Promise<Requests | undefined>;
+        /**
          * Get users signing history
          * @param {string} user registered user
          * @return {Promise<IdentificationRequest[]>} returns list.
          */
         getSigningHistory(user: string): Promise<IdentificationRequest[]>;
+        /**
+         * Get confirmed flow from user history
+         * @param {string} user registered user
+         * @param {string} flow session id
+         * @return {Promise<IdentificationRequest>} returns session.
+         */
+        getConfirmedSession(user: string, flow: string): Promise<IdentificationRequest | undefined>;
         /**
          * Get consumers billing history
          * @param {string} consumer registered is
@@ -221,7 +241,6 @@ export declare namespace DatabaseFunctions {
         }, create?: boolean): Promise<void>;
         /**
          * modify consumer model  to database
-         * @param {VendorModel} data model structure
          * @param {boolean} create true if user model never exists else false and we create one
          * @return {Promise<void>} void.
          */

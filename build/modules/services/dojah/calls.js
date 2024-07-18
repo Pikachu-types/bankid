@@ -34,7 +34,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.DojahIdentityCheck = void 0;
 const axios_1 = __importStar(require("axios"));
-const labs_sharable_1 = require("labs-sharable");
+const server_error_1 = require("../../utils/server.error");
 class DojahIdentityCheck {
     /**
       * BVN check
@@ -58,7 +58,7 @@ class DojahIdentityCheck {
                     return entity;
                 }
                 else {
-                    throw new labs_sharable_1.CustomError(JSON.stringify(data), status);
+                    throw new server_error_1.SeverError(JSON.stringify(data), status);
                 }
             }
             catch (error) {
@@ -66,17 +66,21 @@ class DojahIdentityCheck {
                     console.log("BVN extract error message: ", error.message);
                     const response = error.response;
                     if (response && response.data['error'].includes('not found')) {
-                        throw new labs_sharable_1.CustomError("BVN not found", 404);
+                        throw new server_error_1.SeverError("BVN not found", 404);
                     }
                     else if (response) {
-                        throw new labs_sharable_1.CustomError("", response.status, response.data);
+                        throw new server_error_1.SeverError({
+                            body: response.data,
+                            reason: "Axios unknown error caught",
+                            status: 'failed'
+                        }, response.status);
                     }
                     else {
-                        throw new labs_sharable_1.CustomError(error.message, (_a = error.status) !== null && _a !== void 0 ? _a : 500);
+                        throw new server_error_1.SeverError(error.message, (_a = error.status) !== null && _a !== void 0 ? _a : 500);
                     }
                 }
                 else {
-                    throw new labs_sharable_1.CustomError("Critical ID extract error", 500);
+                    throw new server_error_1.SeverError("Critical ID extract error", 500);
                 }
             }
         });
@@ -103,7 +107,7 @@ class DojahIdentityCheck {
                     return entity;
                 }
                 else {
-                    throw new labs_sharable_1.CustomError(JSON.stringify(data), status);
+                    throw new server_error_1.SeverError(JSON.stringify(data), status);
                 }
             }
             catch (error) {
@@ -111,17 +115,21 @@ class DojahIdentityCheck {
                     console.log("NIN extract error message: ", error.message);
                     const response = error.response;
                     if (response && response.data['error'].includes('not found')) {
-                        throw new labs_sharable_1.CustomError("NIN not found", 404);
+                        throw new server_error_1.SeverError("NIN not found");
                     }
                     else if (response) {
-                        throw new labs_sharable_1.CustomError("", response.status, response.data);
+                        throw new server_error_1.SeverError({
+                            body: response.data,
+                            reason: "Axios unknown error caught",
+                            status: 'failed'
+                        }, response.status);
                     }
                     else {
-                        throw new labs_sharable_1.CustomError(error.message, (_a = error.status) !== null && _a !== void 0 ? _a : 500);
+                        throw new server_error_1.SeverError(error.message, (_a = error.status) !== null && _a !== void 0 ? _a : 500);
                     }
                 }
                 else {
-                    throw new labs_sharable_1.CustomError("Critical ID extract error", 500);
+                    throw new server_error_1.SeverError("Critical ID extract error", 500);
                 }
             }
         });

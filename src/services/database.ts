@@ -4,10 +4,11 @@ import {
   DocumentAction, DocumentReference, Documents,
   FunctionHelpers, IdentificationModel,
   IdentificationRequest, InvitationRequest, PendingApprovals, Requests,
+  SeverError,
   StandaloneBankID, VendorModel,
   eSignature
 } from "..";
-import { CustomError, LabsCipher } from "labs-sharable";
+import { LabsCipher } from "labs-sharable";
 
 export namespace DatabaseFunctions {
 
@@ -101,7 +102,7 @@ export namespace DatabaseFunctions {
       Promise<StandaloneBankID> {
       const source = await this.db.collection(DocumentReference.users)
         .doc(ref).collection(DocumentReference.issuedIDs).doc(pass).get();
-      if (!source.data()) throw new CustomError("The request pasby pass is invalid.");
+      if (!source.data()) throw new SeverError("The request pasby pass is invalid.");
       return StandaloneBankID.fromJson((source.data() as Record<string, unknown>))
     }
 
@@ -126,6 +127,21 @@ export namespace DatabaseFunctions {
         collection(DocumentReference.consumers).doc(id)
         .collection(DocumentReference.apps).get();
       return source.docs.map((e) => ClientApp.fromJson(e.data()));
+    }
+
+    /**
+     * Get consumer app
+     * @param {string} consumer organisation on console
+     * @param {string} app consumer app
+     * @return {Promise<ClientApp>} returns list.
+     */
+    public async getConsumerApp(consumer: string, app: string):
+      Promise<ClientApp> {
+      const source = await this.db.
+        collection(DocumentReference.consumers).doc(consumer)
+        .collection(DocumentReference.apps).doc(app).get();
+      if (!source.exists) throw new SeverError("The requested app does not exists.", 400);
+      return ClientApp.fromJson((source.data() as Record<string, unknown>));
     }
 
 
@@ -158,6 +174,21 @@ export namespace DatabaseFunctions {
     }
 
     /**
+     * Grab flow session
+     * @param {string} id the identifier
+     * @return {Promise<StandaloneBankID>} returns list.
+     */
+    public async retrieveRawIdentificationRequest(id: string):
+      Promise<Requests | undefined> {
+      const source = await this.db.collection(DocumentReference.requests)
+        .doc(id).get();
+      if (!source.exists) {
+        return;
+      }
+      return Requests.fromJson((source.data() as Record<string, unknown>));
+    }
+
+    /**
      * Get users signing history
      * @param {string} user registered user
      * @return {Promise<IdentificationRequest[]>} returns list.
@@ -169,6 +200,22 @@ export namespace DatabaseFunctions {
         .collection(DocumentReference.history).get();
       return source.docs.map((e) => IdentificationRequest.fromJson(e.data()));
     }
+
+    /**
+     * Get confirmed flow from user history
+     * @param {string} user registered user
+     * @param {string} flow session id
+     * @return {Promise<IdentificationRequest>} returns session.
+     */
+    public async getConfirmedSession(user: string, flow: string):
+      Promise<IdentificationRequest | undefined> {
+      const source = await this.db.
+        collection(DocumentReference.users).doc(user)
+        .collection(DocumentReference.history).doc(flow).get();
+      if (!source.exists) throw new SeverError("No such flow request or it has not been processed by any national.", 400);
+      return IdentificationRequest.fromJson((source.data() as Record<string, unknown>));
+    }
+
 
     /**
      * Get consumers billing history
@@ -250,7 +297,7 @@ export namespace DatabaseFunctions {
       data: Requests, action: DocumentAction)
       : Promise<void> {
       if (data.id === undefined) {
-        throw new CustomError("Internal error: Invalid map object. No id found");
+        throw new SeverError("Internal error: Invalid map object. No id found");
       }
       const ref = this.db.
         collection(DocumentReference.requests)
@@ -305,7 +352,7 @@ export namespace DatabaseFunctions {
           params.person.id,
           DocumentReference.users,
         );
-        throw new CustomError("NIN already exists");
+        throw new SeverError("NIN already exists");
       } catch (_) {
         params.person.unResolveMaps();
         await this.db.

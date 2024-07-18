@@ -6,6 +6,7 @@ import { AuthenticateKeysData } from "../superficial/contact";
 import { Generator } from "../../services/generator";
 import { FunctionHelpers } from "../../services/helper";
 import { CustomError, RSAKeys, delay, generateRandomAlphaNumeric, unixTimeStampNow } from "labs-sharable";
+import { SeverError } from "../../utils/server.error";
 /**
  * ClientApp class
 */
@@ -25,6 +26,10 @@ export class ClientApp {
   @Expose() created = 0;
   @Expose() information?: AppVerificationInfoModel;
   @Expose() secrets: AppDataSecret[] = [];
+  /**
+   * Whitelisted urls
+   */
+  @Expose() urls: string[] = [];
   @Expose() keys: RSAKeys = {private: "", public: ""};
   
   keyData: AuthenticateKeysData | undefined;
@@ -130,7 +135,7 @@ export class ClientApp {
     const gen = Generator.createRSAPairString();
     await delay(400);
     if (gen === undefined || !gen.private || !gen.public) {
-      throw new CustomError("Could not generate RSA keys.")
+      throw new SeverError("Could not generate RSA keys.")
     }
     const publicKey = FunctionHelpers.bankidCipherString(secret,
       gen.public);

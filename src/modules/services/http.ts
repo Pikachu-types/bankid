@@ -1,6 +1,7 @@
 import axios, { isAxiosError } from "axios";
 import { CustomError } from "labs-sharable";
 import { PostRequest } from "../interfaces/documents";
+import { SeverError } from "../utils/server.error";
 
 /**
  * HTTP client class
@@ -28,19 +29,23 @@ export class Http {
             // console.log(JSON.stringify(data, null, 4));
 
             if (status != 200) {
-                throw new CustomError(`Http post error: ${JSON.stringify(data) }`, status);
+                throw new SeverError(`Http post error: ${JSON.stringify(data) }`, status);
             }
         } catch (error) {
             if (isAxiosError(error)) {
                 console.log("error message: ", error.message);
                 const response = error.response;
                 if (response) {
-                    throw new CustomError("", response.status, response.data);
+                    throw new SeverError({
+                        body: response.data,
+                        reason: "Axios unknown error caught",
+                        status: 'failed'
+                    }, response.status);
                 } else {
-                    throw new CustomError(error.message, error.status ?? 500);
+                    throw new SeverError(error.message, error.status ?? 500);
                 }
             } else {
-                throw new CustomError(`An unexpected error occurred. Error: ${error}`, 500);
+                throw new SeverError("An unexpected error occurred", 500);
             }
         }
     }

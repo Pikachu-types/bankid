@@ -1,6 +1,7 @@
 import { plainToInstance, Expose } from "class-transformer";
 import { VendorModel } from "./vendors";
 import { CustomError } from "labs-sharable";
+import { SeverError } from "../../utils/server.error";
 
 export interface IReleaseInformation {
   place: string;
@@ -97,7 +98,7 @@ export class StandaloneBankID {
    * @returns {ManagePassResponse}
    */
   public manageObject(vendors: VendorModel[]): ManagePassResponse {
-    if (!this.activated || this.disabled) throw new CustomError("This pass is no longer valid");
+    if (!this.activated || this.disabled) throw new SeverError("This pass is no longer valid");
     const id = this.id.split("-")[1];
     const device = DeviceInfoData.fromJson(this.deviceInfo ?? {});
     return {

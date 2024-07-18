@@ -9,7 +9,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.DeviceInfoData = exports.StandaloneBankID = void 0;
 const class_transformer_1 = require("class-transformer");
 const vendors_1 = require("./vendors");
-const labs_sharable_1 = require("labs-sharable");
+const server_error_1 = require("../../utils/server.error");
 /**
  * StandaloneBankID class
 */
@@ -63,7 +63,7 @@ class StandaloneBankID {
     manageObject(vendors) {
         var _a, _b, _c, _d;
         if (!this.activated || this.disabled)
-            throw new labs_sharable_1.CustomError("This pass is no longer valid");
+            throw new server_error_1.SeverError("This pass is no longer valid");
         const id = this.id.split("-")[1];
         const device = DeviceInfoData.fromJson((_a = this.deviceInfo) !== null && _a !== void 0 ? _a : {});
         return {

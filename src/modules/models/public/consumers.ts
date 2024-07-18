@@ -1,6 +1,6 @@
 import { plainToInstance, Expose } from "class-transformer";
 import { AuthenticateKeysData, ContactData } from "../superficial/contact";
-import { CustomError, delay, unixTimeStampNow } from "labs-sharable";
+import { delay, unixTimeStampNow } from "labs-sharable";
 import { Generator } from "../../services/generator";
 import { FunctionHelpers } from "../../services/helper";
 import { ApiKeyPrefix, BankIDTypes, DocumentTypes } from "../../enums/enums";
@@ -8,6 +8,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { ConsoleRegAccountRequest } from "../../interfaces/requests";
 import { APIKeys, ConsumerProfile, ConsumerServiceJSON } from "../../interfaces/documents";
 import { BankID } from "../bankid";
+import { SeverError } from "../../utils/server.error";
 
 /**
  * ConsumerModel class
@@ -172,7 +173,7 @@ export class ConsumerModel {
       "apiKey": "",
     };
     if (request.email == undefined) {
-      throw new CustomError("Cannot create organisation with no reference to owner");
+      throw new SeverError("Cannot create organisation with no reference to owner");
     }
     const data = ConsumerModel.fromJson(template);
     data.name = request.org;
@@ -192,7 +193,7 @@ export class ConsumerModel {
   public generateServiceJSON(): ConsumerServiceJSON {
     if (this.apiKey === undefined || this.apiKey.length < 1 ||
       this.keyData === undefined) {
-      throw new CustomError("Consumer hasn't configured its api settings");
+      throw new SeverError("Consumer hasn't configured its api settings");
     }
     return {
       type: BankIDTypes.consumer,
@@ -215,7 +216,7 @@ export class ConsumerModel {
     const gen = Generator.createRSAPairString();
     await delay(400);
     if (gen === undefined || !gen.private || !gen.public) {
-      throw new CustomError("Could not generate RSA keys.")
+      throw new SeverError("Could not generate RSA keys.")
     }
     const publicKey = FunctionHelpers.bankidCipherString(secret,
       gen.public);
@@ -252,7 +253,7 @@ export class ConsumerModel {
       };
       this.apiKey = this.apis.live;
     } catch (error) {
-      throw new CustomError("Failed creating credentials");
+      throw new SeverError("Failed creating credentials");
     }
   }
 

@@ -5,6 +5,7 @@ import {
 import { MagicLinkModes } from "../enums/shared";
 import { DocumentReference, DocumentTypes } from "../enums/enums";
 import { FunctionHelpers } from "../services/helper";
+import { SeverError } from "../utils/server.error";
 
 export namespace BankID {
   export enum AppIdentifier {
@@ -106,8 +107,8 @@ export namespace BankID {
      * @return {string} returns collection
      */
     public static whatCollection(id: string): string {
-      if (id.includes("_") === false) {
-        throw new CustomError("");
+      if (!id.includes("_")) {
+        throw new SeverError("Collection does not exist");
       }
       let collection = `${id.split("_")[0]}_`;
       switch (collection) {

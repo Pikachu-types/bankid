@@ -24,6 +24,7 @@ const helper_1 = require("../../services/helper");
 const enums_1 = require("../../enums/enums");
 const uuid_1 = require("uuid");
 const bankid_1 = require("../bankid");
+const server_error_1 = require("../../utils/server.error");
 /**
  * ConsumerModel class
 */
@@ -167,7 +168,7 @@ class ConsumerModel {
             "apiKey": "",
         };
         if (request.email == undefined) {
-            throw new labs_sharable_1.CustomError("Cannot create organisation with no reference to owner");
+            throw new server_error_1.SeverError("Cannot create organisation with no reference to owner");
         }
         const data = ConsumerModel.fromJson(template);
         data.name = request.org;
@@ -186,7 +187,7 @@ class ConsumerModel {
         var _a, _b;
         if (this.apiKey === undefined || this.apiKey.length < 1 ||
             this.keyData === undefined) {
-            throw new labs_sharable_1.CustomError("Consumer hasn't configured its api settings");
+            throw new server_error_1.SeverError("Consumer hasn't configured its api settings");
         }
         return {
             type: enums_1.BankIDTypes.consumer,
@@ -207,7 +208,7 @@ class ConsumerModel {
             const gen = generator_1.Generator.createRSAPairString();
             yield (0, labs_sharable_1.delay)(400);
             if (gen === undefined || !gen.private || !gen.public) {
-                throw new labs_sharable_1.CustomError("Could not generate RSA keys.");
+                throw new server_error_1.SeverError("Could not generate RSA keys.");
             }
             const publicKey = helper_1.FunctionHelpers.bankidCipherString(secret, gen.public);
             const privateKey = helper_1.FunctionHelpers.bankidCipherString(secret, gen.private);
@@ -242,7 +243,7 @@ class ConsumerModel {
             this.apiKey = this.apis.live;
         }
         catch (error) {
-            throw new labs_sharable_1.CustomError("Failed creating credentials");
+            throw new server_error_1.SeverError("Failed creating credentials");
         }
     }
     /**
