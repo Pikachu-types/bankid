@@ -176,7 +176,7 @@ export namespace DatabaseFunctions {
     /**
      * Grab flow session
      * @param {string} id the identifier
-     * @return {Promise<StandaloneBankID>} returns list.
+     * @return {Promise<Requests>} returns list.
      */
     public async retrieveRawIdentificationRequest(id: string):
       Promise<Requests | undefined> {
@@ -186,6 +186,22 @@ export namespace DatabaseFunctions {
         return;
       }
       return Requests.fromJson((source.data() as Record<string, unknown>));
+    }
+    
+    /**
+    * Grab flow session
+    * @param {string} id the identifier
+    * @param {string} user identify the national
+    * @return {Promise<IdentificationRequest>} returns list.
+    */
+    public async getSignedFlowRequest(id: string, user: string):
+      Promise<IdentificationRequest | undefined> {
+      const source = await this.db.collection(DocumentReference.users).doc(user).collection(DocumentReference.history)
+        .doc(id).get();
+      if (!source.exists) {
+        return;
+      }
+      return IdentificationRequest.fromJson((source.data() as Record<string, unknown>));
     }
 
     /**

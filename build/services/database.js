@@ -206,7 +206,7 @@ var DatabaseFunctions;
         /**
          * Grab flow session
          * @param {string} id the identifier
-         * @return {Promise<StandaloneBankID>} returns list.
+         * @return {Promise<Requests>} returns list.
          */
         retrieveRawIdentificationRequest(id) {
             return __awaiter(this, void 0, void 0, function* () {
@@ -216,6 +216,22 @@ var DatabaseFunctions;
                     return;
                 }
                 return __1.Requests.fromJson(source.data());
+            });
+        }
+        /**
+        * Grab flow session
+        * @param {string} id the identifier
+        * @param {string} user identify the national
+        * @return {Promise<IdentificationRequest>} returns list.
+        */
+        getSignedFlowRequest(id, user) {
+            return __awaiter(this, void 0, void 0, function* () {
+                const source = yield this.db.collection(__1.DocumentReference.users).doc(user).collection(__1.DocumentReference.history)
+                    .doc(id).get();
+                if (!source.exists) {
+                    return;
+                }
+                return __1.IdentificationRequest.fromJson(source.data());
             });
         }
         /**

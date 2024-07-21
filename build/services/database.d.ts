@@ -79,9 +79,16 @@ export declare namespace DatabaseFunctions {
         /**
          * Grab flow session
          * @param {string} id the identifier
-         * @return {Promise<StandaloneBankID>} returns list.
+         * @return {Promise<Requests>} returns list.
          */
         retrieveRawIdentificationRequest(id: string): Promise<Requests | undefined>;
+        /**
+        * Grab flow session
+        * @param {string} id the identifier
+        * @param {string} user identify the national
+        * @return {Promise<IdentificationRequest>} returns list.
+        */
+        getSignedFlowRequest(id: string, user: string): Promise<IdentificationRequest | undefined>;
         /**
          * Get users signing history
          * @param {string} user registered user
