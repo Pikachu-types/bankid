@@ -1,6 +1,9 @@
-import { LabsCipher, CustomError, RequestStatus, convertDateToUnix } from "labs-sharable";
+import { LabsCipher, CustomError, convertDateToUnix } from "labs-sharable";
 import { AuthToken, RequestSignature } from "../interfaces/documents";
-import { ActionType, ClientApp, DocumentTypes, IDRequest, RequestMode, Requests, SeverError, Signing } from "..";
+import {
+  ActionType, ClientApp, DocumentTypes,
+  IDRequest, RequestMode, Requests, SeverError, Signing
+} from "..";
 import { DatabaseFunctions } from "../../services";
 import { JsonWebTokenError } from "jsonwebtoken";
 
@@ -134,13 +137,6 @@ export class ConsumerHelper {
       signature: decode,
       request: sign,
     };
-  }
-
-  public static async handshakeOidc(signature: string, param: {
-    pb: string;
-    db: DatabaseFunctions.Getters,
-  }) {
-    // deconstruct signature
   }
 
   /**
