@@ -209,11 +209,30 @@ export namespace DatabaseFunctions {
      * @param {string} user registered user
      * @return {Promise<IdentificationRequest[]>} returns list.
      */
-    public async getSigningHistory(user: string):
+    public async getSigningHistory(user: string, options?: {
+      limit: number;
+      /**
+       * Document ID reference to begin with
+       */
+      startAt?: string;
+    } ):
       Promise<IdentificationRequest[]> {
-      const source = await this.db.
+      let val = this.db.
         collection(DocumentReference.users).doc(user)
-        .collection(DocumentReference.history).get();
+        .collection(DocumentReference.history)
+      
+      if (options) {
+        if (options.startAt) {
+          const docRef = this.db.collection(DocumentReference.users).doc(user)
+            .collection(DocumentReference.history).doc(options.startAt);
+          const snapshot = await docRef.get();
+
+          val.startAt(snapshot);
+        }
+
+        val.limit(options.limit);
+      }
+      const source = await val.get();
       return source.docs.map((e) => IdentificationRequest.fromJson(e.data()));
     }
 
