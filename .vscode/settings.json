@@ -20,6 +20,8 @@
         "jsons",
         "namingclaim",
         "nationalityclaim",
+        "OIDC",
+        "pkce",
         "secretid",
         "sess",
         "unixtimestamp",

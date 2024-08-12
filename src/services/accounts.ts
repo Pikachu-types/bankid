@@ -21,7 +21,7 @@ export class Accounts {
   constructor(getter: DatabaseFunctions.Getters,) {
     this.getter = getter;
   }
-  
+
   /**
    * Get a some bankid account
    * @param {Record<string, unknown>} params arguments
@@ -132,6 +132,42 @@ export class Accounts {
       consumer: consumer,
       app: app,
     };
+  }
+
+  /**
+     * Validates the provided API key against the list of consumers.
+     * @param params - An object containing the API key to validate.
+     * @param params.apikey - The consumer API key to validate.
+     * @returns The consumer associated with the provided API key if valid.
+     * @throws {SeverError} If the API key is not valid.
+     */
+  public async validateConsumer(params: {
+    /**
+     * Consumer api key
+     */
+    apikey: string,
+    /**
+    * client secret key
+    */
+    appSecret: string,
+    cipher: string,
+  }) {
+    const consumer = ConsumerModel.
+      matchApiKey(await this.getter.retrieveConsumers(), params.apikey);
+    if (!consumer) {
+      throw new SeverError("Request forbidden: Api key not valid", 403);
+    }
+    const app = ClientApp.
+      matchSecretKey(await this.getter.getConsumerApps(consumer.id), params.appSecret, params.cipher);
+
+    if (!app) {
+      throw new SeverError("Request forbidden: App secret not valid", 403);
+    }
+
+    return {
+      consumer: consumer,
+      app: app,
+    }
   }
 
   /**

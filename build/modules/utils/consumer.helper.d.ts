@@ -52,10 +52,6 @@ export declare class ConsumerHelper {
         app: ClientApp;
         request: Requests;
     }>;
-    static handshakeOidc(signature: string, param: {
-        pb: string;
-        db: DatabaseFunctions.Getters;
-    }): Promise<void>;
     /**
      * Create expiration time
      * @param {number} duration length of time

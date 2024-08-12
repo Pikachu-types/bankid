@@ -114,6 +114,31 @@ class Accounts {
         });
     }
     /**
+       * Validates the provided API key against the list of consumers.
+       * @param params - An object containing the API key to validate.
+       * @param params.apikey - The consumer API key to validate.
+       * @returns The consumer associated with the provided API key if valid.
+       * @throws {SeverError} If the API key is not valid.
+       */
+    validateConsumer(params) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const consumer = __1.ConsumerModel.
+                matchApiKey(yield this.getter.retrieveConsumers(), params.apikey);
+            if (!consumer) {
+                throw new __1.SeverError("Request forbidden: Api key not valid", 403);
+            }
+            const app = __1.ClientApp.
+                matchSecretKey(yield this.getter.getConsumerApps(consumer.id), params.appSecret, params.cipher);
+            if (!app) {
+                throw new __1.SeverError("Request forbidden: App secret not valid", 403);
+            }
+            return {
+                consumer: consumer,
+                app: app,
+            };
+        });
+    }
+    /**
     * Authenticate mobile applications
     * @param {Record<string, unknown>} params required arguments
     * @return {Promise<ConsumerAppsResponse>} returns auth token

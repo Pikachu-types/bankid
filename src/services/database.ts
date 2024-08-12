@@ -1,7 +1,7 @@
 import * as admin from "firebase-admin";
 import {
   BillingModel, ClientApp, ConsumerModel,
-  DocumentAction, DocumentReference, Documents,
+  DocumentAction, DocumentReference, DocumentTypes, Documents,
   FunctionHelpers, IdentificationModel,
   IdentificationRequest, InvitationRequest, PendingApprovals, Requests,
   SeverError,
@@ -9,6 +9,7 @@ import {
   eSignature
 } from "..";
 import { LabsCipher } from "labs-sharable";
+import { OIDCSession } from "../modules/models/public/oidc_session";
 
 export namespace DatabaseFunctions {
 
@@ -41,7 +42,7 @@ export namespace DatabaseFunctions {
         }
       });
     }
-    
+
     /**
      * Go to database invitations collection and get all
      * @return {Promise<VendorModel[]>} returns list.
@@ -49,8 +50,8 @@ export namespace DatabaseFunctions {
     public async retrieveNINInvitations(): Promise<InvitationRequest[]> {
       const source = await this.db.collection(DocumentReference.invitations).get();
       return source.docs.map((e) => InvitationRequest.fromJson(e.data()));
-    }    
-    
+    }
+
     /**
      * Go to database registration requests collection and get all
      * @return {Promise<VendorModel[]>} returns list.
@@ -187,7 +188,7 @@ export namespace DatabaseFunctions {
       }
       return Requests.fromJson((source.data() as Record<string, unknown>));
     }
-    
+
     /**
     * Grab flow session
     * @param {string} id the identifier
@@ -215,12 +216,12 @@ export namespace DatabaseFunctions {
        * Document ID reference to begin with
        */
       startAt?: string;
-    } ):
+    }):
       Promise<IdentificationRequest[]> {
       let val = this.db.
         collection(DocumentReference.users).doc(user)
         .collection(DocumentReference.history)
-      
+
       if (options) {
         if (options.startAt) {
           const docRef = this.db.collection(DocumentReference.users).doc(user)
@@ -237,15 +238,30 @@ export namespace DatabaseFunctions {
     }
 
     /**
-     * Get confirmed flow from user history
-     * @param {string} user registered user
-     * @param {string} flow session id
-     * @return {Promise<IdentificationRequest>} returns session.
+     * Retrieves an OIDC session from the database using the provided token.
+     *
+     * @param token - The token used to identify the OIDC session.
+     * @returns A promise that resolves to an OIDCSession object if found, or undefined if not.
+     * @throws ServerError if the session does not exist or has expired.
      */
-    public async getConfirmedSession(user: string, flow: string):
-      Promise<IdentificationRequest | undefined> {
+    public async getOIDCSession(token: string):
+      Promise<OIDCSession> {
       const source = await this.db.
-        collection(DocumentReference.users).doc(user)
+        collection(DocumentReference.sessions).doc(token).get();
+      if (!source.exists) throw new SeverError("Resource session must be invalid or has expired", 400);
+      return OIDCSession.fromJson((source.data() as Record<string, unknown>));
+    }
+
+    /**
+     * Retrieves a confirmed session for a specific user and flow from the database.
+     * @param user The user identifier.
+     * @param flow The flow identifier.
+     * @returns A Promise that resolves to an IdentificationRequest object if found, otherwise undefined.
+     * @throws {SeverError} If the flow request does not exist or has not been processed by any national.
+     */
+    public async getConfirmedSession(user: string, flow: string): Promise<IdentificationRequest | undefined> {
+      const source = await this.db
+        .collection(DocumentReference.users).doc(user)
         .collection(DocumentReference.history).doc(flow).get();
       if (!source.exists) throw new SeverError("No such flow request or it has not been processed by any national.", 400);
       return IdentificationRequest.fromJson((source.data() as Record<string, unknown>));
@@ -413,7 +429,21 @@ export namespace DatabaseFunctions {
         .collection(DocumentReference.issuedIDs).doc(id.id)
         .set(id.toMap());
     }
-  
+
+
+    /**
+     * Creates a new OIDC session in the database.
+     * @param data - The OIDC session object to be created.
+     * @throws {SeverError} If the provided OIDC session object has an invalid ID.
+     * @returns A Promise that resolves when the OIDC session is successfully created.
+     */
+    public async createOIDCSession(data: OIDCSession): Promise<void> {
+      if (!data.id.startsWith(DocumentTypes.oidc)) throw new SeverError("Invalid OIDC session object");
+      await this.db
+        .collection(DocumentReference.sessions).doc(data.id)
+        .set(data.toMap());
+    }
+
 
     /**
      * Create nin invitation request
@@ -446,7 +476,7 @@ export namespace DatabaseFunctions {
         await query.set(person.toMap());
       }
     }
-    
+
     /**
      * Change pending to false for pasby with nin request
       * @param {PendingApprovals} person owner of the new BankID

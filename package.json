@@ -1,6 +1,6 @@
 {
   "name": "@bukadirect/bankid",
-  "version": "0.4.3",
+  "version": "0.4.4",
   "description": "Finsel DGI team shared typescript helper module for pasby",
   "main": "build/index.js",
   "files": [

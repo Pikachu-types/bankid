@@ -1,5 +1,6 @@
 import * as admin from "firebase-admin";
 import { BillingModel, ClientApp, ConsumerModel, DocumentAction, Documents, IdentificationModel, IdentificationRequest, InvitationRequest, PendingApprovals, Requests, StandaloneBankID, VendorModel, eSignature } from "..";
+import { OIDCSession } from "../modules/models/public/oidc_session";
 export declare namespace DatabaseFunctions {
     /**
     * Database helper class
@@ -94,12 +95,27 @@ export declare namespace DatabaseFunctions {
          * @param {string} user registered user
          * @return {Promise<IdentificationRequest[]>} returns list.
          */
-        getSigningHistory(user: string): Promise<IdentificationRequest[]>;
+        getSigningHistory(user: string, options?: {
+            limit: number;
+            /**
+             * Document ID reference to begin with
+             */
+            startAt?: string;
+        }): Promise<IdentificationRequest[]>;
         /**
-         * Get confirmed flow from user history
-         * @param {string} user registered user
-         * @param {string} flow session id
-         * @return {Promise<IdentificationRequest>} returns session.
+         * Retrieves an OIDC session from the database using the provided token.
+         *
+         * @param token - The token used to identify the OIDC session.
+         * @returns A promise that resolves to an OIDCSession object if found, or undefined if not.
+         * @throws ServerError if the session does not exist or has expired.
+         */
+        getOIDCSession(token: string): Promise<OIDCSession>;
+        /**
+         * Retrieves a confirmed session for a specific user and flow from the database.
+         * @param user The user identifier.
+         * @param flow The flow identifier.
+         * @returns A Promise that resolves to an IdentificationRequest object if found, otherwise undefined.
+         * @throws {SeverError} If the flow request does not exist or has not been processed by any national.
          */
         getConfirmedSession(user: string, flow: string): Promise<IdentificationRequest | undefined>;
         /**
@@ -167,6 +183,13 @@ export declare namespace DatabaseFunctions {
          * @return {Promise<void>} returns list.
          */
         createBankID(person: IdentificationModel, id: StandaloneBankID): Promise<void>;
+        /**
+         * Creates a new OIDC session in the database.
+         * @param data - The OIDC session object to be created.
+         * @throws {SeverError} If the provided OIDC session object has an invalid ID.
+         * @returns A Promise that resolves when the OIDC session is successfully created.
+         */
+        createOIDCSession(data: OIDCSession): Promise<void>;
         /**
          * Create nin invitation request
           * @param {InvitationRequest} person owner of the new BankID

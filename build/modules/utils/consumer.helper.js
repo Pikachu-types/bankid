@@ -114,11 +114,6 @@ class ConsumerHelper {
             };
         });
     }
-    static handshakeOidc(signature, param) {
-        return __awaiter(this, void 0, void 0, function* () {
-            // deconstruct signature
-        });
-    }
     /**
      * Create expiration time
      * @param {number} duration length of time

@@ -37,7 +37,7 @@ export declare enum DocumentReference {
      */
     console = "console",
     /**
-     * Collection reference for console sessions by console users
+     * Collection reference for auth and console user sessions
      */
     sessions = "sessions",
     /**
@@ -147,6 +147,7 @@ export declare enum DocumentTypes {
      * Console session
      */
     session = "sess_",
+    oidc = "tk_",
     invitation = "invite_"
 }
 /**

@@ -36,6 +36,7 @@ exports.DatabaseFunctions = void 0;
 const admin = __importStar(require("firebase-admin"));
 const __1 = require("..");
 const labs_sharable_1 = require("labs-sharable");
+const oidc_session_1 = require("../modules/models/public/oidc_session");
 var DatabaseFunctions;
 (function (DatabaseFunctions) {
     /**
@@ -239,24 +240,51 @@ var DatabaseFunctions;
          * @param {string} user registered user
          * @return {Promise<IdentificationRequest[]>} returns list.
          */
-        getSigningHistory(user) {
+        getSigningHistory(user, options) {
             return __awaiter(this, void 0, void 0, function* () {
-                const source = yield this.db.
+                let val = this.db.
                     collection(__1.DocumentReference.users).doc(user)
-                    .collection(__1.DocumentReference.history).get();
+                    .collection(__1.DocumentReference.history);
+                if (options) {
+                    if (options.startAt) {
+                        const docRef = this.db.collection(__1.DocumentReference.users).doc(user)
+                            .collection(__1.DocumentReference.history).doc(options.startAt);
+                        const snapshot = yield docRef.get();
+                        val.startAt(snapshot);
+                    }
+                    val.limit(options.limit);
+                }
+                const source = yield val.get();
                 return source.docs.map((e) => __1.IdentificationRequest.fromJson(e.data()));
             });
         }
         /**
-         * Get confirmed flow from user history
-         * @param {string} user registered user
-         * @param {string} flow session id
-         * @return {Promise<IdentificationRequest>} returns session.
+         * Retrieves an OIDC session from the database using the provided token.
+         *
+         * @param token - The token used to identify the OIDC session.
+         * @returns A promise that resolves to an OIDCSession object if found, or undefined if not.
+         * @throws ServerError if the session does not exist or has expired.
+         */
+        getOIDCSession(token) {
+            return __awaiter(this, void 0, void 0, function* () {
+                const source = yield this.db.
+                    collection(__1.DocumentReference.sessions).doc(token).get();
+                if (!source.exists)
+                    throw new __1.SeverError("Resource session must be invalid or has expired", 400);
+                return oidc_session_1.OIDCSession.fromJson(source.data());
+            });
+        }
+        /**
+         * Retrieves a confirmed session for a specific user and flow from the database.
+         * @param user The user identifier.
+         * @param flow The flow identifier.
+         * @returns A Promise that resolves to an IdentificationRequest object if found, otherwise undefined.
+         * @throws {SeverError} If the flow request does not exist or has not been processed by any national.
          */
         getConfirmedSession(user, flow) {
             return __awaiter(this, void 0, void 0, function* () {
-                const source = yield this.db.
-                    collection(__1.DocumentReference.users).doc(user)
+                const source = yield this.db
+                    .collection(__1.DocumentReference.users).doc(user)
                     .collection(__1.DocumentReference.history).doc(flow).get();
                 if (!source.exists)
                     throw new __1.SeverError("No such flow request or it has not been processed by any national.", 400);
@@ -405,6 +433,21 @@ var DatabaseFunctions;
                     collection(__1.DocumentReference.users).doc(person.id)
                     .collection(__1.DocumentReference.issuedIDs).doc(id.id)
                     .set(id.toMap());
+            });
+        }
+        /**
+         * Creates a new OIDC session in the database.
+         * @param data - The OIDC session object to be created.
+         * @throws {SeverError} If the provided OIDC session object has an invalid ID.
+         * @returns A Promise that resolves when the OIDC session is successfully created.
+         */
+        createOIDCSession(data) {
+            return __awaiter(this, void 0, void 0, function* () {
+                if (!data.id.startsWith(__1.DocumentTypes.oidc))
+                    throw new __1.SeverError("Invalid OIDC session object");
+                yield this.db
+                    .collection(__1.DocumentReference.sessions).doc(data.id)
+                    .set(data.toMap());
             });
         }
         /**

@@ -41,7 +41,7 @@ var DocumentReference;
      */
     DocumentReference["console"] = "console";
     /**
-     * Collection reference for console sessions by console users
+     * Collection reference for auth and console user sessions
      */
     DocumentReference["sessions"] = "sessions";
     /**
@@ -156,6 +156,7 @@ var DocumentTypes;
      * Console session
      */
     DocumentTypes["session"] = "sess_";
+    DocumentTypes["oidc"] = "tk_";
     DocumentTypes["invitation"] = "invite_";
 })(DocumentTypes = exports.DocumentTypes || (exports.DocumentTypes = {}));
 /**

@@ -49,6 +49,27 @@ export declare class Accounts {
         cipher: string;
     }): Promise<AppConsumerReturn | undefined>;
     /**
+       * Validates the provided API key against the list of consumers.
+       * @param params - An object containing the API key to validate.
+       * @param params.apikey - The consumer API key to validate.
+       * @returns The consumer associated with the provided API key if valid.
+       * @throws {SeverError} If the API key is not valid.
+       */
+    validateConsumer(params: {
+        /**
+         * Consumer api key
+         */
+        apikey: string;
+        /**
+        * client secret key
+        */
+        appSecret: string;
+        cipher: string;
+    }): Promise<{
+        consumer: ConsumerModel;
+        app: ClientApp;
+    }>;
+    /**
     * Authenticate mobile applications
     * @param {Record<string, unknown>} params required arguments
     * @return {Promise<ConsumerAppsResponse>} returns auth token
