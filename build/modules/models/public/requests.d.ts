@@ -105,6 +105,7 @@ export declare class Requests {
      * nin or cac numbers
      */
     to: string;
+    pkce: string;
     /**
      * This is used to update listeners about signing event
      * has:

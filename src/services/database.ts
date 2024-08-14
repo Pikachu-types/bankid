@@ -393,17 +393,17 @@ export namespace DatabaseFunctions {
     })
       : Promise<void> {
       try {
-        // const accounts = new Accounts(new Getters(this.db));
-        // await accounts.getRegisteredUser({
-        //   id: params.person.id,
-        //   cipher: params.cipher,
-        // });
         const getter = new Getters(this.db);
         const exists = await getter.doesDocumentExist(
           params.person.id,
           DocumentReference.users,
         );
-        throw new SeverError("NIN already exists");
+        if (exists) throw new SeverError("NIN already exists");
+        await this.db.
+          collection(DocumentReference.users).doc(params.person.id)
+          .update({
+            "content": FunctionHelpers.encryptJSON(params.person.toMap(), params.cipher),
+          });
       } catch (_) {
         params.person.unResolveMaps();
         await this.db.
@@ -661,6 +661,20 @@ export namespace DatabaseFunctions {
       }
     }
 
+    public async createOrUpdateFirebaseDocument(options: {
+      docID: string,
+      collectionPath: string,
+      data: Record<string, unknown>,
+    }, setter = false)
+      : Promise<void> {
+      const query = this.db.collection(options.collectionPath).doc(options.docID);
+      if (setter) {
+        await query.set(options.data);
+      } else {
+        await query.update(options.data);
+      }
+      return;
+    }
   }
 
 

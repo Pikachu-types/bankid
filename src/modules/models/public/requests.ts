@@ -149,6 +149,8 @@ export class Requests {
    */
   @Expose() to = "";
 
+  @Expose() pkce = "";
+
   /**
    * This is used to update listeners about signing event
    * has:

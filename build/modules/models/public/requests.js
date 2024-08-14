@@ -173,6 +173,7 @@ class Requests {
          * nin or cac numbers
          */
         this.to = "";
+        this.pkce = "";
         /**
          * This tells our servers how to handle the request
          * mobile, web or file
@@ -245,6 +246,9 @@ __decorate([
 __decorate([
     (0, class_transformer_1.Expose)()
 ], Requests.prototype, "to", void 0);
+__decorate([
+    (0, class_transformer_1.Expose)()
+], Requests.prototype, "pkce", void 0);
 __decorate([
     (0, class_transformer_1.Expose)()
 ], Requests.prototype, "hook", void 0);

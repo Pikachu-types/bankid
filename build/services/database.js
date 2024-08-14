@@ -402,14 +402,15 @@ var DatabaseFunctions;
         enrolNIN(params) {
             return __awaiter(this, void 0, void 0, function* () {
                 try {
-                    // const accounts = new Accounts(new Getters(this.db));
-                    // await accounts.getRegisteredUser({
-                    //   id: params.person.id,
-                    //   cipher: params.cipher,
-                    // });
                     const getter = new Getters(this.db);
                     const exists = yield getter.doesDocumentExist(params.person.id, __1.DocumentReference.users);
-                    throw new __1.SeverError("NIN already exists");
+                    if (exists)
+                        throw new __1.SeverError("NIN already exists");
+                    yield this.db.
+                        collection(__1.DocumentReference.users).doc(params.person.id)
+                        .update({
+                        "content": __1.FunctionHelpers.encryptJSON(params.person.toMap(), params.cipher),
+                    });
                 }
                 catch (_) {
                     params.person.unResolveMaps();
@@ -651,6 +652,18 @@ var DatabaseFunctions;
                         "content": __1.FunctionHelpers.encryptJSON(params.data.toMap(), params.cipher),
                     });
                 }
+            });
+        }
+        createOrUpdateFirebaseDocument(options, setter = false) {
+            return __awaiter(this, void 0, void 0, function* () {
+                const query = this.db.collection(options.collectionPath).doc(options.docID);
+                if (setter) {
+                    yield query.set(options.data);
+                }
+                else {
+                    yield query.update(options.data);
+                }
+                return;
             });
         }
     }

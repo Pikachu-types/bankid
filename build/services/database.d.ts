@@ -278,5 +278,10 @@ export declare namespace DatabaseFunctions {
             data: VendorModel;
             cipher: string;
         }, create?: boolean): Promise<void>;
+        createOrUpdateFirebaseDocument(options: {
+            docID: string;
+            collectionPath: string;
+            data: Record<string, unknown>;
+        }, setter?: boolean): Promise<void>;
     }
 }
