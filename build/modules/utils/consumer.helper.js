@@ -12,6 +12,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.ConsumerHelper = void 0;
 const labs_sharable_1 = require("labs-sharable");
 const __1 = require("..");
+const uuid_1 = require("uuid");
 class ConsumerHelper {
     /**
      * Validate auth token
@@ -143,6 +144,9 @@ class ConsumerHelper {
             return nin;
         else
             return `${__1.DocumentTypes.user}${nin}`;
+    }
+    static uniqueID() {
+        return (0, uuid_1.v4)().replace(/-/g, "");
     }
     /**
      * Decode request

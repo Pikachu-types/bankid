@@ -6,38 +6,32 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.OIDCSession = void 0;
+exports.UserResource = void 0;
 const class_transformer_1 = require("class-transformer");
 const labs_sharable_1 = require("labs-sharable");
-const enums_1 = require("../../enums/enums");
+const consumer_helper_1 = require("../../utils/consumer.helper");
 /**
- * Doc
+ * Attached to Consumers [apps] once a user links their profile to the app.
 */
-class OIDCSession {
+class UserResource {
     constructor() {
         /* eslint new-cap: ["error", { "capIsNew": false }]*/
+        this.national = "";
         this.id = "";
-        this.challenge = "";
-        this.exp = 0;
+        this.region = "";
+        /**
+         * Date added
+         */
         this.iat = 0;
-        /**
-         * national id
-         */
-        this.sub = "";
-        /**
-         * consumer
-         */
-        this.consumer = "";
-        this.claims = [];
     }
     /**
      * Change record to this class
      *
      * @param {Record<string, unknown>} obj  json object from db
-     * @return {OIDCSession} this class
+     * @return {UserResource} this class
      */
     static fromJson(obj) {
-        const result = (0, class_transformer_1.plainToInstance)(OIDCSession, obj, { excludeExtraneousValues: true });
+        const result = (0, class_transformer_1.plainToInstance)(UserResource, obj, { excludeExtraneousValues: true });
         return result;
     }
     /**
@@ -47,24 +41,25 @@ class OIDCSession {
     toJsonString() {
         return JSON.stringify(this);
     }
-    /**
-     * class handler
-     */
-    generateID(token) {
-        if (this.id.length > 1)
-            return;
-        this.id = `${enums_1.DocumentTypes.oidc}${token}`;
+    static generate(nin, region) {
+        const resource = new UserResource();
+        resource.iat = (0, labs_sharable_1.unixTimeStampNow)();
+        resource.id = consumer_helper_1.ConsumerHelper.uniqueID();
+        resource.national = nin;
+        resource.region = region;
+        resource.lsn = (0, labs_sharable_1.unixTimeStampNow)();
+        return resource;
     }
     /**
      * Helper class function to find one specific object based on id
      *
-     * @param {OIDCSession[]} list an array to sort from and find given
-     * @param {string} id provide the needed id to match for
-     * @return {OIDCSession | undefined} found object else undefined
+     * @param {UserResource[]} list an array to sort from and find given
+     * @param {string} nin provide the needed id to match for
+     * @return {UserResource | undefined} found object else undefined
      */
-    static findOne(list, id) {
+    static findOne(list, nin) {
         for (let i = 0; i < list.length; i++) {
-            if ((0, labs_sharable_1.equalToIgnoreCase)(list[i].id, id))
+            if ((0, labs_sharable_1.equalToIgnoreCase)(list[i].national, nin))
                 return list[i];
         }
         return;
@@ -79,24 +74,18 @@ class OIDCSession {
 }
 __decorate([
     (0, class_transformer_1.Expose)()
-], OIDCSession.prototype, "id", void 0);
+], UserResource.prototype, "national", void 0);
 __decorate([
     (0, class_transformer_1.Expose)()
-], OIDCSession.prototype, "challenge", void 0);
+], UserResource.prototype, "id", void 0);
 __decorate([
     (0, class_transformer_1.Expose)()
-], OIDCSession.prototype, "exp", void 0);
+], UserResource.prototype, "region", void 0);
 __decorate([
     (0, class_transformer_1.Expose)()
-], OIDCSession.prototype, "iat", void 0);
+], UserResource.prototype, "lsn", void 0);
 __decorate([
     (0, class_transformer_1.Expose)()
-], OIDCSession.prototype, "sub", void 0);
-__decorate([
-    (0, class_transformer_1.Expose)()
-], OIDCSession.prototype, "consumer", void 0);
-__decorate([
-    (0, class_transformer_1.Expose)()
-], OIDCSession.prototype, "claims", void 0);
-exports.OIDCSession = OIDCSession;
-//# sourceMappingURL=oidc_session.js.map
+], UserResource.prototype, "iat", void 0);
+exports.UserResource = UserResource;
+//# sourceMappingURL=user_resource.js.map

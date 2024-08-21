@@ -5,7 +5,7 @@ import {
   FunctionHelpers, IdentificationModel,
   IdentificationRequest, InvitationRequest, PendingApprovals, Requests,
   SeverError,
-  StandaloneBankID, VendorModel,
+  StandaloneBankID, UserResource, VendorModel,
   eSignature
 } from "..";
 import { LabsCipher } from "labs-sharable";
@@ -173,6 +173,13 @@ export namespace DatabaseFunctions {
       const source = await this.db.collection(DocumentReference.requests).get();
       return source.docs.map((e) => Requests.fromJson(e.data()));
     }
+    
+    
+    public async retrieveOIDCSessions():
+      Promise<OIDCSession[]> {
+      const source = await this.db.collection(DocumentReference.sessions).get();
+      return source.docs.map((e) => OIDCSession.fromJson(e.data()));
+    }
 
     /**
      * Grab flow session
@@ -292,12 +299,28 @@ export namespace DatabaseFunctions {
       return source.docs.map((e) => Documents.fromJson(e.data()));
     }
 
+ 
+    public async isUserAttachedToApp(params: {
+      app: string,
+      org: string,
+      nin: string,
+    })
+      : Promise<UserResource | undefined> {
+      const source = await this.db.
+        collection(DocumentReference.consumers).doc(params.org)
+        .collection(DocumentReference.apps).doc(params.app)
+        .collection("users")
+        .where('national', '==', params.nin).get();
+      if (source.empty) return;
+      return source.docs.map((e) => UserResource.fromJson(e.data()))[0];
+    }
+    
     /**
      * A power function used to check if firestore document exist
      * @param {string} docID reference id
      * @param {string} collectionPath string path of collection
      *  i.e users/{user}/notification
-     * @return {Promise<boolean>} nothing
+     * @return {Promise<UserResource | undefine>} nothing
      */
     public async doesDocumentExist(docID: string,
       collectionPath: string)
@@ -428,6 +451,26 @@ export namespace DatabaseFunctions {
         collection(DocumentReference.users).doc(person.id)
         .collection(DocumentReference.issuedIDs).doc(id.id)
         .set(id.toMap());
+    }
+
+
+    public async attachUserToApp(params: {
+      app: string,
+      org: string,
+      resource: UserResource,
+    }, modify = false)
+      : Promise<void> {
+      const query = this.db.
+        collection(DocumentReference.consumers).doc(params.org)
+        .collection(DocumentReference.apps).doc(params.app)
+        .collection("users")
+        .doc(params.resource.id);
+      
+      if (modify) {
+        await query.update(params.resource.toMap());
+      } else {
+        await query.set(params.resource.toMap());
+      }
     }
 
 
@@ -677,6 +720,34 @@ export namespace DatabaseFunctions {
     }
   }
 
+  export class Cleaners {
 
+    readonly db: admin.firestore.Firestore;
 
+    constructor(admin: admin.firestore.Firestore) {
+      this.db = admin;
+    }
+    
+    public async cleanRawFlow(id: string): Promise<void> {
+      const ref = this.db.
+        collection(DocumentReference.requests)
+        .doc(id);
+      await ref.delete();
+    }
+
+    public async cleanSession(id: string): Promise<void> {
+      const ref = this.db.
+        collection(DocumentReference.sessions)
+        .doc(id);
+      await ref.delete();
+    }
+
+    public async deleteIssuedID(bid: string, eid: string): Promise<void> {
+      const ref = this.db.
+        collection(DocumentReference.users)
+        .doc(bid).collection(DocumentReference.issuedIDs).doc(eid);
+      await ref.delete();
+    }
+
+  }
 }

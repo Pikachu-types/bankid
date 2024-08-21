@@ -1,5 +1,5 @@
 /**
- * Get a pasby nin invitation request
+ * Doc
 */
 export declare class OIDCSession {
     id: string;

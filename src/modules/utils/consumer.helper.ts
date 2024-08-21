@@ -6,6 +6,8 @@ import {
 } from "..";
 import { DatabaseFunctions } from "../../services";
 import { JsonWebTokenError } from "jsonwebtoken";
+import { v4 as uuidv4 } from "uuid";
+
 
 export class ConsumerHelper {
   /**
@@ -170,6 +172,11 @@ export class ConsumerHelper {
     : string {
     if (nin.startsWith(DocumentTypes.user)) return nin;
     else return `${DocumentTypes.user}${nin}`;
+  }
+  
+  public static uniqueID()
+    : string {
+    return uuidv4().replace(/-/g, "");
   }
 
   /**

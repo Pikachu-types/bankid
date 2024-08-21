@@ -66,6 +66,7 @@ export declare class ConsumerHelper {
      * @return {string}
      */
     static stringifyNIN(nin: string): string;
+    static uniqueID(): string;
     /**
      * Decode request
      * @param {Requests} req flow request

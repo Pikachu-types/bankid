@@ -3,7 +3,7 @@ import { equalToIgnoreCase } from "labs-sharable";
 import { DocumentTypes } from "../../enums/enums";
 
 /**
- * Get a pasby nin invitation request
+ * Doc
 */
 export class OIDCSession {
   /* eslint new-cap: ["error", { "capIsNew": false }]*/

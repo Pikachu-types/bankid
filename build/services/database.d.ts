@@ -1,5 +1,5 @@
 import * as admin from "firebase-admin";
-import { BillingModel, ClientApp, ConsumerModel, DocumentAction, Documents, IdentificationModel, IdentificationRequest, InvitationRequest, PendingApprovals, Requests, StandaloneBankID, VendorModel, eSignature } from "..";
+import { BillingModel, ClientApp, ConsumerModel, DocumentAction, Documents, IdentificationModel, IdentificationRequest, InvitationRequest, PendingApprovals, Requests, StandaloneBankID, UserResource, VendorModel, eSignature } from "..";
 import { OIDCSession } from "../modules/models/public/oidc_session";
 export declare namespace DatabaseFunctions {
     /**
@@ -77,6 +77,7 @@ export declare namespace DatabaseFunctions {
          * @return {Promise<Requests[]>} returns list.
          */
         retrieveRawIdentificationRequests(): Promise<Requests[]>;
+        retrieveOIDCSessions(): Promise<OIDCSession[]>;
         /**
          * Grab flow session
          * @param {string} id the identifier
@@ -129,12 +130,17 @@ export declare namespace DatabaseFunctions {
          * @return {Promise<Documents[]>} returns list.
          */
         getEDocs(): Promise<Documents[]>;
+        isUserAttachedToApp(params: {
+            app: string;
+            org: string;
+            nin: string;
+        }): Promise<UserResource | undefined>;
         /**
          * A power function used to check if firestore document exist
          * @param {string} docID reference id
          * @param {string} collectionPath string path of collection
          *  i.e users/{user}/notification
-         * @return {Promise<boolean>} nothing
+         * @return {Promise<UserResource | undefine>} nothing
          */
         doesDocumentExist(docID: string, collectionPath: string): Promise<boolean>;
         /**
@@ -183,6 +189,11 @@ export declare namespace DatabaseFunctions {
          * @return {Promise<void>} returns list.
          */
         createBankID(person: IdentificationModel, id: StandaloneBankID): Promise<void>;
+        attachUserToApp(params: {
+            app: string;
+            org: string;
+            resource: UserResource;
+        }, modify?: boolean): Promise<void>;
         /**
          * Creates a new OIDC session in the database.
          * @param data - The OIDC session object to be created.
@@ -283,5 +294,12 @@ export declare namespace DatabaseFunctions {
             collectionPath: string;
             data: Record<string, unknown>;
         }, setter?: boolean): Promise<void>;
+    }
+    class Cleaners {
+        readonly db: admin.firestore.Firestore;
+        constructor(admin: admin.firestore.Firestore);
+        cleanRawFlow(id: string): Promise<void>;
+        cleanSession(id: string): Promise<void>;
+        deleteIssuedID(bid: string, eid: string): Promise<void>;
     }
 }

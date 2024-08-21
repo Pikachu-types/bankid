@@ -204,6 +204,12 @@ var DatabaseFunctions;
                 return source.docs.map((e) => __1.Requests.fromJson(e.data()));
             });
         }
+        retrieveOIDCSessions() {
+            return __awaiter(this, void 0, void 0, function* () {
+                const source = yield this.db.collection(__1.DocumentReference.sessions).get();
+                return source.docs.map((e) => oidc_session_1.OIDCSession.fromJson(e.data()));
+            });
+        }
         /**
          * Grab flow session
          * @param {string} id the identifier
@@ -315,12 +321,24 @@ var DatabaseFunctions;
                 return source.docs.map((e) => __1.Documents.fromJson(e.data()));
             });
         }
+        isUserAttachedToApp(params) {
+            return __awaiter(this, void 0, void 0, function* () {
+                const source = yield this.db.
+                    collection(__1.DocumentReference.consumers).doc(params.org)
+                    .collection(__1.DocumentReference.apps).doc(params.app)
+                    .collection("users")
+                    .where('national', '==', params.nin).get();
+                if (source.empty)
+                    return;
+                return source.docs.map((e) => __1.UserResource.fromJson(e.data()))[0];
+            });
+        }
         /**
          * A power function used to check if firestore document exist
          * @param {string} docID reference id
          * @param {string} collectionPath string path of collection
          *  i.e users/{user}/notification
-         * @return {Promise<boolean>} nothing
+         * @return {Promise<UserResource | undefine>} nothing
          */
         doesDocumentExist(docID, collectionPath) {
             return __awaiter(this, void 0, void 0, function* () {
@@ -434,6 +452,21 @@ var DatabaseFunctions;
                     collection(__1.DocumentReference.users).doc(person.id)
                     .collection(__1.DocumentReference.issuedIDs).doc(id.id)
                     .set(id.toMap());
+            });
+        }
+        attachUserToApp(params, modify = false) {
+            return __awaiter(this, void 0, void 0, function* () {
+                const query = this.db.
+                    collection(__1.DocumentReference.consumers).doc(params.org)
+                    .collection(__1.DocumentReference.apps).doc(params.app)
+                    .collection("users")
+                    .doc(params.resource.id);
+                if (modify) {
+                    yield query.update(params.resource.toMap());
+                }
+                else {
+                    yield query.set(params.resource.toMap());
+                }
             });
         }
         /**
@@ -668,5 +701,35 @@ var DatabaseFunctions;
         }
     }
     DatabaseFunctions.Management = Management;
+    class Cleaners {
+        constructor(admin) {
+            this.db = admin;
+        }
+        cleanRawFlow(id) {
+            return __awaiter(this, void 0, void 0, function* () {
+                const ref = this.db.
+                    collection(__1.DocumentReference.requests)
+                    .doc(id);
+                yield ref.delete();
+            });
+        }
+        cleanSession(id) {
+            return __awaiter(this, void 0, void 0, function* () {
+                const ref = this.db.
+                    collection(__1.DocumentReference.sessions)
+                    .doc(id);
+                yield ref.delete();
+            });
+        }
+        deleteIssuedID(bid, eid) {
+            return __awaiter(this, void 0, void 0, function* () {
+                const ref = this.db.
+                    collection(__1.DocumentReference.users)
+                    .doc(bid).collection(__1.DocumentReference.issuedIDs).doc(eid);
+                yield ref.delete();
+            });
+        }
+    }
+    DatabaseFunctions.Cleaners = Cleaners;
 })(DatabaseFunctions = exports.DatabaseFunctions || (exports.DatabaseFunctions = {}));
 //# sourceMappingURL=database.js.map
