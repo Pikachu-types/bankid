@@ -79,6 +79,8 @@ export class IdentificationRequest {
   @Expose() name = "";
 
   @Expose() signed = false;
+  
+  @Expose() sandbox = false;
 
   @Expose() details: Record<string, unknown> | undefined;
 

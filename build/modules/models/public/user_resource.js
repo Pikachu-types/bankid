@@ -86,6 +86,9 @@ __decorate([
 ], UserResource.prototype, "lsn", void 0);
 __decorate([
     (0, class_transformer_1.Expose)()
+], UserResource.prototype, "blocked", void 0);
+__decorate([
+    (0, class_transformer_1.Expose)()
 ], UserResource.prototype, "iat", void 0);
 exports.UserResource = UserResource;
 //# sourceMappingURL=user_resource.js.map

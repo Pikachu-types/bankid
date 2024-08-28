@@ -63,6 +63,7 @@ export declare class IdentificationRequest {
     useragent: string;
     name: string;
     signed: boolean;
+    sandbox: boolean;
     details: Record<string, unknown> | undefined;
     signatureIP: AbstractIPData | undefined;
     signature: string | undefined;

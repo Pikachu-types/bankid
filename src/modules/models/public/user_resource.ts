@@ -14,6 +14,8 @@ export class UserResource {
    * Last seen
    */
   @Expose() lsn: number | undefined;
+
+  @Expose() blocked: boolean | undefined;
   /**
    * Date added
    */

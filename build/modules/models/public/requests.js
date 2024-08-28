@@ -58,6 +58,7 @@ class IdentificationRequest {
         this.useragent = "";
         this.name = "";
         this.signed = false;
+        this.sandbox = false;
         this.acquireClaims = [];
     }
     /**
@@ -147,6 +148,9 @@ __decorate([
 __decorate([
     (0, class_transformer_1.Expose)()
 ], IdentificationRequest.prototype, "signed", void 0);
+__decorate([
+    (0, class_transformer_1.Expose)()
+], IdentificationRequest.prototype, "sandbox", void 0);
 __decorate([
     (0, class_transformer_1.Expose)()
 ], IdentificationRequest.prototype, "details", void 0);

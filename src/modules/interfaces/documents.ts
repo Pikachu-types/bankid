@@ -207,6 +207,7 @@ export interface RequestSignature {
   consumer: string;
   app: string;
   user: string;
+  sandbox: boolean;
   acquireClaims?: string[];
 }
 

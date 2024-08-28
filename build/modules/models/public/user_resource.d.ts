@@ -9,6 +9,7 @@ export declare class UserResource {
      * Last seen
      */
     lsn: number | undefined;
+    blocked: boolean | undefined;
     /**
      * Date added
      */
