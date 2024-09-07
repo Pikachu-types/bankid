@@ -1,3 +1,5 @@
+import * as crypto from "crypto";
+
 function generateCodeVerifier() {
   const array = new Uint32Array(56 / 2);
   crypto.getRandomValues(array);
