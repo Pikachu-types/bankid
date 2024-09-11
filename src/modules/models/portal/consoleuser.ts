@@ -2,6 +2,9 @@ import { plainToInstance, Expose } from "class-transformer";
 import { v4 as uuidv4 } from 'uuid';
 import { DocumentTypes } from "../../enums/enums";
 import { ConsoleAccountSecurity } from "../../interfaces/documents";
+import { ConsoleRegAccountRequest } from "../../interfaces/requests";
+import { unixTimeStampNow } from "labs-sharable";
+import { UserRoles } from "../../enums/shared";
 /**
  * ConsoleUser class
 */
@@ -14,7 +17,11 @@ export class ConsoleUser {
   @Expose() id = "";
   @Expose() email = "";
   @Expose() legalAccepted = false;
-  @Expose() naming: Record<string, unknown> = {};
+  @Expose() campaigns = false;
+  @Expose() naming?: {
+    first: string;
+    last: string;
+  };
   @Expose() created: number = 0;
   @Expose() lut: number = 0;
   @Expose() security: ConsoleAccountSecurity | undefined;
@@ -59,6 +66,21 @@ export class ConsoleUser {
   }
 
   /**
+   * Helper class function to find one specific object based on eid
+   *
+   * @param {ConsoleUser[]} list an array to sort from and find given
+   * @param {string} eid provide the needed id to match for
+   * @return {ConsoleUser | undefined} found object else undefined
+   */
+  public static findEID(list: ConsoleUser[], eid: string)
+    : ConsoleUser | undefined {
+    for (let i = 0; i < list.length; i++) {
+      if (list[i].security && list[i].security?.nin === eid) return list[i];
+    }
+    return;
+  }
+
+  /**
    * un-resolve maps for certain attributes
    * @return {void} nothing
    */
@@ -76,11 +98,17 @@ export class ConsoleUser {
 
   /**
   * get document in map format
+  * @param {string[]} paths add attributes you'd like to omit from the map
   * @return { Record<string, unknown>} returns doc map .
   */
-  public toMap()
+  public toMap(paths?: string[])
     : Record<string, unknown> {
     const res = JSON.parse(this.toJsonString());
+    if (paths) {
+      for (let i = 0; i < paths.length; i++) {
+        delete res[paths[i]];
+      }
+    }
     return res;
   }
 
@@ -91,6 +119,23 @@ export class ConsoleUser {
   public static createID(): string {
     return `${DocumentTypes.consoleuser}${uuidv4()}`;
   }
+
+  public static create(data: ConsoleRegAccountRequest): ConsoleUser {
+    const user = new ConsoleUser();
+    user.id = ConsoleUser.createID();
+    user.naming = data.naming;
+    user.email = data.email ?? '';
+    user.legalAccepted = data.legalAccepted;
+    user.created = unixTimeStampNow();
+    user.lut = unixTimeStampNow();
+    user.security = {
+      tFA: false,
+      generated: false,
+      provider: "",
+    };
+    user.organizations = [];
+    return user;
+  }
 }
 
 /**
@@ -98,7 +143,7 @@ export class ConsoleUser {
  */
 export interface ConsumerUserReference {
   email: string;
-  role: string;
+  role: UserRoles;
   name: string;
   id: string;
   tFA: boolean;

@@ -10,6 +10,7 @@ exports.ConsoleUser = void 0;
 const class_transformer_1 = require("class-transformer");
 const uuid_1 = require("uuid");
 const enums_1 = require("../../enums/enums");
+const labs_sharable_1 = require("labs-sharable");
 /**
  * ConsoleUser class
 */
@@ -22,7 +23,7 @@ class ConsoleUser {
         this.id = "";
         this.email = "";
         this.legalAccepted = false;
-        this.naming = {};
+        this.campaigns = false;
         this.created = 0;
         this.lut = 0;
         this.organizations = [];
@@ -60,6 +61,21 @@ class ConsoleUser {
         return;
     }
     /**
+     * Helper class function to find one specific object based on eid
+     *
+     * @param {ConsoleUser[]} list an array to sort from and find given
+     * @param {string} eid provide the needed id to match for
+     * @return {ConsoleUser | undefined} found object else undefined
+     */
+    static findEID(list, eid) {
+        var _a;
+        for (let i = 0; i < list.length; i++) {
+            if (list[i].security && ((_a = list[i].security) === null || _a === void 0 ? void 0 : _a.nin) === eid)
+                return list[i];
+        }
+        return;
+    }
+    /**
      * un-resolve maps for certain attributes
      * @return {void} nothing
      */
@@ -75,10 +91,16 @@ class ConsoleUser {
     }
     /**
     * get document in map format
+    * @param {string[]} paths add attributes you'd like to omit from the map
     * @return { Record<string, unknown>} returns doc map .
     */
-    toMap() {
+    toMap(paths) {
         const res = JSON.parse(this.toJsonString());
+        if (paths) {
+            for (let i = 0; i < paths.length; i++) {
+                delete res[paths[i]];
+            }
+        }
         return res;
     }
     /**
@@ -87,6 +109,23 @@ class ConsoleUser {
      */
     static createID() {
         return `${enums_1.DocumentTypes.consoleuser}${(0, uuid_1.v4)()}`;
+    }
+    static create(data) {
+        var _a;
+        const user = new ConsoleUser();
+        user.id = ConsoleUser.createID();
+        user.naming = data.naming;
+        user.email = (_a = data.email) !== null && _a !== void 0 ? _a : '';
+        user.legalAccepted = data.legalAccepted;
+        user.created = (0, labs_sharable_1.unixTimeStampNow)();
+        user.lut = (0, labs_sharable_1.unixTimeStampNow)();
+        user.security = {
+            tFA: false,
+            generated: false,
+            provider: "",
+        };
+        user.organizations = [];
+        return user;
     }
 }
 __decorate([
@@ -98,6 +137,9 @@ __decorate([
 __decorate([
     (0, class_transformer_1.Expose)()
 ], ConsoleUser.prototype, "legalAccepted", void 0);
+__decorate([
+    (0, class_transformer_1.Expose)()
+], ConsoleUser.prototype, "campaigns", void 0);
 __decorate([
     (0, class_transformer_1.Expose)()
 ], ConsoleUser.prototype, "naming", void 0);

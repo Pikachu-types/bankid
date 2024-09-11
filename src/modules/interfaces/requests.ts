@@ -1,5 +1,5 @@
-import { DocumentAction, UserRoles } from "../enums/enums";
-import { MagicLinkModes } from "../enums/shared";
+import { DocumentAction } from "../enums/enums";
+import { MagicLinkModes, UserRoles } from "../enums/shared";
 import { DojahBVNResponse, DojahNINResponse } from "../services/dojah";
 import { EdenModel } from "./documents";
 
@@ -130,7 +130,7 @@ export interface MagicToken {
   /**
    * Type of Magic token
    */
-  mode: MagicLinkModes | string;
+  mode: MagicLinkModes;
   /**
    * Would be undefined if created for login only
    * else registration parses all reg data here 
@@ -151,9 +151,10 @@ export interface MagicToken {
  * Create BankID Console account RequestModel
  */
 export interface ConsoleRegAccountRequest {
-  email?: string;
+  email: string;
   debug: boolean;
   legalAccepted: boolean;
+  campaigns: boolean;
   org: string;
   role?: string;
   naming?: {

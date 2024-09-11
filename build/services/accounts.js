@@ -104,7 +104,7 @@ class Accounts {
                 throw new __1.SeverError("Requester is not authorized", 401);
             }
             if (params.data.key.startsWith(__1.ApiKeyPrefix.test) &&
-                app.type === __1.AppType.production) {
+                app.type === 'production') {
                 throw new __1.SeverError("Cannot apply a test key to a production type application", 403);
             }
             return {
@@ -156,7 +156,7 @@ class Accounts {
                 throw new __1.SeverError("Request forbidden: App secret not valid", 403);
             }
             if (params.apikey.startsWith(__1.ApiKeyPrefix.test) &&
-                app.type === __1.AppType.production) {
+                app.type === 'production') {
                 throw new __1.SeverError("Cannot apply a test key to a production type application", 403);
             }
             const data = {

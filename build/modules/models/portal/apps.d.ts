@@ -1,7 +1,7 @@
-import { AppType, AppVerificationStatus } from "../../enums/enums";
 import { AppDataSecret } from "../../interfaces/documents";
 import { AuthenticateKeysData } from "../superficial/contact";
 import { RSAKeys } from "labs-sharable";
+import { AppFrameworkType, AppType, AppVerificationStatus, ClientScope, ConsumptionType } from "../..";
 /**
  * ClientApp class
 */
@@ -11,8 +11,13 @@ export declare class ClientApp {
      */
     id: string;
     owner: string;
+    technology?: {
+        type: AppFrameworkType;
+        framework: string;
+    };
     appName: string;
     type: AppType;
+    consumption?: ConsumptionType;
     verificationStatus: AppVerificationStatus;
     displayName: string;
     lut: number;
@@ -23,6 +28,7 @@ export declare class ClientApp {
      * Whitelisted urls
      */
     urls: string[];
+    scopes: ClientScope[];
     keys: RSAKeys;
     keyData: AuthenticateKeysData | undefined;
     /**
@@ -86,9 +92,10 @@ export declare class ClientApp {
     static generateSecret(secret: string, type: AppType): AppDataSecret;
     /**
     * get document in map format
+    * @param {string[]} paths add attributes you'd like to omit from the map
     * @return { Record<string, unknown>} returns doc map .
     */
-    toMap(): Record<string, unknown>;
+    toMap(paths?: string[]): Record<string, unknown>;
     /**
      * create a pretty unique uid for consumers
      * @return {string} generated uid

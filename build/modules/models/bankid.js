@@ -49,7 +49,7 @@ var BankID;
         */
         static buildLoginLink(token, debug = false, mode) {
             return `${debug ? Links.consoleLocalhost : Links.consoleDomain}` +
-                `/magic/${token}${mode === undefined ? '' : `?mode=${mode}`}`;
+                `/magic/${token}${!mode ? '' : `?mode=${mode}`}`;
         }
         /**
         * generate billing verification email sender

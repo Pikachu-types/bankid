@@ -1,6 +1,6 @@
 import { AuthenticateKeysData, ContactData } from "../superficial/contact";
 import { ConsoleRegAccountRequest } from "../../interfaces/requests";
-import { APIKeys, ConsumerProfile, ConsumerServiceJSON } from "../../interfaces/documents";
+import { APIKeys, ConsumerServiceJSON } from "../../interfaces/documents";
 /**
  * ConsumerModel class
 */
@@ -10,6 +10,7 @@ export declare class ConsumerModel {
      */
     id: string;
     name: string;
+    image: string;
     regNum: string;
     tin: string;
     apiKey: string;
@@ -19,10 +20,19 @@ export declare class ConsumerModel {
     lut: number | undefined;
     tier: number;
     information?: ConsumerVerificationInfoModel;
+    stats?: {
+        /**
+         * Monthly eSign count
+         */
+        mec: number;
+        /**
+         * Monthly auth count
+         */
+        mac: number;
+    };
     contact: Record<string, unknown>;
     keys: Record<string, unknown>;
     apis: APIKeys | undefined;
-    profile: ConsumerProfile | undefined;
     usage: number | undefined;
     contactData: ContactData | undefined;
     keyData: AuthenticateKeysData | undefined;
@@ -74,9 +84,10 @@ export declare class ConsumerModel {
     toJsonString(): string;
     /**
     * get document in map format
+    * @param {string[]} paths add attributes you'd like to omit from the map
     * @return { Record<string, unknown>} returns doc map .
     */
-    toMap(): Record<string, unknown>;
+    toMap(paths?: string[]): Record<string, unknown>;
     /**
      * creates a new consumer model
      * @param {ConsoleRegAccountRequest} request organisation create requester

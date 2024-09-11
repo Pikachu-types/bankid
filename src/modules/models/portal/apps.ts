@@ -1,12 +1,13 @@
 import { plainToInstance, Expose } from "class-transformer";
 import { v4 as uuidv4, v1 as uuidv1 } from 'uuid';
-import { AppType, AppTypeSecretRef, AppVerificationStatus, DocumentTypes } from "../../enums/enums";
+import { AppTypeSecretRef, DocumentTypes } from "../../enums/enums";
 import { AppDataSecret } from "../../interfaces/documents";
 import { AuthenticateKeysData } from "../superficial/contact";
 import { Generator } from "../../services/generator";
 import { FunctionHelpers } from "../../services/helper";
-import { CustomError, RSAKeys, delay, generateRandomAlphaNumeric, unixTimeStampNow } from "labs-sharable";
+import { RSAKeys, delay, generateRandomAlphaNumeric, unixTimeStampNow } from "labs-sharable";
 import { SeverError } from "../../utils/server.error";
+import { AppFrameworkType, AppType, AppVerificationStatus, ClientScope, ConsumptionType } from "../..";
 /**
  * ClientApp class
 */
@@ -18,9 +19,14 @@ export class ClientApp {
    */
   @Expose() id = "";
   @Expose() owner = "";
+  @Expose() technology?: {
+    type: AppFrameworkType,
+    framework: string,
+  };
   @Expose() appName = "";
-  @Expose() type: AppType = AppType.test;
-  @Expose() verificationStatus: AppVerificationStatus = AppVerificationStatus.stale;
+  @Expose() type: AppType = 'test';
+  @Expose() consumption?: ConsumptionType;
+  @Expose() verificationStatus: AppVerificationStatus = 'stale';
   @Expose() displayName = "";
   @Expose() lut = 0;
   @Expose() created = 0;
@@ -30,6 +36,7 @@ export class ClientApp {
    * Whitelisted urls
    */
   @Expose() urls: string[] = [];
+  @Expose() scopes: ClientScope[] = [];
   @Expose() keys: RSAKeys = {private: "", public: ""};
   
   keyData: AuthenticateKeysData | undefined;
@@ -167,7 +174,7 @@ export class ClientApp {
     return {
       id: generateRandomAlphaNumeric(12),
       secret: FunctionHelpers.bankidCipherString(secret,
-        `${type === AppType.production ?
+        `${type === 'production' ?
           AppTypeSecretRef.production :
           AppTypeSecretRef.test}${uuidv1()}`),
       created: unixTimeStampNow(),
@@ -177,12 +184,18 @@ export class ClientApp {
 
   /**
   * get document in map format
+  * @param {string[]} paths add attributes you'd like to omit from the map
   * @return { Record<string, unknown>} returns doc map .
   */
-  public toMap()
+  public toMap(paths?: string[])
     : Record<string, unknown> {
     const res = JSON.parse(this.toJsonString());
     delete res["keyData"];
+    if (paths) {
+      for (let i = 0; i < paths.length; i++) {
+        delete res[paths[i]];
+      }
+    }
     return res;
   }
 
@@ -199,8 +212,8 @@ export class ClientApp {
    * @return {boolean} generated uid
    */
   public safeApp(): boolean {
-    return this.verificationStatus === AppVerificationStatus.verified
-      && this.type === AppType.production;
+    return this.verificationStatus === 'verified'
+      && this.type === 'production';
   }  
 
   /**
@@ -208,7 +221,7 @@ export class ClientApp {
    * @return {boolean} generated uid
    */
   public testApp(): boolean {
-    return this.type === AppType.test;
+    return this.type === 'test';
   }
 }
 

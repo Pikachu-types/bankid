@@ -60,7 +60,7 @@ export namespace BankID {
     public static buildLoginLink(token: string,
       debug: boolean = false, mode?: MagicLinkModes): string {
       return `${debug ? Links.consoleLocalhost : Links.consoleDomain}` +
-        `/magic/${token}${mode === undefined ? '': `?mode=${mode}`}`;
+        `/magic/${token}${!mode? '': `?mode=${mode}`}`;
     }
     
     /**

@@ -1,11 +1,13 @@
 import * as admin from "firebase-admin";
 import {
-  BillingModel, ClientApp, ConsumerModel,
+  BillingModel, ClientApp, ConsoleUser, ConsumerModel,
+  ConsumerUserReference,
   DocumentAction, DocumentReference, DocumentTypes, Documents,
   FunctionHelpers, IdentificationModel,
   IdentificationRequest, InvitationRequest, PendingApprovals, Requests,
+  SessionData,
   SeverError,
-  StandaloneBankID, UserResource, VendorModel,
+  StandaloneBankID, EIDUserResource, VendorModel,
   eSignature
 } from "..";
 import { LabsCipher } from "labs-sharable";
@@ -120,13 +122,22 @@ export namespace DatabaseFunctions {
     /**
      * Get consumer apps
      * @param {string} id consumer id
+     * @param {string} environment type of apps to retrieve i.e production or test
      * @return {Promise<ClientApp[]>} returns list.
      */
-    public async getConsumerApps(id: string):
+    public async getConsumerApps(id: string, environment?: string):
       Promise<ClientApp[]> {
-      const source = await this.db.
-        collection(DocumentReference.consumers).doc(id)
-        .collection(DocumentReference.apps).get();
+      let s;
+      if (environment) {
+        s = this.db.
+          collection(DocumentReference.consumers).doc(id)
+          .collection(DocumentReference.apps).where('type', '==', environment);
+      } else {
+        s = this.db.
+          collection(DocumentReference.consumers).doc(id)
+          .collection(DocumentReference.apps);
+      }
+      const source = await s.get();
       return source.docs.map((e) => ClientApp.fromJson(e.data()));
     }
 
@@ -143,6 +154,19 @@ export namespace DatabaseFunctions {
         .collection(DocumentReference.apps).doc(app).get();
       if (!source.exists) throw new SeverError("The requested app does not exists.", 400);
       return ClientApp.fromJson((source.data() as Record<string, unknown>));
+    }
+
+    /**
+     * Get consumer app
+     * @param {string} consumer organisation on console
+     * @return {Promise<ConsumerModel>} returns list.
+     */
+    public async getConsumer(consumer: string):
+      Promise<ConsumerModel> {
+      const source = await this.db.
+        collection(DocumentReference.consumers).doc(consumer).get();
+      if (!source.exists) throw new SeverError("The requested consumer does not exists.", 400);
+      return ConsumerModel.fromJson((source.data() as Record<string, unknown>));
     }
 
 
@@ -173,8 +197,8 @@ export namespace DatabaseFunctions {
       const source = await this.db.collection(DocumentReference.requests).get();
       return source.docs.map((e) => Requests.fromJson(e.data()));
     }
-    
-    
+
+
     public async retrieveOIDCSessions():
       Promise<OIDCSession[]> {
       const source = await this.db.collection(DocumentReference.sessions).get();
@@ -299,28 +323,34 @@ export namespace DatabaseFunctions {
       return source.docs.map((e) => Documents.fromJson(e.data()));
     }
 
- 
-    public async isUserAttachedToApp(params: {
-      app: string,
+
+    public async isUserAttachedToConsumer(params: {
       org: string,
       nin: string,
     })
-      : Promise<UserResource | undefined> {
+      : Promise<EIDUserResource | undefined> {
       const source = await this.db.
         collection(DocumentReference.consumers).doc(params.org)
-        .collection(DocumentReference.apps).doc(params.app)
-        .collection("users")
+        .collection(DocumentReference.consumerUser)
         .where('national', '==', params.nin).get();
       if (source.empty) return;
-      return source.docs.map((e) => UserResource.fromJson(e.data()))[0];
+      return source.docs.map((e) => EIDUserResource.fromJson(e.data()))[0];
     }
-    
+
+    public async eidsAttachedToThisConsumer(org: string)
+      : Promise<EIDUserResource[]> {
+      const source = await this.db.
+        collection(DocumentReference.consumers).doc(org)
+        .collection(DocumentReference.consumerUser).get();
+      return source.docs.map((e) => EIDUserResource.fromJson(e.data()));
+    }
+
     /**
      * A power function used to check if firestore document exist
      * @param {string} docID reference id
      * @param {string} collectionPath string path of collection
      *  i.e users/{user}/notification
-     * @return {Promise<UserResource | undefine>} nothing
+     * @return {Promise<boolean>} nothing
      */
     public async doesDocumentExist(docID: string,
       collectionPath: string)
@@ -454,18 +484,17 @@ export namespace DatabaseFunctions {
     }
 
 
-    public async attachUserToApp(params: {
+    public async attachUserToConsumer(params: {
       app: string,
       org: string,
-      resource: UserResource,
+      resource: EIDUserResource,
     }, modify = false)
       : Promise<void> {
       const query = this.db.
         collection(DocumentReference.consumers).doc(params.org)
-        .collection(DocumentReference.apps).doc(params.app)
-        .collection("users")
+        .collection(DocumentReference.consumerUser)
         .doc(params.resource.id);
-      
+
       if (modify) {
         await query.update(params.resource.toMap());
       } else {
@@ -651,6 +680,20 @@ export namespace DatabaseFunctions {
         await doc.set(data.toMap());
       }
     }
+    
+
+    public async manageConsumerApp(consumer: string,
+      data: ClientApp, modify = false)
+      : Promise<void> {
+      const doc = this.db.collection(DocumentReference.consumers).
+        doc(consumer).collection(DocumentReference.apps)
+        .doc(data.id);
+      if (modify) {
+        await doc.update(data.toMap());
+      } else {
+        await doc.set(data.toMap());
+      }
+    }
 
     /**
      * modify identification model (bankid) to database
@@ -727,7 +770,7 @@ export namespace DatabaseFunctions {
     constructor(admin: admin.firestore.Firestore) {
       this.db = admin;
     }
-    
+
     public async cleanRawFlow(id: string): Promise<void> {
       const ref = this.db.
         collection(DocumentReference.requests)
@@ -748,6 +791,131 @@ export namespace DatabaseFunctions {
         .doc(bid).collection(DocumentReference.issuedIDs).doc(eid);
       await ref.delete();
     }
+  }
 
+  export class ConsoleUI {
+
+    readonly db: admin.firestore.Firestore;
+
+    constructor(admin: admin.firestore.Firestore) {
+      this.db = admin;
+    }
+
+
+    public async retrieveConsoleUsers(): Promise<ConsoleUser[]> {
+      const source = await this.db.collection(DocumentReference.console).get();
+      return source.docs.map((e) => ConsoleUser.fromJson(e.data()));
+    }
+
+    public async getConsoleUser(email: string)
+      : Promise<ConsoleUser> {
+      const source = await this.db.
+        collection(DocumentReference.console)
+        .where('email', '==', email).get();
+      if (source.empty) throw new SeverError(`No such user with email: ${email} exists.`, 400, 'authorization_error');
+      return source.docs.map((e) => ConsoleUser.fromJson(e.data()))[0];
+    }
+    
+    public async resolveConsoleUser(email: string)
+      : Promise<ConsoleUser | undefined> {
+      const source = await this.db.
+        collection(DocumentReference.console)
+        .where('email', '==', email).get();
+      if (source.empty) return;
+      return source.docs.map((e) => ConsoleUser.fromJson(e.data()))[0];
+    }
+
+    /**
+     * Get users sessions
+     * @param {string} user console user
+     * @return {Promise<SessionData[]>} returns list.
+     */
+    public async getConsoleUserSessions(user: string):
+      Promise<SessionData[]> {
+      const source = await this.db.
+        collection(DocumentReference.console).doc(user)
+        .collection(DocumentReference.sessions).get();
+      return source.docs.map((e) => SessionData.fromJson(e.data()));
+    }
+
+    /**
+     * modify console session to database
+     * @param {ConsoleUser} user console user who owns session
+     * @param {SessionData} data model structure
+     * @param {boolean} create true if user model never
+     *  exists else false and we create one
+     * @return {Promise<void>} void.
+     */
+    public async modifyConsoleUserSession(user: ConsoleUser,
+      data: SessionData, create = true)
+      : Promise<void> {
+      data.unResolveMaps();
+      const ref = this.db.
+        collection(DocumentReference.console).doc(user.id).
+        collection(DocumentReference.sessions).doc(data.id);
+      if (ref && create) {
+        await ref.set(data.toMap());
+      } else {
+        await ref.update(data.toMap());
+      }
+    }
+
+
+    /**
+    * Get user organizations map
+    * @param {ConsoleUser} member console user model
+    * @return {Promise<Record<string, unknown>[]>} returns app
+    */
+    public async getOrganizationsForMember(member: ConsoleUser, omitted?: string[])
+      : Promise<Record<string, unknown>[]> {
+      const getter = new Getters(this.db);
+      const consumers = await getter.retrieveConsumers();
+      const orgs: Record<string, unknown>[] = [];
+      for (let i = 0; i < consumers.length; i++) {
+        const org = consumers[i];
+        if (member.organizations.includes(org.id)) {
+          orgs.push(org.toMap(omitted));
+        }
+      }
+      return orgs;
+    }
+
+    /**
+     * modify console session to database
+     * @param {ConsumerUserReference} consumer console user who owns session
+     * @param {SessionData} data model structure
+     * @param {boolean} create true if user model never
+     *  exists else false and we create one
+     * @return {Promise<void>} void.
+     */
+    public async modifyConsumerUserReference(consumer: ConsumerModel, data: ConsumerUserReference, create = true)
+      : Promise<void> {
+      const ref = this.db.
+        collection(DocumentReference.consumers).doc(consumer.id).
+        collection(DocumentReference.members).doc(data.id);
+      if (ref && create) {
+        await ref.set(JSON.parse(JSON.stringify(data)));
+      } else {
+        await ref.update(JSON.parse(JSON.stringify(data)));
+      }
+    }
+
+    public async deleteApp(consumer:string, app: string): Promise<void> {
+      const ref = this.db.
+        collection(DocumentReference.consumers)
+        .doc(consumer).collection(DocumentReference.apps).doc(app);
+      const exist = (await ref.get()).exists;
+      if (!exist) throw new SeverError(`App with id:${app} does not exist`, 400, 'invalid_request');
+      await ref.delete();
+    }
+
+    public async deleteConsumer(consumer:string): Promise<void> {
+      const ref = this.db.
+        collection(DocumentReference.consumers)
+        .doc(consumer);
+      const exist = (await ref.get()).exists;
+      if (!exist) throw new SeverError(`Consumer with id:${consumer} does not exist`, 400, 'invalid_request');
+      await ref.delete();
+    }
   }
 }

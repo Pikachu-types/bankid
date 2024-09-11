@@ -1,7 +1,7 @@
 import { LabsCipher, unixTimeStampNow } from "labs-sharable";
 import fakeNINs = require("../jsons/fake-nin.json");
 import {
-  ApiKeyPrefix, AppConsumerReturn, AppType,
+  ApiKeyPrefix, AppConsumerReturn,
   AuthRequest, BAccount, BillingModel, ClientApp,
   ConsumerAppsResponse,
   ConsumerModel, DocumentReference, DocumentTypes,
@@ -125,7 +125,7 @@ export class Accounts {
     }
 
     if (params.data.key.startsWith(ApiKeyPrefix.test) &&
-      app.type === AppType.production) {
+      app.type === 'production') {
       throw new SeverError("Cannot apply a test key to a production type application", 403);
     }
     return {
@@ -204,7 +204,7 @@ export class Accounts {
     }
 
     if (params.apikey.startsWith(ApiKeyPrefix.test) &&
-      app.type === AppType.production) {
+      app.type === 'production') {
       throw new SeverError("Cannot apply a test key to a production type application", 403);
     }
     const data = {

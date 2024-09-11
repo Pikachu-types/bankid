@@ -16,6 +16,7 @@ export enum DocumentReference {
    * Meaning folks that can requests bankID information
    */
   consumers = "consumers",
+  consumerUser = "eids",
   /**
    * Collection reference for all registered nins with bankIDs
    */
@@ -45,7 +46,10 @@ export enum DocumentReference {
    */
   history = "history",
 
-  userRef = "users",
+  /**
+   * Console organisation members
+   */
+  members = "users",
   /**
    * Consumer apps reference
    */
@@ -162,23 +166,6 @@ export enum DocumentTypes {
 }
 
 /**
- * AppTypes on BankID
- */
-export enum AppType {
-  production = "production",
-  test = "test",
-}
-
-/**
- * App Verification status
- */
-export enum AppVerificationStatus {
-  verified = "verified",
-  waiting = "waiting",
-  unverified = "unverified",
-  stale = "stale",
-}
-/**
  * AppType secret key reference on BankID
  */
 export enum AppTypeSecretRef {
@@ -202,16 +189,6 @@ export enum DocumentAction {
   update = "update",
   create = "create",
   get = "get",
-}
-
-/**
- * User roles
- */
-export enum UserRoles {
-  admin = "admin",
-  owner = "owner",
-  editor = "editor",
-  viewer = "viewer"
 }
 
 /**

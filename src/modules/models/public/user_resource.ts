@@ -3,9 +3,9 @@ import { equalToIgnoreCase, unixTimeStampNow } from "labs-sharable";
 import { ConsumerHelper } from "../../utils/consumer.helper";
 
 /**
- * Attached to Consumers [apps] once a user links their profile to the app. 
+ * Attached to consumers once a user interfaces with any of its apps. 
 */
-export class UserResource {
+export class EIDUserResource {
   /* eslint new-cap: ["error", { "capIsNew": false }]*/
   @Expose() national = "";
   @Expose() id = "";
@@ -13,23 +13,27 @@ export class UserResource {
   /**
    * Last seen
    */
-  @Expose() lsn: number | undefined;
+  @Expose() lsn: number = 0;
 
   @Expose() blocked: boolean | undefined;
   /**
    * Date added
    */
   @Expose() iat: number = 0;
+  /**
+   * ID of consumer apps this user has interfaced with
+   */
+  @Expose() apps: string[] = [];
 
   /**
    * Change record to this class
    *
    * @param {Record<string, unknown>} obj  json object from db
-   * @return {UserResource} this class
+   * @return {EIDUserResource} this class
    */
   public static fromJson(obj: Record<string, unknown>)
-    : UserResource {
-    const result: UserResource = plainToInstance(UserResource, obj,
+    : EIDUserResource {
+    const result: EIDUserResource = plainToInstance(EIDUserResource, obj,
       { excludeExtraneousValues: true });
     return result;
   }
@@ -42,8 +46,8 @@ export class UserResource {
     return JSON.stringify(this);
   }
 
-  public static generate(nin: string, region: string): UserResource {
-    const resource = new UserResource();
+  public static generate(nin: string, region: string): EIDUserResource {
+    const resource = new EIDUserResource();
 
     resource.iat = unixTimeStampNow();
     resource.id = ConsumerHelper.uniqueID();
@@ -54,15 +58,26 @@ export class UserResource {
     return resource;
   }
 
+
+  public static getMonthlyActiveUsers(users: EIDUserResource[]): number {
+    const currentTime = Date.now() / 1000; // Current time in seconds (UNIX timestamp)
+    const thirtyDaysInSeconds = 30 * 24 * 60 * 60; // 30 days in seconds
+
+    // Filter users where last seen (`lsn`) is within the last 30 days
+    const activeUsers = users.filter(user => (currentTime - (user.lsn)) <= thirtyDaysInSeconds);
+
+    return activeUsers.length;
+  }
+
   /**
    * Helper class function to find one specific object based on id
    *
-   * @param {UserResource[]} list an array to sort from and find given
+   * @param {EIDUserResource[]} list an array to sort from and find given
    * @param {string} nin provide the needed id to match for
-   * @return {UserResource | undefined} found object else undefined
+   * @return {EIDUserResource | undefined} found object else undefined
    */
-  public static findOne(list: UserResource[], nin: string)
-    : UserResource | undefined {
+  public static findOne(list: EIDUserResource[], nin: string)
+    : EIDUserResource | undefined {
     for (let i = 0; i < list.length; i++) {
       if (equalToIgnoreCase(list[i].national, nin)) return list[i];
     }

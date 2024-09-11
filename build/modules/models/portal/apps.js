@@ -36,8 +36,8 @@ class ClientApp {
         this.id = "";
         this.owner = "";
         this.appName = "";
-        this.type = enums_1.AppType.test;
-        this.verificationStatus = enums_1.AppVerificationStatus.stale;
+        this.type = 'test';
+        this.verificationStatus = 'stale';
         this.displayName = "";
         this.lut = 0;
         this.created = 0;
@@ -46,6 +46,7 @@ class ClientApp {
          * Whitelisted urls
          */
         this.urls = [];
+        this.scopes = [];
         this.keys = { private: "", public: "" };
     }
     /**
@@ -167,7 +168,7 @@ class ClientApp {
     static generateSecret(secret, type) {
         return {
             id: (0, labs_sharable_1.generateRandomAlphaNumeric)(12),
-            secret: helper_1.FunctionHelpers.bankidCipherString(secret, `${type === enums_1.AppType.production ?
+            secret: helper_1.FunctionHelpers.bankidCipherString(secret, `${type === 'production' ?
                 enums_1.AppTypeSecretRef.production :
                 enums_1.AppTypeSecretRef.test}${(0, uuid_1.v1)()}`),
             created: (0, labs_sharable_1.unixTimeStampNow)(),
@@ -176,11 +177,17 @@ class ClientApp {
     }
     /**
     * get document in map format
+    * @param {string[]} paths add attributes you'd like to omit from the map
     * @return { Record<string, unknown>} returns doc map .
     */
-    toMap() {
+    toMap(paths) {
         const res = JSON.parse(this.toJsonString());
         delete res["keyData"];
+        if (paths) {
+            for (let i = 0; i < paths.length; i++) {
+                delete res[paths[i]];
+            }
+        }
         return res;
     }
     /**
@@ -195,15 +202,15 @@ class ClientApp {
      * @return {boolean} generated uid
      */
     safeApp() {
-        return this.verificationStatus === enums_1.AppVerificationStatus.verified
-            && this.type === enums_1.AppType.production;
+        return this.verificationStatus === 'verified'
+            && this.type === 'production';
     }
     /**
      * Check if app is a test app
      * @return {boolean} generated uid
      */
     testApp() {
-        return this.type === enums_1.AppType.test;
+        return this.type === 'test';
     }
 }
 __decorate([
@@ -214,10 +221,16 @@ __decorate([
 ], ClientApp.prototype, "owner", void 0);
 __decorate([
     (0, class_transformer_1.Expose)()
+], ClientApp.prototype, "technology", void 0);
+__decorate([
+    (0, class_transformer_1.Expose)()
 ], ClientApp.prototype, "appName", void 0);
 __decorate([
     (0, class_transformer_1.Expose)()
 ], ClientApp.prototype, "type", void 0);
+__decorate([
+    (0, class_transformer_1.Expose)()
+], ClientApp.prototype, "consumption", void 0);
 __decorate([
     (0, class_transformer_1.Expose)()
 ], ClientApp.prototype, "verificationStatus", void 0);
@@ -239,6 +252,9 @@ __decorate([
 __decorate([
     (0, class_transformer_1.Expose)()
 ], ClientApp.prototype, "urls", void 0);
+__decorate([
+    (0, class_transformer_1.Expose)()
+], ClientApp.prototype, "scopes", void 0);
 __decorate([
     (0, class_transformer_1.Expose)()
 ], ClientApp.prototype, "keys", void 0);

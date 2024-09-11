@@ -1,5 +1,5 @@
 import * as admin from "firebase-admin";
-import { BillingModel, ClientApp, ConsumerModel, DocumentAction, Documents, IdentificationModel, IdentificationRequest, InvitationRequest, PendingApprovals, Requests, StandaloneBankID, UserResource, VendorModel, eSignature } from "..";
+import { BillingModel, ClientApp, ConsoleUser, ConsumerModel, ConsumerUserReference, DocumentAction, Documents, IdentificationModel, IdentificationRequest, InvitationRequest, PendingApprovals, Requests, SessionData, StandaloneBankID, EIDUserResource, VendorModel, eSignature } from "..";
 import { OIDCSession } from "../modules/models/public/oidc_session";
 export declare namespace DatabaseFunctions {
     /**
@@ -55,9 +55,10 @@ export declare namespace DatabaseFunctions {
         /**
          * Get consumer apps
          * @param {string} id consumer id
+         * @param {string} environment type of apps to retrieve i.e production or test
          * @return {Promise<ClientApp[]>} returns list.
          */
-        getConsumerApps(id: string): Promise<ClientApp[]>;
+        getConsumerApps(id: string, environment?: string): Promise<ClientApp[]>;
         /**
          * Get consumer app
          * @param {string} consumer organisation on console
@@ -65,6 +66,12 @@ export declare namespace DatabaseFunctions {
          * @return {Promise<ClientApp>} returns list.
          */
         getConsumerApp(consumer: string, app: string): Promise<ClientApp>;
+        /**
+         * Get consumer app
+         * @param {string} consumer organisation on console
+         * @return {Promise<ConsumerModel>} returns list.
+         */
+        getConsumer(consumer: string): Promise<ConsumerModel>;
         /**
          * Go to database request collection and
          * encrypted identification request
@@ -130,17 +137,17 @@ export declare namespace DatabaseFunctions {
          * @return {Promise<Documents[]>} returns list.
          */
         getEDocs(): Promise<Documents[]>;
-        isUserAttachedToApp(params: {
-            app: string;
+        isUserAttachedToConsumer(params: {
             org: string;
             nin: string;
-        }): Promise<UserResource | undefined>;
+        }): Promise<EIDUserResource | undefined>;
+        eidsAttachedToThisConsumer(org: string): Promise<EIDUserResource[]>;
         /**
          * A power function used to check if firestore document exist
          * @param {string} docID reference id
          * @param {string} collectionPath string path of collection
          *  i.e users/{user}/notification
-         * @return {Promise<UserResource | undefine>} nothing
+         * @return {Promise<boolean>} nothing
          */
         doesDocumentExist(docID: string, collectionPath: string): Promise<boolean>;
         /**
@@ -189,10 +196,10 @@ export declare namespace DatabaseFunctions {
          * @return {Promise<void>} returns list.
          */
         createBankID(person: IdentificationModel, id: StandaloneBankID): Promise<void>;
-        attachUserToApp(params: {
+        attachUserToConsumer(params: {
             app: string;
             org: string;
-            resource: UserResource;
+            resource: EIDUserResource;
         }, modify?: boolean): Promise<void>;
         /**
          * Creates a new OIDC session in the database.
@@ -267,6 +274,7 @@ export declare namespace DatabaseFunctions {
          * @return {Promise<void>} void.
          */
         manageIssuedBankID(ref: string, data: StandaloneBankID, modify?: boolean): Promise<void>;
+        manageConsumerApp(consumer: string, data: ClientApp, modify?: boolean): Promise<void>;
         /**
          * modify identification model (bankid) to database
          * @param {Record<string, unknown>} params arguments
@@ -301,5 +309,44 @@ export declare namespace DatabaseFunctions {
         cleanRawFlow(id: string): Promise<void>;
         cleanSession(id: string): Promise<void>;
         deleteIssuedID(bid: string, eid: string): Promise<void>;
+    }
+    class ConsoleUI {
+        readonly db: admin.firestore.Firestore;
+        constructor(admin: admin.firestore.Firestore);
+        retrieveConsoleUsers(): Promise<ConsoleUser[]>;
+        getConsoleUser(email: string): Promise<ConsoleUser>;
+        resolveConsoleUser(email: string): Promise<ConsoleUser | undefined>;
+        /**
+         * Get users sessions
+         * @param {string} user console user
+         * @return {Promise<SessionData[]>} returns list.
+         */
+        getConsoleUserSessions(user: string): Promise<SessionData[]>;
+        /**
+         * modify console session to database
+         * @param {ConsoleUser} user console user who owns session
+         * @param {SessionData} data model structure
+         * @param {boolean} create true if user model never
+         *  exists else false and we create one
+         * @return {Promise<void>} void.
+         */
+        modifyConsoleUserSession(user: ConsoleUser, data: SessionData, create?: boolean): Promise<void>;
+        /**
+        * Get user organizations map
+        * @param {ConsoleUser} member console user model
+        * @return {Promise<Record<string, unknown>[]>} returns app
+        */
+        getOrganizationsForMember(member: ConsoleUser, omitted?: string[]): Promise<Record<string, unknown>[]>;
+        /**
+         * modify console session to database
+         * @param {ConsumerUserReference} consumer console user who owns session
+         * @param {SessionData} data model structure
+         * @param {boolean} create true if user model never
+         *  exists else false and we create one
+         * @return {Promise<void>} void.
+         */
+        modifyConsumerUserReference(consumer: ConsumerModel, data: ConsumerUserReference, create?: boolean): Promise<void>;
+        deleteApp(consumer: string, app: string): Promise<void>;
+        deleteConsumer(consumer: string): Promise<void>;
     }
 }

@@ -150,13 +150,23 @@ var DatabaseFunctions;
         /**
          * Get consumer apps
          * @param {string} id consumer id
+         * @param {string} environment type of apps to retrieve i.e production or test
          * @return {Promise<ClientApp[]>} returns list.
          */
-        getConsumerApps(id) {
+        getConsumerApps(id, environment) {
             return __awaiter(this, void 0, void 0, function* () {
-                const source = yield this.db.
-                    collection(__1.DocumentReference.consumers).doc(id)
-                    .collection(__1.DocumentReference.apps).get();
+                let s;
+                if (environment) {
+                    s = this.db.
+                        collection(__1.DocumentReference.consumers).doc(id)
+                        .collection(__1.DocumentReference.apps).where('type', '==', environment);
+                }
+                else {
+                    s = this.db.
+                        collection(__1.DocumentReference.consumers).doc(id)
+                        .collection(__1.DocumentReference.apps);
+                }
+                const source = yield s.get();
                 return source.docs.map((e) => __1.ClientApp.fromJson(e.data()));
             });
         }
@@ -174,6 +184,20 @@ var DatabaseFunctions;
                 if (!source.exists)
                     throw new __1.SeverError("The requested app does not exists.", 400);
                 return __1.ClientApp.fromJson(source.data());
+            });
+        }
+        /**
+         * Get consumer app
+         * @param {string} consumer organisation on console
+         * @return {Promise<ConsumerModel>} returns list.
+         */
+        getConsumer(consumer) {
+            return __awaiter(this, void 0, void 0, function* () {
+                const source = yield this.db.
+                    collection(__1.DocumentReference.consumers).doc(consumer).get();
+                if (!source.exists)
+                    throw new __1.SeverError("The requested consumer does not exists.", 400);
+                return __1.ConsumerModel.fromJson(source.data());
             });
         }
         /**
@@ -321,16 +345,23 @@ var DatabaseFunctions;
                 return source.docs.map((e) => __1.Documents.fromJson(e.data()));
             });
         }
-        isUserAttachedToApp(params) {
+        isUserAttachedToConsumer(params) {
             return __awaiter(this, void 0, void 0, function* () {
                 const source = yield this.db.
                     collection(__1.DocumentReference.consumers).doc(params.org)
-                    .collection(__1.DocumentReference.apps).doc(params.app)
-                    .collection("users")
+                    .collection(__1.DocumentReference.consumerUser)
                     .where('national', '==', params.nin).get();
                 if (source.empty)
                     return;
-                return source.docs.map((e) => __1.UserResource.fromJson(e.data()))[0];
+                return source.docs.map((e) => __1.EIDUserResource.fromJson(e.data()))[0];
+            });
+        }
+        eidsAttachedToThisConsumer(org) {
+            return __awaiter(this, void 0, void 0, function* () {
+                const source = yield this.db.
+                    collection(__1.DocumentReference.consumers).doc(org)
+                    .collection(__1.DocumentReference.consumerUser).get();
+                return source.docs.map((e) => __1.EIDUserResource.fromJson(e.data()));
             });
         }
         /**
@@ -338,7 +369,7 @@ var DatabaseFunctions;
          * @param {string} docID reference id
          * @param {string} collectionPath string path of collection
          *  i.e users/{user}/notification
-         * @return {Promise<UserResource | undefine>} nothing
+         * @return {Promise<boolean>} nothing
          */
         doesDocumentExist(docID, collectionPath) {
             return __awaiter(this, void 0, void 0, function* () {
@@ -454,12 +485,11 @@ var DatabaseFunctions;
                     .set(id.toMap());
             });
         }
-        attachUserToApp(params, modify = false) {
+        attachUserToConsumer(params, modify = false) {
             return __awaiter(this, void 0, void 0, function* () {
                 const query = this.db.
                     collection(__1.DocumentReference.consumers).doc(params.org)
-                    .collection(__1.DocumentReference.apps).doc(params.app)
-                    .collection("users")
+                    .collection(__1.DocumentReference.consumerUser)
                     .doc(params.resource.id);
                 if (modify) {
                     yield query.update(params.resource.toMap());
@@ -642,6 +672,19 @@ var DatabaseFunctions;
                 }
             });
         }
+        manageConsumerApp(consumer, data, modify = false) {
+            return __awaiter(this, void 0, void 0, function* () {
+                const doc = this.db.collection(__1.DocumentReference.consumers).
+                    doc(consumer).collection(__1.DocumentReference.apps)
+                    .doc(data.id);
+                if (modify) {
+                    yield doc.update(data.toMap());
+                }
+                else {
+                    yield doc.set(data.toMap());
+                }
+            });
+        }
         /**
          * modify identification model (bankid) to database
          * @param {Record<string, unknown>} params arguments
@@ -731,5 +774,134 @@ var DatabaseFunctions;
         }
     }
     DatabaseFunctions.Cleaners = Cleaners;
+    class ConsoleUI {
+        constructor(admin) {
+            this.db = admin;
+        }
+        retrieveConsoleUsers() {
+            return __awaiter(this, void 0, void 0, function* () {
+                const source = yield this.db.collection(__1.DocumentReference.console).get();
+                return source.docs.map((e) => __1.ConsoleUser.fromJson(e.data()));
+            });
+        }
+        getConsoleUser(email) {
+            return __awaiter(this, void 0, void 0, function* () {
+                const source = yield this.db.
+                    collection(__1.DocumentReference.console)
+                    .where('email', '==', email).get();
+                if (source.empty)
+                    throw new __1.SeverError(`No such user with email: ${email} exists.`, 400, 'authorization_error');
+                return source.docs.map((e) => __1.ConsoleUser.fromJson(e.data()))[0];
+            });
+        }
+        resolveConsoleUser(email) {
+            return __awaiter(this, void 0, void 0, function* () {
+                const source = yield this.db.
+                    collection(__1.DocumentReference.console)
+                    .where('email', '==', email).get();
+                if (source.empty)
+                    return;
+                return source.docs.map((e) => __1.ConsoleUser.fromJson(e.data()))[0];
+            });
+        }
+        /**
+         * Get users sessions
+         * @param {string} user console user
+         * @return {Promise<SessionData[]>} returns list.
+         */
+        getConsoleUserSessions(user) {
+            return __awaiter(this, void 0, void 0, function* () {
+                const source = yield this.db.
+                    collection(__1.DocumentReference.console).doc(user)
+                    .collection(__1.DocumentReference.sessions).get();
+                return source.docs.map((e) => __1.SessionData.fromJson(e.data()));
+            });
+        }
+        /**
+         * modify console session to database
+         * @param {ConsoleUser} user console user who owns session
+         * @param {SessionData} data model structure
+         * @param {boolean} create true if user model never
+         *  exists else false and we create one
+         * @return {Promise<void>} void.
+         */
+        modifyConsoleUserSession(user, data, create = true) {
+            return __awaiter(this, void 0, void 0, function* () {
+                data.unResolveMaps();
+                const ref = this.db.
+                    collection(__1.DocumentReference.console).doc(user.id).
+                    collection(__1.DocumentReference.sessions).doc(data.id);
+                if (ref && create) {
+                    yield ref.set(data.toMap());
+                }
+                else {
+                    yield ref.update(data.toMap());
+                }
+            });
+        }
+        /**
+        * Get user organizations map
+        * @param {ConsoleUser} member console user model
+        * @return {Promise<Record<string, unknown>[]>} returns app
+        */
+        getOrganizationsForMember(member, omitted) {
+            return __awaiter(this, void 0, void 0, function* () {
+                const getter = new Getters(this.db);
+                const consumers = yield getter.retrieveConsumers();
+                const orgs = [];
+                for (let i = 0; i < consumers.length; i++) {
+                    const org = consumers[i];
+                    if (member.organizations.includes(org.id)) {
+                        orgs.push(org.toMap(omitted));
+                    }
+                }
+                return orgs;
+            });
+        }
+        /**
+         * modify console session to database
+         * @param {ConsumerUserReference} consumer console user who owns session
+         * @param {SessionData} data model structure
+         * @param {boolean} create true if user model never
+         *  exists else false and we create one
+         * @return {Promise<void>} void.
+         */
+        modifyConsumerUserReference(consumer, data, create = true) {
+            return __awaiter(this, void 0, void 0, function* () {
+                const ref = this.db.
+                    collection(__1.DocumentReference.consumers).doc(consumer.id).
+                    collection(__1.DocumentReference.members).doc(data.id);
+                if (ref && create) {
+                    yield ref.set(JSON.parse(JSON.stringify(data)));
+                }
+                else {
+                    yield ref.update(JSON.parse(JSON.stringify(data)));
+                }
+            });
+        }
+        deleteApp(consumer, app) {
+            return __awaiter(this, void 0, void 0, function* () {
+                const ref = this.db.
+                    collection(__1.DocumentReference.consumers)
+                    .doc(consumer).collection(__1.DocumentReference.apps).doc(app);
+                const exist = (yield ref.get()).exists;
+                if (!exist)
+                    throw new __1.SeverError(`App with id:${app} does not exist`, 400, 'invalid_request');
+                yield ref.delete();
+            });
+        }
+        deleteConsumer(consumer) {
+            return __awaiter(this, void 0, void 0, function* () {
+                const ref = this.db.
+                    collection(__1.DocumentReference.consumers)
+                    .doc(consumer);
+                const exist = (yield ref.get()).exists;
+                if (!exist)
+                    throw new __1.SeverError(`Consumer with id:${consumer} does not exist`, 400, 'invalid_request');
+                yield ref.delete();
+            });
+        }
+    }
+    DatabaseFunctions.ConsoleUI = ConsoleUI;
 })(DatabaseFunctions = exports.DatabaseFunctions || (exports.DatabaseFunctions = {}));
 //# sourceMappingURL=database.js.map

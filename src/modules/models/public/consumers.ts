@@ -6,7 +6,7 @@ import { FunctionHelpers } from "../../services/helper";
 import { ApiKeyPrefix, BankIDTypes, DocumentTypes } from "../../enums/enums";
 import { v4 as uuidv4 } from 'uuid';
 import { ConsoleRegAccountRequest } from "../../interfaces/requests";
-import { APIKeys, ConsumerProfile, ConsumerServiceJSON } from "../../interfaces/documents";
+import { APIKeys, ConsumerServiceJSON } from "../../interfaces/documents";
 import { BankID } from "../bankid";
 import { SeverError } from "../../utils/server.error";
 
@@ -21,6 +21,7 @@ export class ConsumerModel {
    */
   @Expose() id = "";
   @Expose() name = "";
+  @Expose() image = "";
   @Expose() regNum = "";
   @Expose() tin = "";
   @Expose() apiKey = "";
@@ -30,10 +31,19 @@ export class ConsumerModel {
   @Expose() lut: number | undefined;
   @Expose() tier = 1;
   @Expose() information?: ConsumerVerificationInfoModel;
+  @Expose() stats?: {
+    /**
+     * Monthly eSign count
+     */
+    mec: number;
+    /**
+     * Monthly auth count
+     */
+    mac: number;
+  };
   @Expose() contact: Record<string, unknown> = {};
   @Expose() keys: Record<string, unknown> = {};
   @Expose() apis: APIKeys | undefined;
-  @Expose() profile: ConsumerProfile | undefined;
   // / monthly usage counter
   @Expose() usage: number | undefined;
 
@@ -130,13 +140,19 @@ export class ConsumerModel {
 
   /**
   * get document in map format
+  * @param {string[]} paths add attributes you'd like to omit from the map
   * @return { Record<string, unknown>} returns doc map .
   */
-  public toMap()
+  public toMap(paths?:string[])
     : Record<string, unknown> {
     const res = JSON.parse(this.toJsonString());
     delete res["contactData"];
     delete res["keyData"];
+    if (paths) {
+      for (let i = 0; i < paths.length; i++){
+        delete res[paths[i]];
+      }
+    }
     return res;
   }
 

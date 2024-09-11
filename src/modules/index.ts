@@ -37,6 +37,7 @@ export * from "./enums/shared";
 export * from "./enums/templates";
 export * from "./utils/e_signatures";
 export * from "./utils/pkce";
+export * from "./utils/paginate";
 export * from "./utils/server.error";
 export * from "./utils/consumer.helper";
 export * from "./enums/enums";

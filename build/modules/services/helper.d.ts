@@ -94,3 +94,11 @@ export declare class FunctionHelpers {
     static getIPAddress(request: Request): string;
 }
 export declare function parseInterface(data: any): any;
+/**
+ * Calculates the expiration time based on the given duration and format.
+ *
+ * @param {number} duration - The duration for which the expiration time is to be calculated.
+ * @param {'m' | 'h' | 's'} format - The format of the duration ('m' for minutes, 'h' for hours, 's' for seconds).
+ * @returns {number} - The expiration time in Unix timestamp format.
+ */
+export declare function expiresAt(duration: number, format?: 'm' | 'h' | 's'): number;

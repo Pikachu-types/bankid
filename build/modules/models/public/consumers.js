@@ -36,6 +36,7 @@ class ConsumerModel {
          */
         this.id = "";
         this.name = "";
+        this.image = "";
         this.regNum = "";
         this.tin = "";
         this.apiKey = "";
@@ -127,12 +128,18 @@ class ConsumerModel {
     }
     /**
     * get document in map format
+    * @param {string[]} paths add attributes you'd like to omit from the map
     * @return { Record<string, unknown>} returns doc map .
     */
-    toMap() {
+    toMap(paths) {
         const res = JSON.parse(this.toJsonString());
         delete res["contactData"];
         delete res["keyData"];
+        if (paths) {
+            for (let i = 0; i < paths.length; i++) {
+                delete res[paths[i]];
+            }
+        }
         return res;
     }
     /**
@@ -285,6 +292,9 @@ __decorate([
 ], ConsumerModel.prototype, "name", void 0);
 __decorate([
     (0, class_transformer_1.Expose)()
+], ConsumerModel.prototype, "image", void 0);
+__decorate([
+    (0, class_transformer_1.Expose)()
 ], ConsumerModel.prototype, "regNum", void 0);
 __decorate([
     (0, class_transformer_1.Expose)()
@@ -312,6 +322,9 @@ __decorate([
 ], ConsumerModel.prototype, "information", void 0);
 __decorate([
     (0, class_transformer_1.Expose)()
+], ConsumerModel.prototype, "stats", void 0);
+__decorate([
+    (0, class_transformer_1.Expose)()
 ], ConsumerModel.prototype, "contact", void 0);
 __decorate([
     (0, class_transformer_1.Expose)()
@@ -319,9 +332,6 @@ __decorate([
 __decorate([
     (0, class_transformer_1.Expose)()
 ], ConsumerModel.prototype, "apis", void 0);
-__decorate([
-    (0, class_transformer_1.Expose)()
-], ConsumerModel.prototype, "profile", void 0);
 __decorate([
     (0, class_transformer_1.Expose)()
 ], ConsumerModel.prototype, "usage", void 0);

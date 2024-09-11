@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.RequestStatus = exports.RequestSources = exports.UserRoles = exports.DocumentAction = exports.ApiKeyPrefix = exports.AppTypeSecretRef = exports.AppVerificationStatus = exports.AppType = exports.DocumentTypes = exports.TFAProviders = exports.BankIDTypes = exports.ActionType = exports.RequestMode = exports.DocumentReference = void 0;
+exports.RequestStatus = exports.RequestSources = exports.DocumentAction = exports.ApiKeyPrefix = exports.AppTypeSecretRef = exports.DocumentTypes = exports.TFAProviders = exports.BankIDTypes = exports.ActionType = exports.RequestMode = exports.DocumentReference = void 0;
 /**
  * Default database document references
  */
@@ -20,6 +20,7 @@ var DocumentReference;
      * Meaning folks that can requests bankID information
      */
     DocumentReference["consumers"] = "consumers";
+    DocumentReference["consumerUser"] = "eids";
     /**
      * Collection reference for all registered nins with bankIDs
      */
@@ -48,7 +49,10 @@ var DocumentReference;
      * BankID NIN sessions wrapped in a history
      */
     DocumentReference["history"] = "history";
-    DocumentReference["userRef"] = "users";
+    /**
+     * Console organisation members
+     */
+    DocumentReference["members"] = "users";
     /**
      * Consumer apps reference
      */
@@ -160,24 +164,6 @@ var DocumentTypes;
     DocumentTypes["invitation"] = "invite_";
 })(DocumentTypes = exports.DocumentTypes || (exports.DocumentTypes = {}));
 /**
- * AppTypes on BankID
- */
-var AppType;
-(function (AppType) {
-    AppType["production"] = "production";
-    AppType["test"] = "test";
-})(AppType = exports.AppType || (exports.AppType = {}));
-/**
- * App Verification status
- */
-var AppVerificationStatus;
-(function (AppVerificationStatus) {
-    AppVerificationStatus["verified"] = "verified";
-    AppVerificationStatus["waiting"] = "waiting";
-    AppVerificationStatus["unverified"] = "unverified";
-    AppVerificationStatus["stale"] = "stale";
-})(AppVerificationStatus = exports.AppVerificationStatus || (exports.AppVerificationStatus = {}));
-/**
  * AppType secret key reference on BankID
  */
 var AppTypeSecretRef;
@@ -203,16 +189,6 @@ var DocumentAction;
     DocumentAction["create"] = "create";
     DocumentAction["get"] = "get";
 })(DocumentAction = exports.DocumentAction || (exports.DocumentAction = {}));
-/**
- * User roles
- */
-var UserRoles;
-(function (UserRoles) {
-    UserRoles["admin"] = "admin";
-    UserRoles["owner"] = "owner";
-    UserRoles["editor"] = "editor";
-    UserRoles["viewer"] = "viewer";
-})(UserRoles = exports.UserRoles || (exports.UserRoles = {}));
 /**
  * Document actions
  */

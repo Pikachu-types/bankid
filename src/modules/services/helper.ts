@@ -1,4 +1,4 @@
-import {CipherType, CustomError, LabsCipher} from "labs-sharable";
+import {CipherType, convertDateToUnix, CustomError, LabsCipher} from "labs-sharable";
 import { ApprovedClients } from "../models/public/approvedClients";
 import { Request } from "express";
 import { createHash } from "crypto";
@@ -218,4 +218,23 @@ export class FunctionHelpers {
 /* eslint-disable */
 export function parseInterface(data: any) {
   return JSON.parse(JSON.stringify(data));
+}
+
+/**
+ * Calculates the expiration time based on the given duration and format.
+ *
+ * @param {number} duration - The duration for which the expiration time is to be calculated.
+ * @param {'m' | 'h' | 's'} format - The format of the duration ('m' for minutes, 'h' for hours, 's' for seconds).
+ * @returns {number} - The expiration time in Unix timestamp format.
+ */
+export function expiresAt(duration: number, format: 'm' | 'h' | 's' = 'm'): number {
+  const now = new Date();
+  if (format === 'm') {
+    now.setMinutes(new Date().getMinutes() + duration);
+  } else if (format === 'h') {
+    now.setHours(new Date().getHours() + duration);
+  } else {
+    now.setSeconds(new Date().getSeconds() + duration);
+  }
+  return convertDateToUnix(now);
 }

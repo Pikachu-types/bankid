@@ -6,32 +6,40 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.UserResource = void 0;
+exports.EIDUserResource = void 0;
 const class_transformer_1 = require("class-transformer");
 const labs_sharable_1 = require("labs-sharable");
 const consumer_helper_1 = require("../../utils/consumer.helper");
 /**
- * Attached to Consumers [apps] once a user links their profile to the app.
+ * Attached to consumers once a user interfaces with any of its apps.
 */
-class UserResource {
+class EIDUserResource {
     constructor() {
         /* eslint new-cap: ["error", { "capIsNew": false }]*/
         this.national = "";
         this.id = "";
         this.region = "";
         /**
+         * Last seen
+         */
+        this.lsn = 0;
+        /**
          * Date added
          */
         this.iat = 0;
+        /**
+         * ID of consumer apps this user has interfaced with
+         */
+        this.apps = [];
     }
     /**
      * Change record to this class
      *
      * @param {Record<string, unknown>} obj  json object from db
-     * @return {UserResource} this class
+     * @return {EIDUserResource} this class
      */
     static fromJson(obj) {
-        const result = (0, class_transformer_1.plainToInstance)(UserResource, obj, { excludeExtraneousValues: true });
+        const result = (0, class_transformer_1.plainToInstance)(EIDUserResource, obj, { excludeExtraneousValues: true });
         return result;
     }
     /**
@@ -42,7 +50,7 @@ class UserResource {
         return JSON.stringify(this);
     }
     static generate(nin, region) {
-        const resource = new UserResource();
+        const resource = new EIDUserResource();
         resource.iat = (0, labs_sharable_1.unixTimeStampNow)();
         resource.id = consumer_helper_1.ConsumerHelper.uniqueID();
         resource.national = nin;
@@ -50,12 +58,19 @@ class UserResource {
         resource.lsn = (0, labs_sharable_1.unixTimeStampNow)();
         return resource;
     }
+    static getMonthlyActiveUsers(users) {
+        const currentTime = Date.now() / 1000; // Current time in seconds (UNIX timestamp)
+        const thirtyDaysInSeconds = 30 * 24 * 60 * 60; // 30 days in seconds
+        // Filter users where last seen (`lsn`) is within the last 30 days
+        const activeUsers = users.filter(user => (currentTime - (user.lsn)) <= thirtyDaysInSeconds);
+        return activeUsers.length;
+    }
     /**
      * Helper class function to find one specific object based on id
      *
-     * @param {UserResource[]} list an array to sort from and find given
+     * @param {EIDUserResource[]} list an array to sort from and find given
      * @param {string} nin provide the needed id to match for
-     * @return {UserResource | undefined} found object else undefined
+     * @return {EIDUserResource | undefined} found object else undefined
      */
     static findOne(list, nin) {
         for (let i = 0; i < list.length; i++) {
@@ -74,21 +89,24 @@ class UserResource {
 }
 __decorate([
     (0, class_transformer_1.Expose)()
-], UserResource.prototype, "national", void 0);
+], EIDUserResource.prototype, "national", void 0);
 __decorate([
     (0, class_transformer_1.Expose)()
-], UserResource.prototype, "id", void 0);
+], EIDUserResource.prototype, "id", void 0);
 __decorate([
     (0, class_transformer_1.Expose)()
-], UserResource.prototype, "region", void 0);
+], EIDUserResource.prototype, "region", void 0);
 __decorate([
     (0, class_transformer_1.Expose)()
-], UserResource.prototype, "lsn", void 0);
+], EIDUserResource.prototype, "lsn", void 0);
 __decorate([
     (0, class_transformer_1.Expose)()
-], UserResource.prototype, "blocked", void 0);
+], EIDUserResource.prototype, "blocked", void 0);
 __decorate([
     (0, class_transformer_1.Expose)()
-], UserResource.prototype, "iat", void 0);
-exports.UserResource = UserResource;
+], EIDUserResource.prototype, "iat", void 0);
+__decorate([
+    (0, class_transformer_1.Expose)()
+], EIDUserResource.prototype, "apps", void 0);
+exports.EIDUserResource = EIDUserResource;
 //# sourceMappingURL=user_resource.js.map

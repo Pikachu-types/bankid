@@ -1,4 +1,6 @@
 import { ConsoleAccountSecurity } from "../../interfaces/documents";
+import { ConsoleRegAccountRequest } from "../../interfaces/requests";
+import { UserRoles } from "../../enums/shared";
 /**
  * ConsoleUser class
 */
@@ -9,7 +11,11 @@ export declare class ConsoleUser {
     id: string;
     email: string;
     legalAccepted: boolean;
-    naming: Record<string, unknown>;
+    campaigns: boolean;
+    naming?: {
+        first: string;
+        last: string;
+    };
     created: number;
     lut: number;
     security: ConsoleAccountSecurity | undefined;
@@ -35,6 +41,14 @@ export declare class ConsoleUser {
      */
     static findOne(list: ConsoleUser[], id: string): ConsoleUser | undefined;
     /**
+     * Helper class function to find one specific object based on eid
+     *
+     * @param {ConsoleUser[]} list an array to sort from and find given
+     * @param {string} eid provide the needed id to match for
+     * @return {ConsoleUser | undefined} found object else undefined
+     */
+    static findEID(list: ConsoleUser[], eid: string): ConsoleUser | undefined;
+    /**
      * un-resolve maps for certain attributes
      * @return {void} nothing
      */
@@ -46,21 +60,23 @@ export declare class ConsoleUser {
     toJsonString(): string;
     /**
     * get document in map format
+    * @param {string[]} paths add attributes you'd like to omit from the map
     * @return { Record<string, unknown>} returns doc map .
     */
-    toMap(): Record<string, unknown>;
+    toMap(paths?: string[]): Record<string, unknown>;
     /**
      * create a pretty unique uid for consumers
      * @return {string} generated uid
      */
     static createID(): string;
+    static create(data: ConsoleRegAccountRequest): ConsoleUser;
 }
 /**
  * Consumer user doc model
  */
 export interface ConsumerUserReference {
     email: string;
-    role: string;
+    role: UserRoles;
     name: string;
     id: string;
     tFA: boolean;

@@ -53,6 +53,7 @@ __exportStar(require("./enums/shared"), exports);
 __exportStar(require("./enums/templates"), exports);
 __exportStar(require("./utils/e_signatures"), exports);
 __exportStar(require("./utils/pkce"), exports);
+__exportStar(require("./utils/paginate"), exports);
 __exportStar(require("./utils/server.error"), exports);
 __exportStar(require("./utils/consumer.helper"), exports);
 __exportStar(require("./enums/enums"), exports);

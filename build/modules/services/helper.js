@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.parseInterface = exports.FunctionHelpers = void 0;
+exports.expiresAt = exports.parseInterface = exports.FunctionHelpers = void 0;
 const labs_sharable_1 = require("labs-sharable");
 const approvedClients_1 = require("../models/public/approvedClients");
 const crypto_1 = require("crypto");
@@ -211,4 +211,25 @@ function parseInterface(data) {
     return JSON.parse(JSON.stringify(data));
 }
 exports.parseInterface = parseInterface;
+/**
+ * Calculates the expiration time based on the given duration and format.
+ *
+ * @param {number} duration - The duration for which the expiration time is to be calculated.
+ * @param {'m' | 'h' | 's'} format - The format of the duration ('m' for minutes, 'h' for hours, 's' for seconds).
+ * @returns {number} - The expiration time in Unix timestamp format.
+ */
+function expiresAt(duration, format = 'm') {
+    const now = new Date();
+    if (format === 'm') {
+        now.setMinutes(new Date().getMinutes() + duration);
+    }
+    else if (format === 'h') {
+        now.setHours(new Date().getHours() + duration);
+    }
+    else {
+        now.setSeconds(new Date().getSeconds() + duration);
+    }
+    return (0, labs_sharable_1.convertDateToUnix)(now);
+}
+exports.expiresAt = expiresAt;
 //# sourceMappingURL=helper.js.map
