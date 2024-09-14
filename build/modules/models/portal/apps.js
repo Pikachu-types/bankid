@@ -47,7 +47,6 @@ class ClientApp {
          */
         this.urls = [];
         this.scopes = [];
-        this.keys = { private: "", public: "" };
     }
     /**
      * Change record to ClientApp class
@@ -77,7 +76,9 @@ class ClientApp {
     * @return {void} text
     */
     resolveMaps() {
-        this.keyData = contact_1.AuthenticateKeysData.fromJson(this.keys);
+        if (this.keys && this.keys.public && this.keys.public.length > 10) {
+            this.keyData = contact_1.AuthenticateKeysData.fromJson(this.keys);
+        }
     }
     /**
      * Validate if secret is valid

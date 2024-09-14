@@ -223,6 +223,14 @@ export class AuthenticateKeysData {
     }
   }
 
+  public toJson(cipherKey: string) {
+    if (this.public.length < 10 || (!this.private || (this.private && this.private.length < 10))) return;
+    return {
+      public: this.getPublicKey(cipherKey)?.toString() ?? '',
+      private: this.getPrivateKey(cipherKey)?.toString() ?? '',
+    }
+  }
+
   /**
   * get document in map format
   * @return { Record<string, unknown>} returns doc map .

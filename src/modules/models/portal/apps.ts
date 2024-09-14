@@ -5,7 +5,7 @@ import { AppDataSecret } from "../../interfaces/documents";
 import { AuthenticateKeysData } from "../superficial/contact";
 import { Generator } from "../../services/generator";
 import { FunctionHelpers } from "../../services/helper";
-import { RSAKeys, delay, generateRandomAlphaNumeric, unixTimeStampNow } from "labs-sharable";
+import { delay, generateRandomAlphaNumeric, unixTimeStampNow } from "labs-sharable";
 import { SeverError } from "../../utils/server.error";
 import { AppFrameworkType, AppType, AppVerificationStatus, ClientScope, ConsumptionType } from "../..";
 /**
@@ -37,7 +37,10 @@ export class ClientApp {
    */
   @Expose() urls: string[] = [];
   @Expose() scopes: ClientScope[] = [];
-  @Expose() keys: RSAKeys = {private: "", public: ""};
+  @Expose() keys?: {
+    private?: string;
+    public: string;
+  };
   
   keyData: AuthenticateKeysData | undefined;
 
@@ -73,7 +76,9 @@ export class ClientApp {
   * @return {void} text
   */
   public resolveMaps(): void {
-    this.keyData = AuthenticateKeysData.fromJson(this.keys);
+    if (this.keys && this.keys.public && this.keys.public.length > 10) {
+      this.keyData = AuthenticateKeysData.fromJson(this.keys);
+    }
   }
 
 

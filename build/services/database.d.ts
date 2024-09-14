@@ -274,6 +274,12 @@ export declare namespace DatabaseFunctions {
          * @return {Promise<void>} void.
          */
         manageIssuedBankID(ref: string, data: StandaloneBankID, modify?: boolean): Promise<void>;
+        /**
+         * Manage app
+         * @param consumer
+         * @param data
+         * @param modify default is false
+         */
         manageConsumerApp(consumer: string, data: ClientApp, modify?: boolean): Promise<void>;
         /**
          * modify identification model (bankid) to database

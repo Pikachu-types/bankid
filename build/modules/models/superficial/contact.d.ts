@@ -123,6 +123,10 @@ export declare class AuthenticateKeysData {
      * @return {string} text
      */
     getPrivateKey(cipherKey: string): Buffer | undefined;
+    toJson(cipherKey: string): {
+        public: string;
+        private: string;
+    } | undefined;
     /**
     * get document in map format
     * @return { Record<string, unknown>} returns doc map .

@@ -682,6 +682,12 @@ export namespace DatabaseFunctions {
     }
     
 
+    /**
+     * Manage app
+     * @param consumer 
+     * @param data 
+     * @param modify default is false
+     */
     public async manageConsumerApp(consumer: string,
       data: ClientApp, modify = false)
       : Promise<void> {

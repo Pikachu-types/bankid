@@ -672,6 +672,12 @@ var DatabaseFunctions;
                 }
             });
         }
+        /**
+         * Manage app
+         * @param consumer
+         * @param data
+         * @param modify default is false
+         */
         manageConsumerApp(consumer, data, modify = false) {
             return __awaiter(this, void 0, void 0, function* () {
                 const doc = this.db.collection(__1.DocumentReference.consumers).

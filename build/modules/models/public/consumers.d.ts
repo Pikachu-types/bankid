@@ -1,6 +1,7 @@
 import { AuthenticateKeysData, ContactData } from "../superficial/contact";
 import { ConsoleRegAccountRequest } from "../../interfaces/requests";
 import { APIKeys, ConsumerServiceJSON } from "../../interfaces/documents";
+import { AppType } from "../../enums/shared";
 /**
  * ConsumerModel class
 */
@@ -32,7 +33,7 @@ export declare class ConsumerModel {
     };
     contact: Record<string, unknown>;
     keys: Record<string, unknown>;
-    apis: APIKeys | undefined;
+    apis: APIKeys;
     usage: number | undefined;
     contactData: ContactData | undefined;
     keyData: AuthenticateKeysData | undefined;
@@ -64,6 +65,7 @@ export declare class ConsumerModel {
      * @return {ConsumerModel | undefined} found object else undefined
      */
     static findOne(list: ConsumerModel[], id: string): ConsumerModel | undefined;
+    findApiKey(env: AppType): string;
     /**
      * Helper class function to find one specific object based on id
      *
@@ -77,6 +79,7 @@ export declare class ConsumerModel {
      * @return {void} nothing
      */
     unResolveMaps(): void;
+    hasApiKeys(): boolean;
     /**
      * This class handler to json
      * @return {string} text
@@ -110,7 +113,7 @@ export declare class ConsumerModel {
      * @param {string} secret cipher key
      * @return {void} generated api keys
      */
-    private generateApiKeys;
+    generateApiKeys(): void;
     /**
      * finally hash api keys for db storing
      * @return {void} generated api keys

@@ -14,6 +14,9 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.ConsumerModel = void 0;
 const class_transformer_1 = require("class-transformer");
@@ -25,6 +28,7 @@ const enums_1 = require("../../enums/enums");
 const uuid_1 = require("uuid");
 const bankid_1 = require("../bankid");
 const server_error_1 = require("../../utils/server.error");
+const generate_api_key_1 = __importDefault(require("generate-api-key"));
 /**
  * ConsumerModel class
 */
@@ -45,6 +49,10 @@ class ConsumerModel {
         this.tier = 1;
         this.contact = {};
         this.keys = {};
+        this.apis = {
+            live: "",
+            test: ""
+        };
     }
     /**
      * Change record to ConsumerModel class
@@ -93,6 +101,17 @@ class ConsumerModel {
         }
         return;
     }
+    findApiKey(env) {
+        if (env === 'production' && this.apis) {
+            return this.apis.live;
+        }
+        else if (env === 'test' && this.apis) {
+            return this.apis.test;
+        }
+        else {
+            return "";
+        }
+    }
     /**
      * Helper class function to find one specific object based on id
      *
@@ -118,6 +137,9 @@ class ConsumerModel {
             this.contact = this.contactData.toMap();
         if (this.keyData)
             this.keys = this.keyData.toMap();
+    }
+    hasApiKeys() {
+        return this.apis.live.length > 1 && this.apis.test.length > 1;
     }
     /**
      * This class handler to json
@@ -224,7 +246,7 @@ class ConsumerModel {
                 private: privateKey,
             };
             this.keyData = contact_1.AuthenticateKeysData.fromJson(this.keys);
-            this.generateApiKeys(secret);
+            this.generateApiKeys();
             callback(this.keyData);
         });
     }
@@ -233,25 +255,12 @@ class ConsumerModel {
      * @param {string} secret cipher key
      * @return {void} generated api keys
      */
-    generateApiKeys(secret) {
-        const signable = {
-            "name": this.name,
-            "created": this.created,
-            "identifier": this.id,
+    generateApiKeys() {
+        var key = (0, generate_api_key_1.default)({ method: 'string', min: 32, max: 32, batch: 2 });
+        this.apis = {
+            live: `${enums_1.ApiKeyPrefix.live}${key[0]}`,
+            test: `${enums_1.ApiKeyPrefix.test}${key[1]}`,
         };
-        const source = helper_1.FunctionHelpers.bankidCipherString(secret, JSON.stringify(signable));
-        try {
-            const cryp = helper_1.FunctionHelpers.
-                changeCipherStringToModel(source);
-            this.apis = {
-                live: `${enums_1.ApiKeyPrefix.live}${cryp.content}`,
-                test: `${enums_1.ApiKeyPrefix.test}${cryp.iv}`,
-            };
-            this.apiKey = this.apis.live;
-        }
-        catch (error) {
-            throw new server_error_1.SeverError("Failed creating credentials");
-        }
     }
     /**
      * finally hash api keys for db storing

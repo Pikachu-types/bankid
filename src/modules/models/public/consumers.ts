@@ -9,6 +9,8 @@ import { ConsoleRegAccountRequest } from "../../interfaces/requests";
 import { APIKeys, ConsumerServiceJSON } from "../../interfaces/documents";
 import { BankID } from "../bankid";
 import { SeverError } from "../../utils/server.error";
+import generateApiKey from 'generate-api-key';
+import { AppType } from "../../enums/shared";
 
 /**
  * ConsumerModel class
@@ -43,7 +45,10 @@ export class ConsumerModel {
   };
   @Expose() contact: Record<string, unknown> = {};
   @Expose() keys: Record<string, unknown> = {};
-  @Expose() apis: APIKeys | undefined;
+  @Expose() apis: APIKeys = {
+    live: "",
+    test: ""
+  };
   // / monthly usage counter
   @Expose() usage: number | undefined;
 
@@ -102,6 +107,17 @@ export class ConsumerModel {
     }
     return;
   }
+  
+  public findApiKey(env: AppType)
+    : string {
+    if (env === 'production' && this.apis) {
+      return this.apis.live;
+    } else if (env === 'test' && this.apis) {
+      return this.apis.test;
+    } else {
+      return ""
+    }
+  }
 
   /**
    * Helper class function to find one specific object based on id
@@ -128,6 +144,10 @@ export class ConsumerModel {
   public unResolveMaps(): void {
     if (this.contactData) this.contact = this.contactData.toMap();
     if (this.keyData) this.keys = this.keyData.toMap();
+  }
+  
+  public hasApiKeys(): boolean {
+    return this.apis.live.length > 1 && this.apis.test.length > 1;
   }
 
   /**
@@ -243,7 +263,7 @@ export class ConsumerModel {
       private: privateKey,
     };
     this.keyData = AuthenticateKeysData.fromJson(this.keys);
-    this.generateApiKeys(secret);
+    this.generateApiKeys();
     callback(this.keyData);
   }
 
@@ -252,25 +272,12 @@ export class ConsumerModel {
    * @param {string} secret cipher key
    * @return {void} generated api keys
    */
-  private generateApiKeys(secret: string): void {
-    const signable = {
-      "name": this.name,
-      "created": this.created,
-      "identifier": this.id,
+  public generateApiKeys(): void {
+    var key = generateApiKey({ method: 'string', min: 32, max: 32, batch: 2 }); 
+    this.apis = {
+      live: `${ApiKeyPrefix.live}${key[0]}`,
+      test: `${ApiKeyPrefix.test}${key[1]}`,
     };
-    const source = FunctionHelpers.bankidCipherString(secret,
-      JSON.stringify(signable));
-    try {
-      const cryp = FunctionHelpers.
-        changeCipherStringToModel(source);
-      this.apis = {
-        live: `${ApiKeyPrefix.live}${cryp.content}`,
-        test: `${ApiKeyPrefix.test}${cryp.iv}`,
-      };
-      this.apiKey = this.apis.live;
-    } catch (error) {
-      throw new SeverError("Failed creating credentials");
-    }
   }
 
   /**

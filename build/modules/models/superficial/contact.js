@@ -255,6 +255,15 @@ class AuthenticateKeysData {
             return;
         }
     }
+    toJson(cipherKey) {
+        var _a, _b, _c, _d;
+        if (this.public.length < 10 || (!this.private || (this.private && this.private.length < 10)))
+            return;
+        return {
+            public: (_b = (_a = this.getPublicKey(cipherKey)) === null || _a === void 0 ? void 0 : _a.toString()) !== null && _b !== void 0 ? _b : '',
+            private: (_d = (_c = this.getPrivateKey(cipherKey)) === null || _c === void 0 ? void 0 : _c.toString()) !== null && _d !== void 0 ? _d : '',
+        };
+    }
     /**
     * get document in map format
     * @return { Record<string, unknown>} returns doc map .

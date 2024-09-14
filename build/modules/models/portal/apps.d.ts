@@ -1,6 +1,5 @@
 import { AppDataSecret } from "../../interfaces/documents";
 import { AuthenticateKeysData } from "../superficial/contact";
-import { RSAKeys } from "labs-sharable";
 import { AppFrameworkType, AppType, AppVerificationStatus, ClientScope, ConsumptionType } from "../..";
 /**
  * ClientApp class
@@ -29,7 +28,10 @@ export declare class ClientApp {
      */
     urls: string[];
     scopes: ClientScope[];
-    keys: RSAKeys;
+    keys?: {
+        private?: string;
+        public: string;
+    };
     keyData: AuthenticateKeysData | undefined;
     /**
      * Change record to ClientApp class
