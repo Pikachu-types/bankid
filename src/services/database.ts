@@ -8,9 +8,10 @@ import {
   SessionData,
   SeverError,
   StandaloneBankID, EIDUserResource, VendorModel,
-  eSignature
+  eSignature,
+  UserRoles
 } from "..";
-import { LabsCipher } from "labs-sharable";
+import { LabsCipher, parseInterface } from "labs-sharable";
 import { OIDCSession } from "../modules/models/public/oidc_session";
 
 export namespace DatabaseFunctions {
@@ -753,6 +754,12 @@ export namespace DatabaseFunctions {
       }
     }
 
+    /**
+     * 
+     * @param options 
+     * @param setter default is false
+     * @returns 
+     */
     public async createOrUpdateFirebaseDocument(options: {
       docID: string,
       collectionPath: string,
@@ -831,6 +838,35 @@ export namespace DatabaseFunctions {
       return source.docs.map((e) => ConsoleUser.fromJson(e.data()))[0];
     }
 
+    public async getConsumerMember(consumer: string, email:string) {
+      const source = await this.db.
+        collection(DocumentReference.consumers).doc(consumer).collection(DocumentReference.members)
+        .where('email', '==', email).get();
+      if (source.empty) throw new SeverError(`The user with email: ${email} is not attached to organization: ${consumer}`, 400, 'invalid_request');
+      return source.docs.map((e) => parseInterface(e.data()) as ConsumerUserReference)[0];
+    }
+
+    public async retrieveConsumerMembers(consumer: string, options?: {
+      email?: string;
+      role?: UserRoles
+    }): Promise<ConsumerUserReference[]> {
+      let s;
+      if (options?.email) {
+        s = this.db.
+          collection(DocumentReference.consumers).doc(consumer).collection(DocumentReference.members)
+          .where('email', '==', options.email);
+      }else if (options?.role) {
+        s = this.db.
+          collection(DocumentReference.consumers).doc(consumer).collection(DocumentReference.members)
+          .where('role', '==', options.role);
+      } else {
+        s = this.db.
+          collection(DocumentReference.consumers).doc(consumer).collection(DocumentReference.members);
+      }
+      const source = await s.get();
+      return source.docs.map((e) => parseInterface(e.data()) as ConsumerUserReference);
+    }
+
     /**
      * Get users sessions
      * @param {string} user console user
@@ -890,8 +926,7 @@ export namespace DatabaseFunctions {
      * modify console session to database
      * @param {ConsumerUserReference} consumer console user who owns session
      * @param {SessionData} data model structure
-     * @param {boolean} create true if user model never
-     *  exists else false and we create one
+     * @param {boolean} create default is true
      * @return {Promise<void>} void.
      */
     public async modifyConsumerUserReference(consumer: ConsumerModel, data: ConsumerUserReference, create = true)
@@ -923,5 +958,6 @@ export namespace DatabaseFunctions {
       if (!exist) throw new SeverError(`Consumer with id:${consumer} does not exist`, 400, 'invalid_request');
       await ref.delete();
     }
+
   }
 }

@@ -14,9 +14,8 @@ const mts = {
 } as const;
 
 const roles = {
-  admin: "admin",
   owner: "owner",
-  editor: "editor",
+  admin: "admin",
   viewer: "viewer"
 } as const;
 

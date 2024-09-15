@@ -10,7 +10,8 @@ import { APIKeys, ConsumerServiceJSON } from "../../interfaces/documents";
 import { BankID } from "../bankid";
 import { SeverError } from "../../utils/server.error";
 import generateApiKey from 'generate-api-key';
-import { AppType } from "../../enums/shared";
+import { AppType, UserRoles } from "../../enums/shared";
+import { ConsumerUserReference } from "../portal/consoleuser";
 
 /**
  * ConsumerModel class
@@ -307,6 +308,16 @@ export class ConsumerModel {
     if (this.apis?.live === hash) return true;
     if (this.apis?.test === hash) return true;
     return false;
+  }
+
+  /**
+   * Check if user has read write privilege
+   * @param {ConsumerUserReference} user  the user in question
+   * @return {boolean} value
+   */
+  public static isaPrivilegedUser(user: ConsumerUserReference): boolean {
+    const parm: UserRoles[] = ['admin', 'owner'];
+    return parm.includes(user.role);
   }
 }
 

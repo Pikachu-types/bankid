@@ -292,6 +292,15 @@ class ConsumerModel {
             return true;
         return false;
     }
+    /**
+     * Check if user has read write privilege
+     * @param {ConsumerUserReference} user  the user in question
+     * @return {boolean} value
+     */
+    static isaPrivilegedUser(user) {
+        const parm = ['admin', 'owner'];
+        return parm.includes(user.role);
+    }
 }
 __decorate([
     (0, class_transformer_1.Expose)()

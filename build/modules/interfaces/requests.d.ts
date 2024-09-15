@@ -141,7 +141,7 @@ export interface ConsoleRegAccountRequest {
     email: string;
     debug: boolean;
     legalAccepted: boolean;
-    campaigns: boolean;
+    campaigns?: boolean;
     org: string;
     role?: string;
     naming?: {

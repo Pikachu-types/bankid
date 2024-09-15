@@ -42,6 +42,10 @@ export class ConsoleUser {
     return result;
   }
 
+  public name() {
+    return this.naming ? `${this.naming.first} ${this.naming?.last}` : "";
+  }
+
   /**
   * resolve maps for certain attributes
   * @return {void} text

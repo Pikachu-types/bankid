@@ -39,6 +39,10 @@ class ConsoleUser {
         result.resolveMaps();
         return result;
     }
+    name() {
+        var _a;
+        return this.naming ? `${this.naming.first} ${(_a = this.naming) === null || _a === void 0 ? void 0 : _a.last}` : "";
+    }
     /**
     * resolve maps for certain attributes
     * @return {void} text

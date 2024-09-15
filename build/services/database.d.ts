@@ -1,5 +1,5 @@
 import * as admin from "firebase-admin";
-import { BillingModel, ClientApp, ConsoleUser, ConsumerModel, ConsumerUserReference, DocumentAction, Documents, IdentificationModel, IdentificationRequest, InvitationRequest, PendingApprovals, Requests, SessionData, StandaloneBankID, EIDUserResource, VendorModel, eSignature } from "..";
+import { BillingModel, ClientApp, ConsoleUser, ConsumerModel, ConsumerUserReference, DocumentAction, Documents, IdentificationModel, IdentificationRequest, InvitationRequest, PendingApprovals, Requests, SessionData, StandaloneBankID, EIDUserResource, VendorModel, eSignature, UserRoles } from "..";
 import { OIDCSession } from "../modules/models/public/oidc_session";
 export declare namespace DatabaseFunctions {
     /**
@@ -303,6 +303,12 @@ export declare namespace DatabaseFunctions {
             data: VendorModel;
             cipher: string;
         }, create?: boolean): Promise<void>;
+        /**
+         *
+         * @param options
+         * @param setter default is false
+         * @returns
+         */
         createOrUpdateFirebaseDocument(options: {
             docID: string;
             collectionPath: string;
@@ -322,6 +328,11 @@ export declare namespace DatabaseFunctions {
         retrieveConsoleUsers(): Promise<ConsoleUser[]>;
         getConsoleUser(email: string): Promise<ConsoleUser>;
         resolveConsoleUser(email: string): Promise<ConsoleUser | undefined>;
+        getConsumerMember(consumer: string, email: string): Promise<ConsumerUserReference>;
+        retrieveConsumerMembers(consumer: string, options?: {
+            email?: string;
+            role?: UserRoles;
+        }): Promise<ConsumerUserReference[]>;
         /**
          * Get users sessions
          * @param {string} user console user
@@ -347,8 +358,7 @@ export declare namespace DatabaseFunctions {
          * modify console session to database
          * @param {ConsumerUserReference} consumer console user who owns session
          * @param {SessionData} data model structure
-         * @param {boolean} create true if user model never
-         *  exists else false and we create one
+         * @param {boolean} create default is true
          * @return {Promise<void>} void.
          */
         modifyConsumerUserReference(consumer: ConsumerModel, data: ConsumerUserReference, create?: boolean): Promise<void>;

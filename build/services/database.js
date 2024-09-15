@@ -736,6 +736,12 @@ var DatabaseFunctions;
                 }
             });
         }
+        /**
+         *
+         * @param options
+         * @param setter default is false
+         * @returns
+         */
         createOrUpdateFirebaseDocument(options, setter = false) {
             return __awaiter(this, void 0, void 0, function* () {
                 const query = this.db.collection(options.collectionPath).doc(options.docID);
@@ -810,6 +816,37 @@ var DatabaseFunctions;
                 return source.docs.map((e) => __1.ConsoleUser.fromJson(e.data()))[0];
             });
         }
+        getConsumerMember(consumer, email) {
+            return __awaiter(this, void 0, void 0, function* () {
+                const source = yield this.db.
+                    collection(__1.DocumentReference.consumers).doc(consumer).collection(__1.DocumentReference.members)
+                    .where('email', '==', email).get();
+                if (source.empty)
+                    throw new __1.SeverError(`The user with email: ${email} is not attached to organization: ${consumer}`, 400, 'invalid_request');
+                return source.docs.map((e) => (0, labs_sharable_1.parseInterface)(e.data()))[0];
+            });
+        }
+        retrieveConsumerMembers(consumer, options) {
+            return __awaiter(this, void 0, void 0, function* () {
+                let s;
+                if (options === null || options === void 0 ? void 0 : options.email) {
+                    s = this.db.
+                        collection(__1.DocumentReference.consumers).doc(consumer).collection(__1.DocumentReference.members)
+                        .where('email', '==', options.email);
+                }
+                else if (options === null || options === void 0 ? void 0 : options.role) {
+                    s = this.db.
+                        collection(__1.DocumentReference.consumers).doc(consumer).collection(__1.DocumentReference.members)
+                        .where('role', '==', options.role);
+                }
+                else {
+                    s = this.db.
+                        collection(__1.DocumentReference.consumers).doc(consumer).collection(__1.DocumentReference.members);
+                }
+                const source = yield s.get();
+                return source.docs.map((e) => (0, labs_sharable_1.parseInterface)(e.data()));
+            });
+        }
         /**
          * Get users sessions
          * @param {string} user console user
@@ -868,8 +905,7 @@ var DatabaseFunctions;
          * modify console session to database
          * @param {ConsumerUserReference} consumer console user who owns session
          * @param {SessionData} data model structure
-         * @param {boolean} create true if user model never
-         *  exists else false and we create one
+         * @param {boolean} create default is true
          * @return {Promise<void>} void.
          */
         modifyConsumerUserReference(consumer, data, create = true) {

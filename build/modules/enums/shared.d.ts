@@ -12,9 +12,8 @@ declare const mts: {
     readonly registration: "registration";
 };
 declare const roles: {
-    readonly admin: "admin";
     readonly owner: "owner";
-    readonly editor: "editor";
+    readonly admin: "admin";
     readonly viewer: "viewer";
 };
 declare const status: {

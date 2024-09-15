@@ -8,9 +8,8 @@ const mts = {
     registration: 'registration'
 };
 const roles = {
-    admin: "admin",
     owner: "owner",
-    editor: "editor",
+    admin: "admin",
     viewer: "viewer"
 };
 const status = {

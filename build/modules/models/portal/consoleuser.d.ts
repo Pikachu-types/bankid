@@ -27,6 +27,7 @@ export declare class ConsoleUser {
      * @return {ConsoleUser} this class
      */
     static fromJson(obj: Record<string, unknown>): ConsoleUser;
+    name(): string;
     /**
     * resolve maps for certain attributes
     * @return {void} text

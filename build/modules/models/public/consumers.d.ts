@@ -2,6 +2,7 @@ import { AuthenticateKeysData, ContactData } from "../superficial/contact";
 import { ConsoleRegAccountRequest } from "../../interfaces/requests";
 import { APIKeys, ConsumerServiceJSON } from "../../interfaces/documents";
 import { AppType } from "../../enums/shared";
+import { ConsumerUserReference } from "../portal/consoleuser";
 /**
  * ConsumerModel class
 */
@@ -125,6 +126,12 @@ export declare class ConsumerModel {
      * @return {boolean} valid or not
      */
     validateApiKey(other: string): boolean;
+    /**
+     * Check if user has read write privilege
+     * @param {ConsumerUserReference} user  the user in question
+     * @return {boolean} value
+     */
+    static isaPrivilegedUser(user: ConsumerUserReference): boolean;
 }
 /**
  * App Verification InfoModel
