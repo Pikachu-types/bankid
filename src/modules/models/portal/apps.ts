@@ -7,7 +7,7 @@ import { Generator } from "../../services/generator";
 import { FunctionHelpers } from "../../services/helper";
 import { delay, generateRandomAlphaNumeric, unixTimeStampNow } from "labs-sharable";
 import { SeverError } from "../../utils/server.error";
-import { AppFrameworkType, AppType, AppVerificationStatus, ClientScope, ConsumptionType } from "../..";
+import { AppFrameworkType, AppType, VerificationStatus, ClientScope, ConsumptionType } from "../..";
 /**
  * ClientApp class
 */
@@ -26,7 +26,7 @@ export class ClientApp {
   @Expose() appName = "";
   @Expose() type: AppType = 'test';
   @Expose() consumption?: ConsumptionType;
-  @Expose() verificationStatus: AppVerificationStatus = 'stale';
+  @Expose() verificationStatus: VerificationStatus = 'stale';
   @Expose() displayName = "";
   @Expose() lut = 0;
   @Expose() created = 0;

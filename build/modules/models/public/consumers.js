@@ -41,10 +41,8 @@ class ConsumerModel {
         this.id = "";
         this.name = "";
         this.image = "";
-        this.regNum = "";
-        this.tin = "";
         this.apiKey = "";
-        this.email = "";
+        this.email = ""; // email used to create account
         this.test = false;
         this.tier = 1;
         this.contact = {};
@@ -153,13 +151,18 @@ class ConsumerModel {
     * @param {string[]} paths add attributes you'd like to omit from the map
     * @return { Record<string, unknown>} returns doc map .
     */
-    toMap(paths) {
+    toMap(params) {
         const res = JSON.parse(this.toJsonString());
         delete res["contactData"];
         delete res["keyData"];
-        if (paths) {
-            for (let i = 0; i < paths.length; i++) {
-                delete res[paths[i]];
+        if (params && params.paths) {
+            for (let i = 0; i < params.paths.length; i++) {
+                delete res[params.paths[i]];
+            }
+        }
+        if (params && params.detailPaths && res.information) {
+            for (let i = 0; i < params.detailPaths.length; i++) {
+                delete res.information[params.detailPaths[i]];
             }
         }
         return res;
@@ -301,6 +304,21 @@ class ConsumerModel {
         const parm = ['admin', 'owner'];
         return parm.includes(user.role);
     }
+    static initiateDetails() {
+        return {
+            legalName: "",
+            domain: "",
+            rcNumber: "",
+            vat: "",
+            type: 'solopreneur',
+            description: "",
+            email: "",
+            address: "",
+            country: "",
+            industry: "",
+            status: 'stale',
+        };
+    }
 }
 __decorate([
     (0, class_transformer_1.Expose)()
@@ -311,12 +329,6 @@ __decorate([
 __decorate([
     (0, class_transformer_1.Expose)()
 ], ConsumerModel.prototype, "image", void 0);
-__decorate([
-    (0, class_transformer_1.Expose)()
-], ConsumerModel.prototype, "regNum", void 0);
-__decorate([
-    (0, class_transformer_1.Expose)()
-], ConsumerModel.prototype, "tin", void 0);
 __decorate([
     (0, class_transformer_1.Expose)()
 ], ConsumerModel.prototype, "apiKey", void 0);
@@ -338,6 +350,9 @@ __decorate([
 __decorate([
     (0, class_transformer_1.Expose)()
 ], ConsumerModel.prototype, "information", void 0);
+__decorate([
+    (0, class_transformer_1.Expose)()
+], ConsumerModel.prototype, "billing", void 0);
 __decorate([
     (0, class_transformer_1.Expose)()
 ], ConsumerModel.prototype, "stats", void 0);

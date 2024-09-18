@@ -154,6 +154,7 @@ export interface ConsumerServiceJSON {
  */
 export interface PendingInvitation {
   id: string;
+  email: string;
   invitation: string;
 };
 

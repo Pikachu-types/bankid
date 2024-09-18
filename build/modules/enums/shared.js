@@ -1,13 +1,21 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.consumptions = exports.scopes = exports.aType = exports.appT = void 0;
+exports.consumptions = exports.scopes = exports.aType = exports.appT = exports.roles = void 0;
 const mts = {
     login: 'login',
     session: 'session',
     invitation: 'invitation',
     registration: 'registration'
 };
-const roles = {
+const plans = {
+    basic: 'basic',
+    scale: 'scale',
+};
+const period = {
+    monthly: 'monthly',
+    yearly: 'yearly',
+};
+exports.roles = {
     owner: "owner",
     admin: "admin",
     viewer: "viewer"
@@ -56,4 +64,11 @@ exports.consumptions = {
     sign: "sign",
     all: "all"
 };
+const channels = strEnum(["card", "bank", "ussd", "qr", "mobile_money", "bank_transfer", "eft"]);
+function strEnum(o) {
+    return o.reduce((res, key) => {
+        res[key] = key;
+        return res;
+    }, Object.create(null));
+}
 //# sourceMappingURL=shared.js.map

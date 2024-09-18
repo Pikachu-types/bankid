@@ -1,17 +1,28 @@
 export type MagicLinkModes = keyof typeof mts;
 export type UserRoles = keyof typeof roles;
-export type AppVerificationStatus = keyof typeof status;
+export type VerificationStatus = keyof typeof status;
 export type AppFrameworkType = keyof typeof appT;
 export type AppType = keyof typeof aType;
 export type ConsumptionType = keyof typeof consumptions;
 export type ClientScope = keyof typeof scopes;
+export type SubscriptionPlan = keyof typeof plans;
+export type Period = keyof typeof period;
+export type PaymentChannels = keyof typeof channels;
 declare const mts: {
     readonly login: "login";
     readonly session: "session";
     readonly invitation: "invitation";
     readonly registration: "registration";
 };
-declare const roles: {
+declare const plans: {
+    readonly basic: "basic";
+    readonly scale: "scale";
+};
+declare const period: {
+    readonly monthly: "monthly";
+    readonly yearly: "yearly";
+};
+export declare const roles: {
     readonly owner: "owner";
     readonly admin: "admin";
     readonly viewer: "viewer";
@@ -59,5 +70,14 @@ export declare const consumptions: {
     readonly auth: "auth";
     readonly sign: "sign";
     readonly all: "all";
+};
+declare const channels: {
+    card: "card";
+    bank: "bank";
+    ussd: "ussd";
+    qr: "qr";
+    mobile_money: "mobile_money";
+    bank_transfer: "bank_transfer";
+    eft: "eft";
 };
 export {};

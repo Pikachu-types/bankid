@@ -1,6 +1,9 @@
-import { isAxiosError } from "axios";
-import { CustomError } from "labs-sharable";
+import axios, { AxiosRequestConfig, AxiosResponse, isAxiosError } from "axios";
 import { DefaultResponse } from "../interfaces/documents";
+import { SeverError } from "../utils/server.error";
+
+type HTTP_METHOD = 'POST' | 'GET' | 'DELETE' | 'PUT' | 'PATCH';
+
 
 /**
  *  Define a type alias for http calls
@@ -71,4 +74,43 @@ export const httpVastClient = async <T>(request: HttpVastCallback<T>,
   return undefined;
 }
 
-// export default {httpClient, httpVastClient};
+export async function apiRequest<T>(
+  method: HTTP_METHOD,
+  url: string,
+  param: Request
+): Promise<T> {
+  const axiosOptions = {
+    headers: param.headers
+      ? JSON.parse(JSON.stringify(param.headers))
+      : { 'Accept': 'application/json' },
+    ...((method === 'POST' || method === 'PUT' || method === 'PATCH') && { data: param.body }),
+  };
+  try {
+    const response: AxiosResponse<T> = await axios({
+      method,
+      url,
+      ...axiosOptions,
+    });
+    return response.data;
+  } catch (error) {
+    // Check if the error is an Axios error
+    if (axios.isAxiosError(error)) {
+      const statusCode = error.response?.status ?? 500;
+      const errorMessage = error.response?.data?.message || error.message;
+      throw new SeverError({
+        reason: errorMessage,
+        status: 'failed',
+        code: statusCode,
+        type: 'api_error',
+      }, statusCode);
+    }
+
+    // If the error is not Axios-specific, handle it as a generic unknown error
+    throw SeverError.handleError(error);
+  }
+}
+
+type Request = {
+  body?: Record<string, unknown>,
+  headers?: Record<string, unknown>,
+}

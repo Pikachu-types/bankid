@@ -43,6 +43,8 @@ __exportStar(require("./models/public/user_resource"), exports);
 __exportStar(require("./models/public//invitation:request"), exports);
 __exportStar(require("./models/public/documents"), exports);
 __exportStar(require("./models/portal/apps"), exports);
+__exportStar(require("./models/portal/logic"), exports);
+__exportStar(require("./models/portal/payment.request"), exports);
 __exportStar(require("./models/portal/dash_content"), exports);
 __exportStar(require("./models/portal/billing"), exports);
 __exportStar(require("./models/public/standaloneIds"), exports);

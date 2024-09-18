@@ -45,6 +45,8 @@ export interface CreateConsumerRequest {
 export interface UserInvitation {
     consumer: string;
     email: string;
+    first: string;
+    last: string;
     role: UserRoles;
     debug: boolean;
 }

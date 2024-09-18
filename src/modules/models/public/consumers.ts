@@ -10,7 +10,7 @@ import { APIKeys, ConsumerServiceJSON } from "../../interfaces/documents";
 import { BankID } from "../bankid";
 import { SeverError } from "../../utils/server.error";
 import generateApiKey from 'generate-api-key';
-import { AppType, UserRoles } from "../../enums/shared";
+import { AppType, VerificationStatus, UserRoles } from "../../enums/shared";
 import { ConsumerUserReference } from "../portal/consoleuser";
 
 /**
@@ -25,24 +25,38 @@ export class ConsumerModel {
   @Expose() id = "";
   @Expose() name = "";
   @Expose() image = "";
-  @Expose() regNum = "";
-  @Expose() tin = "";
   @Expose() apiKey = "";
-  @Expose() email = "";
+  @Expose() email = ""; // email used to create account
   @Expose() test = false;
   @Expose() created: number | undefined;
   @Expose() lut: number | undefined;
   @Expose() tier = 1;
-  @Expose() information?: ConsumerVerificationInfoModel;
+  @Expose() information?: BusinessDetails;
+  @Expose() billing?: BillingCycle;
+  /**
+   * Statistics details of usage
+   */
   @Expose() stats?: {
-    /**
-     * Monthly eSign count
-     */
-    mec: number;
-    /**
-     * Monthly auth count
-     */
-    mac: number;
+    production: {
+      /**
+       * Monthly eSign count
+       */
+      mec: number;
+      /**
+       * Monthly auth count
+       */
+      mac: number;
+    },
+    test: {
+      /**
+       * Monthly eSign count
+      */
+      mec: number;
+      /**
+       * Monthly auth count
+       */
+      mac: number;
+    }
   };
   @Expose() contact: Record<string, unknown> = {};
   @Expose() keys: Record<string, unknown> = {};
@@ -108,7 +122,7 @@ export class ConsumerModel {
     }
     return;
   }
-  
+
   public findApiKey(env: AppType)
     : string {
     if (env === 'production' && this.apis) {
@@ -146,7 +160,7 @@ export class ConsumerModel {
     if (this.contactData) this.contact = this.contactData.toMap();
     if (this.keyData) this.keys = this.keyData.toMap();
   }
-  
+
   public hasApiKeys(): boolean {
     return this.apis.live.length > 1 && this.apis.test.length > 1;
   }
@@ -164,14 +178,21 @@ export class ConsumerModel {
   * @param {string[]} paths add attributes you'd like to omit from the map
   * @return { Record<string, unknown>} returns doc map .
   */
-  public toMap(paths?:string[])
+  public toMap(params?: {
+    paths?: string[],
+    detailPaths?: string[]
+  })
     : Record<string, unknown> {
     const res = JSON.parse(this.toJsonString());
     delete res["contactData"];
     delete res["keyData"];
-    if (paths) {
-      for (let i = 0; i < paths.length; i++){
-        delete res[paths[i]];
+    if (params && params.paths) {
+      for (let i = 0; i < params.paths.length; i++) {
+        delete res[params.paths[i]];
+      }
+    } if (params && params.detailPaths && res.information) {
+      for (let i = 0; i < params.detailPaths.length; i++) {
+        delete res.information[params.detailPaths[i]];
       }
     }
     return res;
@@ -274,7 +295,7 @@ export class ConsumerModel {
    * @return {void} generated api keys
    */
   public generateApiKeys(): void {
-    var key = generateApiKey({ method: 'string', min: 32, max: 32, batch: 2 }); 
+    var key = generateApiKey({ method: 'string', min: 32, max: 32, batch: 2 });
     this.apis = {
       live: `${ApiKeyPrefix.live}${key[0]}`,
       test: `${ApiKeyPrefix.test}${key[1]}`,
@@ -293,7 +314,7 @@ export class ConsumerModel {
     }
     this.apiKey = this.apis.live;
   }
-  
+
 
   /**
    * Validate if api key is valid
@@ -319,19 +340,52 @@ export class ConsumerModel {
     const parm: UserRoles[] = ['admin', 'owner'];
     return parm.includes(user.role);
   }
+
+  public static initiateDetails(): BusinessDetails {
+    return {
+      legalName: "",
+      domain: "",
+      rcNumber: "",
+      vat: "",
+      type: 'solopreneur',
+      description: "",
+      email: "",
+      address: "",
+      country: "",
+      industry: "",
+      status: 'stale',
+    }
+  }
 }
 
-/**
- * App Verification InfoModel
- */
-export interface ConsumerVerificationInfoModel {
+export interface BusinessDetails {
   legalName: string,
   domain: string,
   rcNumber: string,
-  vat: string,
+  type: "solopreneur" | "enterprise",
+  vat?: string,
   description: string,
+  email: string,
   address: string,
-  country?: string,
-  industry?: string,
-  verified: boolean,
+  country: string,
+  industry: string,
+  status: VerificationStatus,
+}
+
+export interface BillingCycle {
+  customer: string; // if paystack - paystack_<customer id>
+  authentication?: IPlan;
+  signature?: IPlan;
+  authorization: {
+    map: Record<string, unknown>,
+    keep: string; // authorization code which we will encrypt
+  }
+}
+
+interface IPlan {
+  plan: "basic" | "scale",
+  cycle: "monthly" | "yearly",
+  next_cycle?: number; // timestamp of next billing
+  begun?: number; // timestamp when the subscription became active
+  iat: number;
 }

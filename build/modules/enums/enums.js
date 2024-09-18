@@ -70,6 +70,7 @@ var DocumentReference;
      * Operations logic collection
      */
     DocumentReference["operations"] = "ops";
+    DocumentReference["transactions"] = "transactions";
     /**
       * A request has just been handled
       */
@@ -161,6 +162,7 @@ var DocumentTypes;
      */
     DocumentTypes["session"] = "sess_";
     DocumentTypes["oidc"] = "tk_";
+    DocumentTypes["transaction"] = "trx_";
     DocumentTypes["invitation"] = "invite_";
 })(DocumentTypes = exports.DocumentTypes || (exports.DocumentTypes = {}));
 /**

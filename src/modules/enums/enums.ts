@@ -67,6 +67,7 @@ export enum DocumentReference {
    * Operations logic collection
    */
   operations = "ops",
+  transactions = "transactions",
   /**
     * A request has just been handled
     */
@@ -161,6 +162,8 @@ export enum DocumentTypes {
   session = "sess_",
 
   oidc = "tk_",
+
+  transaction = "trx_",
 
   invitation = "invite_",
 }

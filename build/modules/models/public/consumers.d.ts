@@ -1,7 +1,7 @@
 import { AuthenticateKeysData, ContactData } from "../superficial/contact";
 import { ConsoleRegAccountRequest } from "../../interfaces/requests";
 import { APIKeys, ConsumerServiceJSON } from "../../interfaces/documents";
-import { AppType } from "../../enums/shared";
+import { AppType, VerificationStatus } from "../../enums/shared";
 import { ConsumerUserReference } from "../portal/consoleuser";
 /**
  * ConsumerModel class
@@ -13,24 +13,38 @@ export declare class ConsumerModel {
     id: string;
     name: string;
     image: string;
-    regNum: string;
-    tin: string;
     apiKey: string;
     email: string;
     test: boolean;
     created: number | undefined;
     lut: number | undefined;
     tier: number;
-    information?: ConsumerVerificationInfoModel;
+    information?: BusinessDetails;
+    billing?: BillingCycle;
+    /**
+     * Statistics details of usage
+     */
     stats?: {
-        /**
-         * Monthly eSign count
-         */
-        mec: number;
-        /**
-         * Monthly auth count
-         */
-        mac: number;
+        production: {
+            /**
+             * Monthly eSign count
+             */
+            mec: number;
+            /**
+             * Monthly auth count
+             */
+            mac: number;
+        };
+        test: {
+            /**
+             * Monthly eSign count
+            */
+            mec: number;
+            /**
+             * Monthly auth count
+             */
+            mac: number;
+        };
     };
     contact: Record<string, unknown>;
     keys: Record<string, unknown>;
@@ -91,7 +105,10 @@ export declare class ConsumerModel {
     * @param {string[]} paths add attributes you'd like to omit from the map
     * @return { Record<string, unknown>} returns doc map .
     */
-    toMap(paths?: string[]): Record<string, unknown>;
+    toMap(params?: {
+        paths?: string[];
+        detailPaths?: string[];
+    }): Record<string, unknown>;
     /**
      * creates a new consumer model
      * @param {ConsoleRegAccountRequest} request organisation create requester
@@ -132,18 +149,35 @@ export declare class ConsumerModel {
      * @return {boolean} value
      */
     static isaPrivilegedUser(user: ConsumerUserReference): boolean;
+    static initiateDetails(): BusinessDetails;
 }
-/**
- * App Verification InfoModel
- */
-export interface ConsumerVerificationInfoModel {
+export interface BusinessDetails {
     legalName: string;
     domain: string;
     rcNumber: string;
-    vat: string;
+    type: "solopreneur" | "enterprise";
+    vat?: string;
     description: string;
+    email: string;
     address: string;
-    country?: string;
-    industry?: string;
-    verified: boolean;
+    country: string;
+    industry: string;
+    status: VerificationStatus;
 }
+export interface BillingCycle {
+    customer: string;
+    authentication?: IPlan;
+    signature?: IPlan;
+    authorization: {
+        map: Record<string, unknown>;
+        keep: string;
+    };
+}
+interface IPlan {
+    plan: "basic" | "scale";
+    cycle: "monthly" | "yearly";
+    next_cycle?: number;
+    begun?: number;
+    iat: number;
+}
+export {};

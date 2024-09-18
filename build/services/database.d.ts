@@ -1,6 +1,8 @@
 import * as admin from "firebase-admin";
 import { BillingModel, ClientApp, ConsoleUser, ConsumerModel, ConsumerUserReference, DocumentAction, Documents, IdentificationModel, IdentificationRequest, InvitationRequest, PendingApprovals, Requests, SessionData, StandaloneBankID, EIDUserResource, VendorModel, eSignature, UserRoles } from "..";
 import { OIDCSession } from "../modules/models/public/oidc_session";
+import { CompanyLogic } from "../modules/models/portal/logic";
+import { TransactionModel } from "../modules/models/portal/payment.request";
 export declare namespace DatabaseFunctions {
     /**
     * Database helper class
@@ -85,6 +87,9 @@ export declare namespace DatabaseFunctions {
          */
         retrieveRawIdentificationRequests(): Promise<Requests[]>;
         retrieveOIDCSessions(): Promise<OIDCSession[]>;
+        retrieveTransactions(): Promise<TransactionModel[]>;
+        findTransactionByReference(reference: string): Promise<TransactionModel>;
+        companyLogic(): Promise<CompanyLogic>;
         /**
          * Grab flow session
          * @param {string} id the identifier
@@ -329,6 +334,7 @@ export declare namespace DatabaseFunctions {
         getConsoleUser(email: string): Promise<ConsoleUser>;
         resolveConsoleUser(email: string): Promise<ConsoleUser | undefined>;
         getConsumerMember(consumer: string, email: string): Promise<ConsumerUserReference>;
+        checkConsumerMemberSilently(consumer: string, email: string): Promise<ConsumerUserReference | undefined>;
         retrieveConsumerMembers(consumer: string, options?: {
             email?: string;
             role?: UserRoles;
@@ -353,7 +359,7 @@ export declare namespace DatabaseFunctions {
         * @param {ConsoleUser} member console user model
         * @return {Promise<Record<string, unknown>[]>} returns app
         */
-        getOrganizationsForMember(member: ConsoleUser, omitted?: string[]): Promise<Record<string, unknown>[]>;
+        getOrganizationsForMember(member: ConsoleUser, omitted?: string[], detailsOmit?: string[]): Promise<Record<string, unknown>[]>;
         /**
          * modify console session to database
          * @param {ConsumerUserReference} consumer console user who owns session
@@ -363,6 +369,8 @@ export declare namespace DatabaseFunctions {
          */
         modifyConsumerUserReference(consumer: ConsumerModel, data: ConsumerUserReference, create?: boolean): Promise<void>;
         deleteApp(consumer: string, app: string): Promise<void>;
+        deleteMember(consumer: string, email: string): Promise<void>;
+        changeMemberRole(consumer: string, email: string, role: UserRoles): Promise<void>;
         deleteConsumer(consumer: string): Promise<void>;
     }
 }

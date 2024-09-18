@@ -13,6 +13,8 @@ import {
 } from "..";
 import { LabsCipher, parseInterface } from "labs-sharable";
 import { OIDCSession } from "../modules/models/public/oidc_session";
+import { CompanyLogic } from "../modules/models/portal/logic";
+import { TransactionModel } from "../modules/models/portal/payment.request";
 
 export namespace DatabaseFunctions {
 
@@ -204,6 +206,27 @@ export namespace DatabaseFunctions {
       Promise<OIDCSession[]> {
       const source = await this.db.collection(DocumentReference.sessions).get();
       return source.docs.map((e) => OIDCSession.fromJson(e.data()));
+    }
+
+    public async retrieveTransactions():
+      Promise<TransactionModel[]> {
+      const source = await this.db.collection(DocumentReference.transactions).get();
+      return source.docs.map((e) => TransactionModel.fromJson(e.data()));
+    }
+
+    public async findTransactionByReference(reference: string) {
+      const source = await this.db.
+        collection(DocumentReference.transactions)
+        .where('reference', '==', reference).get();
+      if (source.empty) throw new SeverError(`Transaction of reference - ${reference} does not exists.`, 400, 'invalid_request');
+      return source.docs.map((e) => TransactionModel.fromJson(e.data()))[0];
+    }
+
+    public async companyLogic():
+      Promise<CompanyLogic> {
+      const source = await this.db.collection(DocumentReference.operations).doc("logic").get();
+      if (!source.exists) throw new SeverError("Operations logic could not be found", 400, 'db_error');
+      return parseInterface(source.data()) as CompanyLogic;
     }
 
     /**
@@ -845,6 +868,14 @@ export namespace DatabaseFunctions {
       if (source.empty) throw new SeverError(`The user with email: ${email} is not attached to organization: ${consumer}`, 400, 'invalid_request');
       return source.docs.map((e) => parseInterface(e.data()) as ConsumerUserReference)[0];
     }
+    
+    public async checkConsumerMemberSilently(consumer: string, email: string) {
+      const source = await this.db.
+        collection(DocumentReference.consumers).doc(consumer).collection(DocumentReference.members)
+        .where('email', '==', email).get();
+      if (source.empty) return;
+      return source.docs.map((e) => parseInterface(e.data()) as ConsumerUserReference)[0];
+    }
 
     public async retrieveConsumerMembers(consumer: string, options?: {
       email?: string;
@@ -908,7 +939,7 @@ export namespace DatabaseFunctions {
     * @param {ConsoleUser} member console user model
     * @return {Promise<Record<string, unknown>[]>} returns app
     */
-    public async getOrganizationsForMember(member: ConsoleUser, omitted?: string[])
+    public async getOrganizationsForMember(member: ConsoleUser, omitted?: string[], detailsOmit?: string[])
       : Promise<Record<string, unknown>[]> {
       const getter = new Getters(this.db);
       const consumers = await getter.retrieveConsumers();
@@ -916,7 +947,7 @@ export namespace DatabaseFunctions {
       for (let i = 0; i < consumers.length; i++) {
         const org = consumers[i];
         if (member.organizations.includes(org.id)) {
-          orgs.push(org.toMap(omitted));
+          orgs.push(org.toMap({paths: omitted, detailPaths: detailsOmit}));
         }
       }
       return orgs;
@@ -948,6 +979,29 @@ export namespace DatabaseFunctions {
       const exist = (await ref.get()).exists;
       if (!exist) throw new SeverError(`App with id:${app} does not exist`, 400, 'invalid_request');
       await ref.delete();
+    }
+
+    public async deleteMember(consumer:string, email: string): Promise<void> {
+      const exist = await this.checkConsumerMemberSilently(consumer, email);
+      if (!exist) throw new SeverError(`Member by email:${email} does not exist`, 400, 'invalid_request');
+      const id = exist.id;
+      await this.db.
+        collection(DocumentReference.consumers).doc(consumer).
+        collection(DocumentReference.members).doc(id).delete();
+      return;
+    }
+
+    public async changeMemberRole(consumer:string, email: string, role: UserRoles): Promise<void> {
+      const exist = await this.checkConsumerMemberSilently(consumer, email);
+
+      if (!exist) throw new SeverError(`Member by email:${email} does not exist thus can't edit`, 400, 'invalid_request');
+      const id = exist.id;
+      await this.db.
+        collection(DocumentReference.consumers).doc(consumer).
+        collection(DocumentReference.members).doc(id).update({
+          role: role
+        });
+      return;
     }
 
     public async deleteConsumer(consumer:string): Promise<void> {

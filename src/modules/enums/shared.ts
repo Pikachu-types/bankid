@@ -1,10 +1,13 @@
 export type MagicLinkModes = keyof typeof mts;
 export type UserRoles = keyof typeof roles;
-export type AppVerificationStatus = keyof typeof status;
+export type VerificationStatus = keyof typeof status;
 export type AppFrameworkType = keyof typeof appT;
 export type AppType = keyof typeof aType;
 export type ConsumptionType = keyof typeof consumptions;
 export type ClientScope = keyof typeof scopes;
+export type SubscriptionPlan = keyof typeof plans;
+export type Period = keyof typeof period;
+export type PaymentChannels = keyof typeof channels;
 
 const mts = {
   login: 'login',
@@ -13,7 +16,17 @@ const mts = {
   registration: 'registration'
 } as const;
 
-const roles = {
+const plans = {
+  basic: 'basic',
+  scale: 'scale',
+} as const;
+
+const period = {
+  monthly: 'monthly',
+  yearly: 'yearly',
+} as const;
+
+export const roles = {
   owner: "owner",
   admin: "admin",
   viewer: "viewer"
@@ -67,3 +80,12 @@ export const consumptions = {
   sign: "sign",
   all: "all"
 } as const
+
+const channels = strEnum(["card", "bank", "ussd", "qr", "mobile_money", "bank_transfer", "eft"])
+
+function strEnum<T extends string>(o: Array<T>): { [K in T]: K } {
+  return o.reduce((res, key) => {
+    res[key] = key;
+    return res;
+  }, Object.create(null));
+}

@@ -1,6 +1,6 @@
 import { AppDataSecret } from "../../interfaces/documents";
 import { AuthenticateKeysData } from "../superficial/contact";
-import { AppFrameworkType, AppType, AppVerificationStatus, ClientScope, ConsumptionType } from "../..";
+import { AppFrameworkType, AppType, VerificationStatus, ClientScope, ConsumptionType } from "../..";
 /**
  * ClientApp class
 */
@@ -17,7 +17,7 @@ export declare class ClientApp {
     appName: string;
     type: AppType;
     consumption?: ConsumptionType;
-    verificationStatus: AppVerificationStatus;
+    verificationStatus: VerificationStatus;
     displayName: string;
     lut: number;
     created: number;

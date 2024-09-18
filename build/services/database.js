@@ -37,6 +37,7 @@ const admin = __importStar(require("firebase-admin"));
 const __1 = require("..");
 const labs_sharable_1 = require("labs-sharable");
 const oidc_session_1 = require("../modules/models/public/oidc_session");
+const payment_request_1 = require("../modules/models/portal/payment.request");
 var DatabaseFunctions;
 (function (DatabaseFunctions) {
     /**
@@ -232,6 +233,30 @@ var DatabaseFunctions;
             return __awaiter(this, void 0, void 0, function* () {
                 const source = yield this.db.collection(__1.DocumentReference.sessions).get();
                 return source.docs.map((e) => oidc_session_1.OIDCSession.fromJson(e.data()));
+            });
+        }
+        retrieveTransactions() {
+            return __awaiter(this, void 0, void 0, function* () {
+                const source = yield this.db.collection(__1.DocumentReference.transactions).get();
+                return source.docs.map((e) => payment_request_1.TransactionModel.fromJson(e.data()));
+            });
+        }
+        findTransactionByReference(reference) {
+            return __awaiter(this, void 0, void 0, function* () {
+                const source = yield this.db.
+                    collection(__1.DocumentReference.transactions)
+                    .where('reference', '==', reference).get();
+                if (source.empty)
+                    throw new __1.SeverError(`Transaction of reference - ${reference} does not exists.`, 400, 'invalid_request');
+                return source.docs.map((e) => payment_request_1.TransactionModel.fromJson(e.data()))[0];
+            });
+        }
+        companyLogic() {
+            return __awaiter(this, void 0, void 0, function* () {
+                const source = yield this.db.collection(__1.DocumentReference.operations).doc("logic").get();
+                if (!source.exists)
+                    throw new __1.SeverError("Operations logic could not be found", 400, 'db_error');
+                return (0, labs_sharable_1.parseInterface)(source.data());
             });
         }
         /**
@@ -826,6 +851,16 @@ var DatabaseFunctions;
                 return source.docs.map((e) => (0, labs_sharable_1.parseInterface)(e.data()))[0];
             });
         }
+        checkConsumerMemberSilently(consumer, email) {
+            return __awaiter(this, void 0, void 0, function* () {
+                const source = yield this.db.
+                    collection(__1.DocumentReference.consumers).doc(consumer).collection(__1.DocumentReference.members)
+                    .where('email', '==', email).get();
+                if (source.empty)
+                    return;
+                return source.docs.map((e) => (0, labs_sharable_1.parseInterface)(e.data()))[0];
+            });
+        }
         retrieveConsumerMembers(consumer, options) {
             return __awaiter(this, void 0, void 0, function* () {
                 let s;
@@ -887,7 +922,7 @@ var DatabaseFunctions;
         * @param {ConsoleUser} member console user model
         * @return {Promise<Record<string, unknown>[]>} returns app
         */
-        getOrganizationsForMember(member, omitted) {
+        getOrganizationsForMember(member, omitted, detailsOmit) {
             return __awaiter(this, void 0, void 0, function* () {
                 const getter = new Getters(this.db);
                 const consumers = yield getter.retrieveConsumers();
@@ -895,7 +930,7 @@ var DatabaseFunctions;
                 for (let i = 0; i < consumers.length; i++) {
                     const org = consumers[i];
                     if (member.organizations.includes(org.id)) {
-                        orgs.push(org.toMap(omitted));
+                        orgs.push(org.toMap({ paths: omitted, detailPaths: detailsOmit }));
                     }
                 }
                 return orgs;
@@ -930,6 +965,32 @@ var DatabaseFunctions;
                 if (!exist)
                     throw new __1.SeverError(`App with id:${app} does not exist`, 400, 'invalid_request');
                 yield ref.delete();
+            });
+        }
+        deleteMember(consumer, email) {
+            return __awaiter(this, void 0, void 0, function* () {
+                const exist = yield this.checkConsumerMemberSilently(consumer, email);
+                if (!exist)
+                    throw new __1.SeverError(`Member by email:${email} does not exist`, 400, 'invalid_request');
+                const id = exist.id;
+                yield this.db.
+                    collection(__1.DocumentReference.consumers).doc(consumer).
+                    collection(__1.DocumentReference.members).doc(id).delete();
+                return;
+            });
+        }
+        changeMemberRole(consumer, email, role) {
+            return __awaiter(this, void 0, void 0, function* () {
+                const exist = yield this.checkConsumerMemberSilently(consumer, email);
+                if (!exist)
+                    throw new __1.SeverError(`Member by email:${email} does not exist thus can't edit`, 400, 'invalid_request');
+                const id = exist.id;
+                yield this.db.
+                    collection(__1.DocumentReference.consumers).doc(consumer).
+                    collection(__1.DocumentReference.members).doc(id).update({
+                    role: role
+                });
+                return;
             });
         }
         deleteConsumer(consumer) {
