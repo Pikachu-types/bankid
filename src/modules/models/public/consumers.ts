@@ -10,7 +10,7 @@ import { APIKeys, ConsumerServiceJSON } from "../../interfaces/documents";
 import { BankID } from "../bankid";
 import { SeverError } from "../../utils/server.error";
 import generateApiKey from 'generate-api-key';
-import { AppType, VerificationStatus, UserRoles } from "../../enums/shared";
+import { AppType, VerificationStatus, UserRoles, ConsumptionType } from "../../enums/shared";
 import { ConsumerUserReference } from "../portal/consoleuser";
 
 /**
@@ -243,6 +243,24 @@ export class ConsumerModel {
     return data;
   }
 
+  public readyForProduction(consumption?: ConsumptionType): void {
+    if (!this.information) {
+      throw new SeverError(`Information about ${this.name} is required to access production products.`, 400, 'authorization_error');
+    } else if (this.information && (!(this.information.rcNumber) || !(this.information.type) || !(this.information.email))) {
+      throw new SeverError(`Some business details for ${this.name} is missing and required to process this request.`, 400, 'invalid_request');
+    } else if (!this.billing) {
+      throw new SeverError(`${this.name} does not have any valid plans attached to it at the moment. Kindly resolve this to continue into production products.`, 400, 'invalid_request');
+    } else if (this.billing && consumption && consumption === 'auth' && !(this.billing.authentication)) {
+      throw new SeverError(`${this.name} needs to have a ${productname(consumption)}  subscription plan to achieve this action.`);
+    } else if (this.billing && consumption && consumption === 'sign' && !(this.billing.signature)) {
+      throw new SeverError(`${this.name} needs to have a ${productname(consumption)}  subscription plan to achieve this action.`);
+    } else if (this.billing && consumption && consumption === 'all' && (!(this.billing.signature) && !(this.billing.signature))) {
+      throw new SeverError(`${this.name} needs to have a ${productname(consumption)}  subscription plan to achieve this action.`);
+    } else {
+      return;
+    }
+  }
+
 
   /**
    * generates consumer service json
@@ -388,4 +406,18 @@ interface IPlan {
   next_cycle?: number; // timestamp of next billing
   begun?: number; // timestamp when the subscription became active
   iat: number;
+  subscription_code?: string
+  token?: string
+}
+
+
+function productname(consumption: ConsumptionType): string {
+  switch (consumption) {
+    case 'auth':
+      return 'authentication';
+    case 'sign':
+      return 'signature';
+    case 'all':
+      return 'authentication and signature'
+  }
 }

@@ -1,7 +1,7 @@
 import { AuthenticateKeysData, ContactData } from "../superficial/contact";
 import { ConsoleRegAccountRequest } from "../../interfaces/requests";
 import { APIKeys, ConsumerServiceJSON } from "../../interfaces/documents";
-import { AppType, VerificationStatus } from "../../enums/shared";
+import { AppType, VerificationStatus, ConsumptionType } from "../../enums/shared";
 import { ConsumerUserReference } from "../portal/consoleuser";
 /**
  * ConsumerModel class
@@ -115,6 +115,7 @@ export declare class ConsumerModel {
      * @return {ConsumerModel} new Consumer
      */
     static createConsumer(request: ConsoleRegAccountRequest): ConsumerModel;
+    readyForProduction(consumption?: ConsumptionType): void;
     /**
      * generates consumer service json
      * @return {void} generated uid
@@ -179,5 +180,7 @@ interface IPlan {
     next_cycle?: number;
     begun?: number;
     iat: number;
+    subscription_code?: string;
+    token?: string;
 }
 export {};

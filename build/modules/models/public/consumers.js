@@ -211,6 +211,29 @@ class ConsumerModel {
         data.test = request.debug;
         return data;
     }
+    readyForProduction(consumption) {
+        if (!this.information) {
+            throw new server_error_1.SeverError(`Information about ${this.name} is required to access production products.`, 400, 'authorization_error');
+        }
+        else if (this.information && (!(this.information.rcNumber) || !(this.information.type) || !(this.information.email))) {
+            throw new server_error_1.SeverError(`Some business details for ${this.name} is missing and required to process this request.`, 400, 'invalid_request');
+        }
+        else if (!this.billing) {
+            throw new server_error_1.SeverError(`${this.name} does not have any valid plans attached to it at the moment. Kindly resolve this to continue into production products.`, 400, 'invalid_request');
+        }
+        else if (this.billing && consumption && consumption === 'auth' && !(this.billing.authentication)) {
+            throw new server_error_1.SeverError(`${this.name} needs to have a ${productname(consumption)}  subscription plan to achieve this action.`);
+        }
+        else if (this.billing && consumption && consumption === 'sign' && !(this.billing.signature)) {
+            throw new server_error_1.SeverError(`${this.name} needs to have a ${productname(consumption)}  subscription plan to achieve this action.`);
+        }
+        else if (this.billing && consumption && consumption === 'all' && (!(this.billing.signature) && !(this.billing.signature))) {
+            throw new server_error_1.SeverError(`${this.name} needs to have a ${productname(consumption)}  subscription plan to achieve this action.`);
+        }
+        else {
+            return;
+        }
+    }
     /**
      * generates consumer service json
      * @return {void} generated uid
@@ -369,4 +392,14 @@ __decorate([
     (0, class_transformer_1.Expose)()
 ], ConsumerModel.prototype, "usage", void 0);
 exports.ConsumerModel = ConsumerModel;
+function productname(consumption) {
+    switch (consumption) {
+        case 'auth':
+            return 'authentication';
+        case 'sign':
+            return 'signature';
+        case 'all':
+            return 'authentication and signature';
+    }
+}
 //# sourceMappingURL=consumers.js.map

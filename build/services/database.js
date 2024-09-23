@@ -510,6 +510,11 @@ var DatabaseFunctions;
                     .set(id.toMap());
             });
         }
+        /**
+         * Modify is false by default
+         * @param params
+         * @param modify
+         */
         attachUserToConsumer(params, modify = false) {
             return __awaiter(this, void 0, void 0, function* () {
                 const query = this.db.

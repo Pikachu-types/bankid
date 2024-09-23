@@ -201,8 +201,12 @@ export declare namespace DatabaseFunctions {
          * @return {Promise<void>} returns list.
          */
         createBankID(person: IdentificationModel, id: StandaloneBankID): Promise<void>;
+        /**
+         * Modify is false by default
+         * @param params
+         * @param modify
+         */
         attachUserToConsumer(params: {
-            app: string;
             org: string;
             resource: EIDUserResource;
         }, modify?: boolean): Promise<void>;

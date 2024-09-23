@@ -508,8 +508,12 @@ export namespace DatabaseFunctions {
     }
 
 
+    /**
+     * Modify is false by default
+     * @param params 
+     * @param modify 
+     */
     public async attachUserToConsumer(params: {
-      app: string,
       org: string,
       resource: EIDUserResource,
     }, modify = false)
