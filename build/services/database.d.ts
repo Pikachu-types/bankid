@@ -3,6 +3,7 @@ import { BillingModel, ClientApp, ConsoleUser, ConsumerModel, ConsumerUserRefere
 import { OIDCSession } from "../modules/models/public/oidc_session";
 import { CompanyLogic } from "../modules/models/portal/logic";
 import { TransactionModel } from "../modules/models/portal/payment.request";
+import { InvoiceModel, OverageModel } from '../modules/models/portal/invoicing';
 export declare namespace DatabaseFunctions {
     /**
     * Database helper class
@@ -376,5 +377,35 @@ export declare namespace DatabaseFunctions {
         deleteMember(consumer: string, email: string): Promise<void>;
         changeMemberRole(consumer: string, email: string, role: UserRoles): Promise<void>;
         deleteConsumer(consumer: string): Promise<void>;
+        /**
+         * Modify invoicing document
+         * @param {InvoiceModel} data the invoicing model
+         * @param {boolean} setter false by default
+         */
+        modifyConsumerInvoicing({ data, consumer }: {
+            data: InvoiceModel;
+            consumer: string;
+        }, setter?: boolean): Promise<void>;
+        /**
+         * Modify invoicing document
+         * @param {InvoiceModel} data the invoicing model
+         * @param {boolean} setter false by default
+         */
+        modifyConsumerOverage({ data, consumer }: {
+            data: OverageModel;
+            consumer: string;
+        }, setter?: boolean): Promise<void>;
+        /**
+         * Get consumers invoicing history
+         * @param {string} consumer registered is
+         * @return {Promise<InvoiceModel[]>} returns list.
+         */
+        retrieveInvoices(consumer: string): Promise<InvoiceModel[]>;
+        /**
+         * Get consumers overage history
+         * @param {string} consumer registered is
+         * @return {Promise<OverageModel[]>} returns list.
+         */
+        retrieveOverages(consumer: string): Promise<OverageModel[]>;
     }
 }

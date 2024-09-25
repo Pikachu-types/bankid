@@ -26,6 +26,11 @@ const status = {
     unverified: "unverified",
     stale: "stale",
 };
+const payment = {
+    stale: "stale",
+    paid: "paid",
+    failed: "failed",
+};
 exports.appT = {
     backend: "backend",
     frontend: "frontend",

@@ -36,6 +36,14 @@ var DocumentReference;
     DocumentReference["requests"] = "requests";
     DocumentReference["bill"] = "billing";
     /**
+     * New console business model plan invoicing
+     */
+    DocumentReference["invoicing"] = "invoicing";
+    /**
+     * Overage cost billing
+     */
+    DocumentReference["overage"] = "overage";
+    /**
      * Collection reference for console users
      * These are real persons who operate a developer-publisher
      * account with BankID

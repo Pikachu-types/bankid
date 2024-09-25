@@ -1,6 +1,7 @@
 export type MagicLinkModes = keyof typeof mts;
 export type UserRoles = keyof typeof roles;
 export type VerificationStatus = keyof typeof status;
+export type PaymentStatus = keyof typeof payment;
 export type AppFrameworkType = keyof typeof appT;
 export type AppType = keyof typeof aType;
 export type ConsumptionType = keyof typeof consumptions;
@@ -32,6 +33,11 @@ declare const status: {
     readonly waiting: "waiting";
     readonly unverified: "unverified";
     readonly stale: "stale";
+};
+declare const payment: {
+    readonly stale: "stale";
+    readonly paid: "paid";
+    readonly failed: "failed";
 };
 export declare const appT: {
     readonly backend: "backend";

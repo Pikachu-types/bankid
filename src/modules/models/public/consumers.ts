@@ -122,6 +122,15 @@ export class ConsumerModel {
     }
     return;
   }
+  
+  public static findPaystackCustomer(list: ConsumerModel[], id: string)
+    : ConsumerModel | undefined {
+    const c = "paystack_"+ id;
+    for (let i = 0; i < list.length; i++) {
+      if (list[i].billing && list[i].billing?.customer === c) return list[i];
+    }
+    return;
+  }
 
   public findApiKey(env: AppType)
     : string {

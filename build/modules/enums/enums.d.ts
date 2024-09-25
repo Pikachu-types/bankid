@@ -32,6 +32,14 @@ export declare enum DocumentReference {
     requests = "requests",
     bill = "billing",
     /**
+     * New console business model plan invoicing
+     */
+    invoicing = "invoicing",
+    /**
+     * Overage cost billing
+     */
+    overage = "overage",
+    /**
      * Collection reference for console users
      * These are real persons who operate a developer-publisher
      * account with BankID

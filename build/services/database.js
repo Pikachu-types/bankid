@@ -38,6 +38,7 @@ const __1 = require("..");
 const labs_sharable_1 = require("labs-sharable");
 const oidc_session_1 = require("../modules/models/public/oidc_session");
 const payment_request_1 = require("../modules/models/portal/payment.request");
+const invoicing_1 = require("../modules/models/portal/invoicing");
 var DatabaseFunctions;
 (function (DatabaseFunctions) {
     /**
@@ -1007,6 +1008,68 @@ var DatabaseFunctions;
                 if (!exist)
                     throw new __1.SeverError(`Consumer with id:${consumer} does not exist`, 400, 'invalid_request');
                 yield ref.delete();
+            });
+        }
+        /**
+         * Modify invoicing document
+         * @param {InvoiceModel} data the invoicing model
+         * @param {boolean} setter false by default
+         */
+        modifyConsumerInvoicing({ data, consumer }, setter = false) {
+            return __awaiter(this, void 0, void 0, function* () {
+                const query = this.db.
+                    collection(__1.DocumentReference.consumers).doc(consumer)
+                    .collection(__1.DocumentReference.invoicing).doc(data.id);
+                if (setter) {
+                    yield query.set(data.toMap());
+                }
+                else {
+                    yield query.update(data.toMap());
+                }
+            });
+        }
+        /**
+         * Modify invoicing document
+         * @param {InvoiceModel} data the invoicing model
+         * @param {boolean} setter false by default
+         */
+        modifyConsumerOverage({ data, consumer }, setter = false) {
+            return __awaiter(this, void 0, void 0, function* () {
+                const query = this.db.
+                    collection(__1.DocumentReference.consumers).doc(consumer)
+                    .collection(__1.DocumentReference.overage).doc(data.timeline);
+                if (setter) {
+                    yield query.set(data.toMap());
+                }
+                else {
+                    yield query.update(data.toMap());
+                }
+            });
+        }
+        /**
+         * Get consumers invoicing history
+         * @param {string} consumer registered is
+         * @return {Promise<InvoiceModel[]>} returns list.
+         */
+        retrieveInvoices(consumer) {
+            return __awaiter(this, void 0, void 0, function* () {
+                const source = yield this.db.
+                    collection(__1.DocumentReference.consumers).doc(consumer)
+                    .collection(__1.DocumentReference.invoicing).get();
+                return source.docs.map((e) => invoicing_1.InvoiceModel.fromJson(e.data()));
+            });
+        }
+        /**
+         * Get consumers overage history
+         * @param {string} consumer registered is
+         * @return {Promise<OverageModel[]>} returns list.
+         */
+        retrieveOverages(consumer) {
+            return __awaiter(this, void 0, void 0, function* () {
+                const source = yield this.db.
+                    collection(__1.DocumentReference.consumers).doc(consumer)
+                    .collection(__1.DocumentReference.invoicing).get();
+                return source.docs.map((e) => invoicing_1.OverageModel.fromJson(e.data()));
             });
         }
     }

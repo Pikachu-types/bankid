@@ -1,6 +1,7 @@
 export type MagicLinkModes = keyof typeof mts;
 export type UserRoles = keyof typeof roles;
 export type VerificationStatus = keyof typeof status;
+export type PaymentStatus = keyof typeof payment;
 export type AppFrameworkType = keyof typeof appT;
 export type AppType = keyof typeof aType;
 export type ConsumptionType = keyof typeof consumptions;
@@ -37,6 +38,12 @@ const status = {
   waiting : "waiting",
   unverified : "unverified",
   stale : "stale",
+} as const
+
+const payment = {
+  stale : "stale",
+  paid : "paid",
+  failed : "failed",
 } as const
 
 export const appT = {

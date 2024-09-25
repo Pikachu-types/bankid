@@ -80,6 +80,7 @@ export declare class ConsumerModel {
      * @return {ConsumerModel | undefined} found object else undefined
      */
     static findOne(list: ConsumerModel[], id: string): ConsumerModel | undefined;
+    static findPaystackCustomer(list: ConsumerModel[], id: string): ConsumerModel | undefined;
     findApiKey(env: AppType): string;
     /**
      * Helper class function to find one specific object based on id

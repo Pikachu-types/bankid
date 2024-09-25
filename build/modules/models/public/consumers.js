@@ -99,6 +99,15 @@ class ConsumerModel {
         }
         return;
     }
+    static findPaystackCustomer(list, id) {
+        var _a;
+        const c = "paystack_" + id;
+        for (let i = 0; i < list.length; i++) {
+            if (list[i].billing && ((_a = list[i].billing) === null || _a === void 0 ? void 0 : _a.customer) === c)
+                return list[i];
+        }
+        return;
+    }
     findApiKey(env) {
         if (env === 'production' && this.apis) {
             return this.apis.live;

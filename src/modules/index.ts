@@ -28,6 +28,7 @@ export * from "./models/public//invitation:request";
 export * from "./models/public/documents";
 export * from "./models/portal/apps";
 export * from "./models/portal/logic";
+export * from "./models/portal/invoicing";
 export * from "./models/portal/payment.request";
 export * from "./models/portal/dash_content";
 export * from "./models/portal/billing";

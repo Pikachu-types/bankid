@@ -15,6 +15,7 @@ import { LabsCipher, parseInterface } from "labs-sharable";
 import { OIDCSession } from "../modules/models/public/oidc_session";
 import { CompanyLogic } from "../modules/models/portal/logic";
 import { TransactionModel } from "../modules/models/portal/payment.request";
+import { InvoiceModel, OverageModel } from '../modules/models/portal/invoicing';
 
 export namespace DatabaseFunctions {
 
@@ -1015,6 +1016,72 @@ export namespace DatabaseFunctions {
       const exist = (await ref.get()).exists;
       if (!exist) throw new SeverError(`Consumer with id:${consumer} does not exist`, 400, 'invalid_request');
       await ref.delete();
+    }
+
+    /**
+     * Modify invoicing document
+     * @param {InvoiceModel} data the invoicing model
+     * @param {boolean} setter false by default
+     */
+    public async modifyConsumerInvoicing({ data, consumer }: {
+      data: InvoiceModel;
+      consumer: string;
+    }, setter = false)
+      : Promise<void> {
+      const query = this.db.
+        collection(DocumentReference.consumers).doc(consumer)
+        .collection(DocumentReference.invoicing).doc(data.id);
+      if (setter) {
+        await query.set(data.toMap());
+      } else {
+        await query.update(data.toMap());
+      }
+    }
+    
+    /**
+     * Modify invoicing document
+     * @param {InvoiceModel} data the invoicing model
+     * @param {boolean} setter false by default
+     */
+    public async modifyConsumerOverage({ data, consumer }: {
+      data: OverageModel;
+      consumer: string;
+    }, setter = false)
+      : Promise<void> {
+      const query = this.db.
+        collection(DocumentReference.consumers).doc(consumer)
+        .collection(DocumentReference.overage).doc(data.timeline);
+      if (setter) {
+        await query.set(data.toMap());
+      } else {
+        await query.update(data.toMap());
+      }
+    }
+
+    /**
+     * Get consumers invoicing history
+     * @param {string} consumer registered is
+     * @return {Promise<InvoiceModel[]>} returns list.
+     */
+    public async retrieveInvoices(consumer: string):
+      Promise<InvoiceModel[]> {
+      const source = await this.db.
+        collection(DocumentReference.consumers).doc(consumer)
+        .collection(DocumentReference.invoicing).get();
+      return source.docs.map((e) => InvoiceModel.fromJson(e.data()));
+    }
+
+    /**
+     * Get consumers overage history
+     * @param {string} consumer registered is
+     * @return {Promise<OverageModel[]>} returns list.
+     */
+    public async retrieveOverages(consumer: string):
+      Promise<OverageModel[]> {
+      const source = await this.db.
+        collection(DocumentReference.consumers).doc(consumer)
+        .collection(DocumentReference.invoicing).get();
+      return source.docs.map((e) => OverageModel.fromJson(e.data()));
     }
 
   }

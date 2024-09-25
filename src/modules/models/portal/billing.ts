@@ -1,5 +1,5 @@
 import { plainToInstance, Expose } from "class-transformer";
-import { CustomError, convertUnixToDate, unixTimeStampNow } from "labs-sharable";
+import { convertUnixToDate, unixTimeStampNow } from "labs-sharable";
 import { SeverError } from "../../utils/server.error";
 
 // <100 calls are free each month
