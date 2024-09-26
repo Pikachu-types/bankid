@@ -400,6 +400,7 @@ export interface BusinessDetails {
 }
 
 export interface BillingCycle {
+  domain: "test" | "live";
   customer: string; // if paystack - paystack_<customer id>
   authentication?: IPlan;
   signature?: IPlan;

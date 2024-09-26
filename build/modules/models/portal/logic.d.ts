@@ -7,7 +7,7 @@ export interface Billing {
     authentication: TPlan[];
     signature: TPlan[];
 }
-interface TPlan {
+export interface TPlan {
     name: string;
     min: number;
     price: number;

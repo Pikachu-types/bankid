@@ -9,7 +9,7 @@ export interface Billing {
   signature: TPlan[];
 }
 
-interface TPlan {
+export interface TPlan {
   name: string;
   min: number;
   price: number;

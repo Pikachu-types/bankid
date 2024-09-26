@@ -167,6 +167,7 @@ export interface BusinessDetails {
     status: VerificationStatus;
 }
 export interface BillingCycle {
+    domain: "test" | "live";
     customer: string;
     authentication?: IPlan;
     signature?: IPlan;

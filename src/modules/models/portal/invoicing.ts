@@ -5,7 +5,7 @@ import { convertUnixToDate, unixTimeStampNow } from "labs-sharable";
 
 type BillItem = {
   charge: number,
-  count: number
+  count: number,
 }
 
 /**
@@ -20,16 +20,15 @@ export class OverageModel {
   @Expose() total = 0;
   @Expose() paid_at = 0;
   @Expose() timeline = "";
+  @Expose() id = "";
+  @Expose() type: "authentication" | "signature" = 'authentication';
   @Expose() instrument: {
     reference: string;
     provider: string;
-    obj?: any
+    obj?: Record<string, unknown>
   } | undefined;
   @Expose() lut: number | undefined;
-  @Expose() items: {
-    authentication?: BillItem,
-    signature?: BillItem
-  } = {};
+  @Expose() items: BillItem[] = [];
 
   /**
    * Change record to OverageModel class

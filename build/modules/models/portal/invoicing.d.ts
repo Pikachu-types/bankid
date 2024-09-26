@@ -14,16 +14,15 @@ export declare class OverageModel {
     total: number;
     paid_at: number;
     timeline: string;
+    id: string;
+    type: "authentication" | "signature";
     instrument: {
         reference: string;
         provider: string;
-        obj?: any;
+        obj?: Record<string, unknown>;
     } | undefined;
     lut: number | undefined;
-    items: {
-        authentication?: BillItem;
-        signature?: BillItem;
-    };
+    items: BillItem[];
     /**
      * Change record to OverageModel class
      *

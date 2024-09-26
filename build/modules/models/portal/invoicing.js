@@ -23,7 +23,9 @@ class OverageModel {
         this.total = 0;
         this.paid_at = 0;
         this.timeline = "";
-        this.items = {};
+        this.id = "";
+        this.type = 'authentication';
+        this.items = [];
     }
     /**
      * Change record to OverageModel class
@@ -99,6 +101,12 @@ __decorate([
 __decorate([
     (0, class_transformer_1.Expose)()
 ], OverageModel.prototype, "timeline", void 0);
+__decorate([
+    (0, class_transformer_1.Expose)()
+], OverageModel.prototype, "id", void 0);
+__decorate([
+    (0, class_transformer_1.Expose)()
+], OverageModel.prototype, "type", void 0);
 __decorate([
     (0, class_transformer_1.Expose)()
 ], OverageModel.prototype, "instrument", void 0);
