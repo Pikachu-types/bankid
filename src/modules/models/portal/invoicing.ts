@@ -107,6 +107,7 @@ export class InvoiceModel {
   /* eslint new-cap: ["error", { "capIsNew": false }]*/
   @Expose() status: PaymentStatus = 'stale';
   @Expose() id = "";
+  @Expose() trxRef = "";
   @Expose() mode: "authentication" | "signature" = 'authentication';
   @Expose() lut = 0;
   /**
@@ -116,6 +117,7 @@ export class InvoiceModel {
   @Expose() paid_at = 0;
   @Expose() period_start = 0;
   @Expose() period_end = 0;
+  @Expose() next_cycle = 0;
 
   /**
    * Change record to InvoiceModel class

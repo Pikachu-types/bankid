@@ -1084,5 +1084,26 @@ export namespace DatabaseFunctions {
       return source.docs.map((e) => OverageModel.fromJson(e.data()));
     }
 
+    public async findInvoiceWithReference({ reference, consumer }: {
+      reference: string;
+      consumer: string;
+    }) {
+      const source = await this.db.
+        collection(DocumentReference.consumers).doc(consumer).collection(DocumentReference.invoicing)
+        .where('trxRef', '==', reference).get();
+      if (source.empty) return;
+      return source.docs.map((e) => InvoiceModel.fromJson(e.data()))[0];
+    }
+
+    public async findInvoiceWithCode({ code, consumer }: {
+      code: string;
+      consumer: string;
+    }) {
+      const source = await this.db.
+        collection(DocumentReference.consumers).doc(consumer).collection(DocumentReference.invoicing)
+        .where('id', '==', code).get();
+      if (source.empty) return;
+      return source.docs.map((e) => InvoiceModel.fromJson(e.data()))[0];
+    }
   }
 }

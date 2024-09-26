@@ -1072,6 +1072,26 @@ var DatabaseFunctions;
                 return source.docs.map((e) => invoicing_1.OverageModel.fromJson(e.data()));
             });
         }
+        findInvoiceWithReference({ reference, consumer }) {
+            return __awaiter(this, void 0, void 0, function* () {
+                const source = yield this.db.
+                    collection(__1.DocumentReference.consumers).doc(consumer).collection(__1.DocumentReference.invoicing)
+                    .where('trxRef', '==', reference).get();
+                if (source.empty)
+                    return;
+                return source.docs.map((e) => invoicing_1.InvoiceModel.fromJson(e.data()))[0];
+            });
+        }
+        findInvoiceWithCode({ code, consumer }) {
+            return __awaiter(this, void 0, void 0, function* () {
+                const source = yield this.db.
+                    collection(__1.DocumentReference.consumers).doc(consumer).collection(__1.DocumentReference.invoicing)
+                    .where('id', '==', code).get();
+                if (source.empty)
+                    return;
+                return source.docs.map((e) => invoicing_1.InvoiceModel.fromJson(e.data()))[0];
+            });
+        }
     }
     DatabaseFunctions.ConsoleUI = ConsoleUI;
 })(DatabaseFunctions = exports.DatabaseFunctions || (exports.DatabaseFunctions = {}));

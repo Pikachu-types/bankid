@@ -407,5 +407,13 @@ export declare namespace DatabaseFunctions {
          * @return {Promise<OverageModel[]>} returns list.
          */
         retrieveOverages(consumer: string): Promise<OverageModel[]>;
+        findInvoiceWithReference({ reference, consumer }: {
+            reference: string;
+            consumer: string;
+        }): Promise<InvoiceModel | undefined>;
+        findInvoiceWithCode({ code, consumer }: {
+            code: string;
+            consumer: string;
+        }): Promise<InvoiceModel | undefined>;
     }
 }

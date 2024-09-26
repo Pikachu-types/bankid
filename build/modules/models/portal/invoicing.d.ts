@@ -64,6 +64,7 @@ export declare class OverageModel {
 export declare class InvoiceModel {
     status: PaymentStatus;
     id: string;
+    trxRef: string;
     mode: "authentication" | "signature";
     lut: number;
     /**
@@ -73,6 +74,7 @@ export declare class InvoiceModel {
     paid_at: number;
     period_start: number;
     period_end: number;
+    next_cycle: number;
     /**
      * Change record to InvoiceModel class
      *

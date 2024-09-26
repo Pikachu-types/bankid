@@ -114,6 +114,7 @@ class InvoiceModel {
         /* eslint new-cap: ["error", { "capIsNew": false }]*/
         this.status = 'stale';
         this.id = "";
+        this.trxRef = "";
         this.mode = 'authentication';
         this.lut = 0;
         /**
@@ -123,6 +124,7 @@ class InvoiceModel {
         this.paid_at = 0;
         this.period_start = 0;
         this.period_end = 0;
+        this.next_cycle = 0;
     }
     /**
      * Change record to InvoiceModel class
@@ -165,6 +167,9 @@ __decorate([
 ], InvoiceModel.prototype, "id", void 0);
 __decorate([
     (0, class_transformer_1.Expose)()
+], InvoiceModel.prototype, "trxRef", void 0);
+__decorate([
+    (0, class_transformer_1.Expose)()
 ], InvoiceModel.prototype, "mode", void 0);
 __decorate([
     (0, class_transformer_1.Expose)()
@@ -181,6 +186,9 @@ __decorate([
 __decorate([
     (0, class_transformer_1.Expose)()
 ], InvoiceModel.prototype, "period_end", void 0);
+__decorate([
+    (0, class_transformer_1.Expose)()
+], InvoiceModel.prototype, "next_cycle", void 0);
 exports.InvoiceModel = InvoiceModel;
 function mYYYY(date) {
     return `${date.getMonth() + 1}-${date.getFullYear()}`;
