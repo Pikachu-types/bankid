@@ -18,7 +18,10 @@ export interface DefaultResponseAndStatus {
 }
 export declare const httpClient: (request: HttpCallback, onError?: MessageCallback) => Promise<DefaultResponseAndStatus | undefined>;
 export declare const httpVastClient: <T>(request: HttpVastCallback<T>, onError?: MessageCallback) => Promise<T | undefined>;
-export declare function apiRequest<T>(method: HTTP_METHOD, url: string, param: Request): Promise<T>;
+export declare function apiRequest<T>(method: HTTP_METHOD, url: string, param: Request): Promise<{
+    data: T;
+    statusCode: number;
+}>;
 type Request = {
     body?: Record<string, unknown>;
     headers?: Record<string, unknown>;

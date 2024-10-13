@@ -8,13 +8,31 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.MicroServiceBackendAxios = void 0;
-const axios_1 = __importDefault(require("axios"));
 const modules_1 = require("../modules");
+const endpoints = {
+    identification: {
+        same: "/identification/same",
+        different: "/identification/different",
+        wildcard: "/identification/wildcard"
+    },
+    signature: {
+        same: "/signing/same",
+        different: "/signing/different",
+        wildcard: "/signing/wildcard",
+        doc: "/signing/document"
+    },
+    flow: {
+        authorize: "/authenticate",
+        cancel: "/flow/cancel",
+        ping: "/flow/ping",
+    },
+    logic: {
+        usage: "/reporting",
+        billing: "/billing/validate"
+    }
+};
 /**
  * Helper class to handle all needed api communication between
  * our micro-services and the main backend
@@ -26,314 +44,116 @@ class MicroServiceBackendAxios {
      * @param {string} appkey microservice identifier
      */
     constructor(dbURI, appkey) {
-        this.authorizationEndpoint = "/authenticate";
-        this.webIDEndpoint = "/identification/different";
-        this.mobileIDEndpoint = "/identification/same";
-        this.mobileSignatureEndpoint = "/signing/same";
-        this.webSignatureEndpoint = "/signing/different";
-        this.pingEndpoint = "/flow/ping";
-        this.cancellationEndpoint = "/flow/cancel";
-        this.wildcardIdentificationEndpoint = "/identification/wildcard";
-        this.wildcardSignatureEndpoint = "/signing/wildcard";
-        this.documentSigningEndpoint = "/signing/document";
-        this.useReportEndpoint = "/reporting";
         this.db = dbURI;
         this.app = appkey;
     }
     /**
-     * Grant api authorization to consumer app
-     * @param {AuthorizationGrantRequest} request data map of request
-     * @param {MessageCallback} onError get feedback on any error logs
-     * @param {string} version what api version would you want to interface with
-     * @return {Promise<DefaultResponseAndStatus>} returns response.
+     * Builds a request to the backend
+     * @param {string} url
+     * @param {Record<string, string>} headers
+     * @param {Record<string, unknown>} body
+     * @param {string} method
+     * @returns {Promise<AxiosResponse<any, any>>}
      */
-    clientAuthorization(request, onError, version = "v1") {
+    requestBuilder({ url, headers, body, method, version }) {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield (0, modules_1.httpClient)(() => __awaiter(this, void 0, void 0, function* () {
-                let query = `sub=${request.sub}&app=${request.app}` +
-                    `&apikey=${request.apikey}&secret=${request.secret}`;
-                if (request.token) {
-                    query = query + `&old=${request.token}`;
-                }
-                const url = `${this.db.replace("[version]", version)}${this.authorizationEndpoint}/?${query}`;
-                const { data, status } = yield axios_1.default.get(url, {
-                    headers: {
-                        'Accept': 'application/json',
-                        'x-requested-with': this.app
-                    }
-                });
-                return {
-                    response: data,
-                    status: status,
-                };
-            }), onError);
+            return yield (0, modules_1.apiRequest)(method !== null && method !== void 0 ? method : 'POST', `${this.db.replace("[version]", version)}${url}`, {
+                headers,
+                body
+            });
+        });
+    }
+    authorization(request, version = "v1") {
+        return __awaiter(this, void 0, void 0, function* () {
+            let query = `sub=${request.sub}&app=${request.app}` +
+                `&apikey=${request.apikey}&secret=${request.secret}`;
+            if (request.token) {
+                query = query + `&old=${request.token}`;
+            }
+            return yield this.requestBuilder({
+                url: endpoints.flow.authorize + `/?${query}`,
+                version: version,
+                headers: {
+                    'Accept': 'application/json',
+                    'x-requested-with': this.app
+                },
+                method: "GET",
+            });
+        });
+    }
+    identification(request, mode, version = "v1") {
+        var _a, _b, _c;
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield this.requestBuilder({
+                url: endpoints.identification[mode],
+                version: version,
+                headers: {
+                    'Accept': 'application/json',
+                    'x-requested-with': this.app,
+                    'x-access-token': (_a = request.token) !== null && _a !== void 0 ? _a : '',
+                    'x-api-key': (_b = request.apikey) !== null && _b !== void 0 ? _b : '',
+                    'x-access-secret': (_c = request.secret) !== null && _c !== void 0 ? _c : '',
+                },
+                method: "POST",
+                body: (0, modules_1.parseInterface)(request)
+            });
+        });
+    }
+    flow(request, mode, version = "v1") {
+        var _a, _b, _c;
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield this.requestBuilder({
+                url: endpoints.flow[mode],
+                version: version,
+                headers: {
+                    'Accept': 'application/json',
+                    'x-requested-with': this.app,
+                    'x-access-token': (_a = request.token) !== null && _a !== void 0 ? _a : '',
+                    'x-api-key': (_b = request.apikey) !== null && _b !== void 0 ? _b : '',
+                    'x-access-secret': (_c = request.secret) !== null && _c !== void 0 ? _c : '',
+                },
+                method: "POST",
+                body: (0, modules_1.parseInterface)(request)
+            });
         });
     }
     /**
-     * Identification flow db backend caller
-     * @param {IdentificationFlowRequest} request data map of request
-     * @param {MessageCallback} onError get feedback on any error logs
-     * @param {string} version what api version would you want to interface with
-     * @return {Promise<DefaultResponseAndStatus>} returns response.
+     * PS - Wildcard signature does not have a v1
+     * @param request
+     * @param mode
+     * @param version
+     * @returns
      */
-    identificationFlow(request, onError, version = "v1") {
+    signature(request, mode, version = "v1") {
+        var _a, _b, _c;
         return __awaiter(this, void 0, void 0, function* () {
-            return yield (0, modules_1.httpClient)(() => __awaiter(this, void 0, void 0, function* () {
-                const url = `${this.db.replace("[version]", version)}${this.webIDEndpoint}`;
-                const { data, status } = yield axios_1.default.post(url, JSON.parse(JSON.stringify(request)), {
-                    headers: {
-                        'Accept': 'application/json',
-                        'x-requested-with': this.app,
-                        'x-access-token': request.token,
-                        'x-api-key': request.apikey,
-                        'x-access-secret': request.secret,
-                    },
-                });
-                return {
-                    response: data,
-                    status: status,
-                };
-            }), onError);
+            return yield this.requestBuilder({
+                url: endpoints.signature[mode],
+                version: version,
+                headers: {
+                    'Accept': 'application/json',
+                    'x-requested-with': this.app,
+                    'x-access-token': (_a = request.token) !== null && _a !== void 0 ? _a : '',
+                    'x-api-key': (_b = request.apikey) !== null && _b !== void 0 ? _b : '',
+                    'x-access-secret': (_c = request.secret) !== null && _c !== void 0 ? _c : '',
+                },
+                method: "POST",
+                body: (0, modules_1.parseInterface)(request)
+            });
         });
     }
-    /**
-     * Identification flow for same devices db backend caller
-     * @param {IdentificationFlowRequest} request data map of request
-     * @param {MessageCallback} onError get feedback on any error logs
-     * @param {string} version what api version would you want to interface. [note: do not use v1]
-     * @return {Promise<DefaultResponseAndStatus>} returns response.
-     */
-    mobIdentificationFlow(request, onError, version = "v1") {
+    logic(request, mode) {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield (0, modules_1.httpClient)(() => __awaiter(this, void 0, void 0, function* () {
-                const url = `${this.db.replace("[version]", version)}${this.mobileIDEndpoint}`;
-                const { data, status } = yield axios_1.default.post(url, JSON.parse(JSON.stringify(request)), {
-                    headers: {
-                        'Accept': 'application/json',
-                        'x-requested-with': this.app,
-                        'x-access-token': request.token,
-                        'x-api-key': request.apikey,
-                        'x-access-secret': request.secret,
-                    },
-                });
-                return {
-                    response: data,
-                    status: status,
-                };
-            }), onError);
-        });
-    }
-    /**
-     * Signature flow for same devices db backend caller
-     * @param {SignatureFlowRequest} request data map of request
-     * @param {MessageCallback} onError get feedback on any error logs
-     * @param {string} version what api version would you want to interface. [note: do not use v1]
-     * @return {Promise<DefaultResponseAndStatus>} returns response.
-     */
-    mobSignatureFlow(request, onError, version = "v1") {
-        return __awaiter(this, void 0, void 0, function* () {
-            return yield (0, modules_1.httpClient)(() => __awaiter(this, void 0, void 0, function* () {
-                const url = `${this.db.replace("[version]", version)}${this.mobileSignatureEndpoint}`;
-                const { data, status } = yield axios_1.default.post(url, JSON.parse(JSON.stringify(request)), {
-                    headers: {
-                        'Accept': 'application/json',
-                        'x-requested-with': this.app,
-                        'x-access-token': request.token,
-                        'x-api-key': request.apikey,
-                        'x-access-secret': request.secret,
-                    },
-                });
-                return {
-                    response: data,
-                    status: status,
-                };
-            }), onError);
-        });
-    }
-    /**
-     * Signature flow for a wildcard audience db backend caller
-     * @param {SignatureFlowRequest} request data map of request
-     * @param {MessageCallback} onError get feedback on any error logs
-     * @param {string} version what api version would you want to interface. [note: do not use v1]
-     * @return {Promise<DefaultResponseAndStatus>} returns response.
-     */
-    wildcardSignatureFlow(request, onError, version = "v2" // no v1
-    ) {
-        return __awaiter(this, void 0, void 0, function* () {
-            return yield (0, modules_1.httpClient)(() => __awaiter(this, void 0, void 0, function* () {
-                const url = `${this.db.replace("[version]", version)}${this.wildcardSignatureEndpoint}`;
-                const { data, status } = yield axios_1.default.post(url, JSON.parse(JSON.stringify(request)), {
-                    headers: {
-                        'Accept': 'application/json',
-                        'x-requested-with': this.app,
-                        'x-access-token': request.token,
-                        'x-api-key': request.apikey,
-                        'x-access-secret': request.secret,
-                    },
-                });
-                return {
-                    response: data,
-                    status: status,
-                };
-            }), onError);
-        });
-    }
-    /**
-     * Cancel a flow db backend caller
-     * @param {CancelFlowRequest} request data map of request
-     * @param {MessageCallback} onError get feedback on any error logs
-     * @param {string} version what api version would you want to interface
-     * @return {Promise<DefaultResponseAndStatus>} returns response.
-     */
-    cancelFlow(request, onError, version = "v1") {
-        return __awaiter(this, void 0, void 0, function* () {
-            return yield (0, modules_1.httpClient)(() => __awaiter(this, void 0, void 0, function* () {
-                const url = `${this.db.replace("[version]", version)}${this.cancellationEndpoint}`;
-                const { data, status } = yield axios_1.default.post(url, JSON.parse(JSON.stringify(request)), {
-                    headers: {
-                        'Accept': 'application/json',
-                        'x-requested-with': this.app,
-                        'x-access-token': request.token,
-                        'x-api-key': request.apikey,
-                        'x-access-secret': request.secret,
-                    },
-                });
-                return {
-                    response: data,
-                    status: status,
-                };
-            }), onError);
-        });
-    }
-    /**
-     * Ping a flow db backend caller
-     * @param {PingFlowRequest} request data map of request
-     * @param {MessageCallback} onError get feedback on any error logs
-     * @param {string} version what api version would you want to interface.
-     * @return {Promise<DefaultResponseAndStatus>} returns response.
-     */
-    pingFlow(request, onError, version = "v1") {
-        return __awaiter(this, void 0, void 0, function* () {
-            return yield (0, modules_1.httpClient)(() => __awaiter(this, void 0, void 0, function* () {
-                const url = `${this.db.replace("[version]", version)}${this.pingEndpoint}`;
-                const { data, status } = yield axios_1.default.post(url, JSON.parse(JSON.stringify(request)), {
-                    headers: {
-                        'Accept': 'application/json',
-                        'x-requested-with': this.app,
-                        'x-access-token': request.token,
-                        'x-api-key': request.apikey,
-                        'x-access-secret': request.secret,
-                    },
-                });
-                return {
-                    response: data,
-                    status: status,
-                };
-            }), onError);
-        });
-    }
-    /**
-     * Signature flow db backend caller
-     * @param {SignatureFlowRequest} request data map of request
-     * @param {MessageCallback} onError get feedback on any error logs
-     * @param {string} version what api version would you want to interface with
-     * @return {Promise<DefaultResponseAndStatus>} returns response.
-     */
-    signatureFlow(request, onError, version = "v1") {
-        return __awaiter(this, void 0, void 0, function* () {
-            return yield (0, modules_1.httpClient)(() => __awaiter(this, void 0, void 0, function* () {
-                const url = `${this.db.replace("[version]", version)}${this.webSignatureEndpoint}`;
-                const { data, status } = yield axios_1.default.post(url, JSON.parse(JSON.stringify(request)), {
-                    headers: {
-                        'Accept': 'application/json',
-                        'x-requested-with': this.app,
-                        'x-access-token': request.token,
-                        'x-api-key': request.apikey,
-                        'x-access-secret': request.secret,
-                    },
-                });
-                return {
-                    response: data,
-                    status: status,
-                };
-            }), onError);
-        });
-    }
-    /**
-     * Wildcard flow db backend caller
-     * @param {IdentificationFlowRequest} request data map of request
-     * @param {MessageCallback} onError get feedback on any error logs
-     * @param {string} version what api version would you want to interface with
-     * @return {Promise<DefaultResponseAndStatus>} returns response.
-     */
-    wildCardIdentificationFlow(request, onError, version = "v1") {
-        return __awaiter(this, void 0, void 0, function* () {
-            return yield (0, modules_1.httpClient)(() => __awaiter(this, void 0, void 0, function* () {
-                const url = `${this.db.replace("[version]", version)}${this.wildcardIdentificationEndpoint}`;
-                const { data, status } = yield axios_1.default.post(url, JSON.parse(JSON.stringify(request)), {
-                    headers: {
-                        'Accept': 'application/json',
-                        'x-requested-with': this.app,
-                        'x-access-token': request.token,
-                        'x-api-key': request.apikey,
-                        'x-access-secret': request.secret,
-                    },
-                });
-                return {
-                    response: data,
-                    status: status,
-                };
-            }), onError);
-        });
-    }
-    /**
-     * Document signing flow db backend caller
-     * @param {eDocSignRequests} request data map of request
-     * @param {MessageCallback} onError get feedback on any error logs
-     * @param {string} version what api version would you want to interface with
-     * @return {Promise<DefaultResponseAndStatus>} returns response.
-     */
-    documentSigningFlow(request, onError, version = "v1") {
-        return __awaiter(this, void 0, void 0, function* () {
-            return yield (0, modules_1.httpClient)(() => __awaiter(this, void 0, void 0, function* () {
-                const url = `${this.db.replace("[version]", version)}${this.documentSigningEndpoint}`;
-                const { data, status } = yield axios_1.default.post(url, JSON.parse(JSON.stringify(request)), {
-                    headers: {
-                        'Accept': 'application/json',
-                        'x-requested-with': this.app,
-                        'x-access-token': request.token,
-                        'x-api-key': request.apikey,
-                        'x-access-secret': request.secret,
-                    },
-                });
-                return {
-                    response: data,
-                    status: status,
-                };
-            }), onError);
-        });
-    }
-    /**
-     * Document signing flow db backend caller
-     * @param {UsageRecording} request data map of request
-     * @param {MessageCallback} onError get feedback on any error logs
-     * @return {Promise<DefaultResponseAndStatus>} returns response.
-     */
-    logApiUsage(request, onError) {
-        return __awaiter(this, void 0, void 0, function* () {
-            return yield (0, modules_1.httpClient)(() => __awaiter(this, void 0, void 0, function* () {
-                const url = `${this.db.replace("[version]", "v2")}${this.useReportEndpoint}`;
-                const { data, status } = yield axios_1.default.post(url, JSON.parse(JSON.stringify(request)), {
-                    headers: {
-                        'Accept': 'application/json',
-                        'x-requested-with': this.app,
-                    },
-                });
-                return {
-                    response: data,
-                    status: status,
-                };
-            }), onError);
+            return yield this.requestBuilder({
+                url: endpoints.logic[mode],
+                version: "v2",
+                headers: {
+                    'Accept': 'application/json',
+                    'x-requested-with': this.app,
+                },
+                method: "POST",
+                body: (0, modules_1.parseInterface)(request)
+            });
         });
     }
 }

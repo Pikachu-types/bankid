@@ -14,6 +14,9 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.ClientApp = void 0;
 const class_transformer_1 = require("class-transformer");
@@ -24,6 +27,7 @@ const generator_1 = require("../../services/generator");
 const helper_1 = require("../../services/helper");
 const labs_sharable_1 = require("labs-sharable");
 const server_error_1 = require("../../utils/server.error");
+const logic_1 = __importDefault(require("../../../logic"));
 /**
  * ClientApp class
 */
@@ -212,6 +216,17 @@ class ClientApp {
      */
     testApp() {
         return this.type === 'test';
+    }
+    validateScope({ mode, variation }) {
+        if (logic_1.default.whitelisted.apps.includes(this.id))
+            return;
+        if (!this.scopes) {
+            throw new server_error_1.SeverError(`${this.appName} lacks scopes. Please head to console and configure your app correctly`, 400, 'authorization_error');
+        }
+        const access = mode === 'flow' ? logic_1.default.access.flow : logic_1.default.access[mode][variation];
+        if (!this.scopes.some(element => access.includes(element))) {
+            throw new server_error_1.SeverError(`${this.appName} lacks sufficient ${mode} scopes needed to make this request.`, 400, 'invalid_request');
+        }
     }
 }
 __decorate([

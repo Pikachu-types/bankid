@@ -51,13 +51,13 @@ export type PostRequest = {
 /**
  * Default response interface
  */
-export interface DefaultResponse {
+export type DefaultResponse = {
     status: string;
     reason?: string;
     cost?: number;
     version?: string;
     data?: Record<string, unknown>;
-}
+};
 /**
  * Console account security
  */

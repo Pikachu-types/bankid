@@ -20,7 +20,7 @@ export declare class ConsumerModel {
     lut: number | undefined;
     tier: number;
     information?: BusinessDetails;
-    billing?: BillingCycle;
+    billing: BillingCycle | null | undefined;
     /**
      * Statistics details of usage
      */
@@ -169,8 +169,8 @@ export interface BusinessDetails {
 export interface BillingCycle {
     domain: "test" | "live";
     customer: string;
-    authentication?: IPlan;
-    signature?: IPlan;
+    authentication: IPlan | null | undefined;
+    signature: IPlan | null | undefined;
     authorization: {
         map: Record<string, unknown>;
         keep: string;

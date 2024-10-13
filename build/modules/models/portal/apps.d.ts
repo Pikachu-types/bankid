@@ -113,6 +113,10 @@ export declare class ClientApp {
      * @return {boolean} generated uid
      */
     testApp(): boolean;
+    validateScope({ mode, variation }: {
+        mode: "identification" | "signature" | "flow";
+        variation: "nin" | "wildcard";
+    }): void;
 }
 /**
  * App Verification InfoModel

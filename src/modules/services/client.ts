@@ -1,4 +1,4 @@
-import axios, { AxiosRequestConfig, AxiosResponse, isAxiosError } from "axios";
+import axios, { AxiosError, AxiosRequestConfig, AxiosResponse, isAxiosError } from "axios";
 import { DefaultResponse } from "../interfaces/documents";
 import { SeverError } from "../utils/server.error";
 
@@ -78,7 +78,7 @@ export async function apiRequest<T>(
   method: HTTP_METHOD,
   url: string,
   param: Request
-): Promise<T> {
+): Promise<{ data: T, statusCode: number }> {
   const axiosOptions = {
     headers: param.headers
       ? JSON.parse(JSON.stringify(param.headers))
@@ -91,17 +91,19 @@ export async function apiRequest<T>(
       url,
       ...axiosOptions,
     });
-    return response.data;
+    // console.log(`Response returned - - ${response.data}`);
+    return { data: response.data, statusCode: response.status };
   } catch (error) {
     // Check if the error is an Axios error
     if (axios.isAxiosError(error)) {
+      // console.log(`Axios error - - ${JSON.stringify((error as AxiosError).response?.data)}`);
       const statusCode = error.response?.status ?? 500;
-      const errorMessage = error.response?.data?.message || error.message;
+      const errorMessage = error.response?.data?.reason || error.message;
       throw new SeverError({
         reason: errorMessage,
-        status: 'failed',
+        status: error.response?.data?.status ?? 'failed',
         code: statusCode,
-        type: 'api_error',
+        type: error.response?.data?.type ??  'api_error',
       }, statusCode);
     }
 

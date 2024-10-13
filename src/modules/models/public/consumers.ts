@@ -32,7 +32,7 @@ export class ConsumerModel {
   @Expose() lut: number | undefined;
   @Expose() tier = 1;
   @Expose() information?: BusinessDetails;
-  @Expose() billing?: BillingCycle;
+  @Expose() billing: BillingCycle | null | undefined;
   /**
    * Statistics details of usage
    */
@@ -402,8 +402,8 @@ export interface BusinessDetails {
 export interface BillingCycle {
   domain: "test" | "live";
   customer: string; // if paystack - paystack_<customer id>
-  authentication?: IPlan;
-  signature?: IPlan;
+  authentication: IPlan | null | undefined;
+  signature: IPlan | null | undefined;
   authorization: {
     map: Record<string, unknown>,
     keep: string; // authorization code which we will encrypt

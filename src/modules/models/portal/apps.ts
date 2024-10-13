@@ -8,6 +8,7 @@ import { FunctionHelpers } from "../../services/helper";
 import { delay, generateRandomAlphaNumeric, unixTimeStampNow } from "labs-sharable";
 import { SeverError } from "../../utils/server.error";
 import { AppFrameworkType, AppType, VerificationStatus, ClientScope, ConsumptionType } from "../..";
+import logic from "../../../logic";
 /**
  * ClientApp class
 */
@@ -227,6 +228,25 @@ export class ClientApp {
    */
   public testApp(): boolean {
     return this.type === 'test';
+  }
+
+  public validateScope({
+    mode, variation
+  }: {
+    mode: "identification" | "signature" | "flow",
+    variation: "nin" | "wildcard",
+  }) {
+    if (logic.whitelisted.apps.includes(this.id)) return;
+
+    if (!this.scopes) {
+      throw new SeverError(`${this.appName} lacks scopes. Please head to console and configure your app correctly`, 400, 'authorization_error');
+    }
+
+    const access = mode === 'flow' ? logic.access.flow : logic.access[mode][variation];
+    if (!this.scopes.some(element => access.includes(element))) {
+      throw new SeverError(`${this.appName} lacks sufficient ${mode} scopes needed to make this request.`,
+        400, 'invalid_request');
+    }
   }
 }
 

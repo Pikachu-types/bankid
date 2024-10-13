@@ -15,6 +15,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.PDFCheck = void 0;
 const pdf_parse_1 = __importDefault(require("pdf-parse"));
 const http_1 = require("./http");
+const server_error_1 = require("../utils/server.error");
 /**
  * Callable for PDF checks
  */
@@ -28,9 +29,14 @@ class PDFCheck {
     }
     static testPDF(url) {
         return __awaiter(this, void 0, void 0, function* () {
-            let pdf = yield (0, http_1.download)(url);
-            let result = yield this.isPDF(pdf);
-            return result.isPDF;
+            try {
+                let pdf = yield (0, http_1.download)(url);
+                let result = yield this.isPDF(pdf);
+                return result.isPDF;
+            }
+            catch (_a) {
+                throw new server_error_1.SeverError("The url provided does not contain a valid pdf file", 400, 'invalid_request');
+            }
         });
     }
 }

@@ -1,4 +1,4 @@
-import { MessageCallback, eDocSignRequests } from "../modules";
+import { DefaultResponse, eDocSignRequests } from "../modules";
 import { AuthorizationGrantRequest, CancelFlowRequest, PingFlowRequest } from "./interfaces/flow.interfaces";
 import { IdentificationFlowRequest } from "./interfaces/identification.interfaces";
 import { SignatureFlowRequest, WildcardSignatureFlowRequest } from "./interfaces/signature.interfaces";
@@ -10,17 +10,6 @@ import { UsageRecording } from "./interfaces/billing.interfaces";
 export declare class MicroServiceBackendAxios {
     db: string;
     app: string;
-    private readonly authorizationEndpoint;
-    private readonly webIDEndpoint;
-    private readonly mobileIDEndpoint;
-    private readonly mobileSignatureEndpoint;
-    private readonly webSignatureEndpoint;
-    private readonly pingEndpoint;
-    private readonly cancellationEndpoint;
-    private readonly wildcardIdentificationEndpoint;
-    private readonly wildcardSignatureEndpoint;
-    private readonly documentSigningEndpoint;
-    private readonly useReportEndpoint;
     /**
      * Class main constructor
      * @param {string} dbURI initialize with dbURI
@@ -28,90 +17,42 @@ export declare class MicroServiceBackendAxios {
      */
     constructor(dbURI: string, appkey: string);
     /**
-     * Grant api authorization to consumer app
-     * @param {AuthorizationGrantRequest} request data map of request
-     * @param {MessageCallback} onError get feedback on any error logs
-     * @param {string} version what api version would you want to interface with
-     * @return {Promise<DefaultResponseAndStatus>} returns response.
+     * Builds a request to the backend
+     * @param {string} url
+     * @param {Record<string, string>} headers
+     * @param {Record<string, unknown>} body
+     * @param {string} method
+     * @returns {Promise<AxiosResponse<any, any>>}
      */
-    clientAuthorization(request: AuthorizationGrantRequest, onError?: MessageCallback, version?: string): Promise<import("../modules").DefaultResponseAndStatus | undefined>;
+    private requestBuilder;
+    authorization(request: AuthorizationGrantRequest, version?: string): Promise<{
+        data: DefaultResponse;
+        statusCode: number;
+    }>;
+    identification(request: IdentificationFlowRequest, mode: "same" | "wildcard" | "different", version?: string): Promise<{
+        data: DefaultResponse;
+        statusCode: number;
+    }>;
+    flow(request: PingFlowRequest | CancelFlowRequest, mode: "cancel" | "ping", version?: string): Promise<{
+        data: DefaultResponse;
+        statusCode: number;
+    }>;
     /**
-     * Identification flow db backend caller
-     * @param {IdentificationFlowRequest} request data map of request
-     * @param {MessageCallback} onError get feedback on any error logs
-     * @param {string} version what api version would you want to interface with
-     * @return {Promise<DefaultResponseAndStatus>} returns response.
+     * PS - Wildcard signature does not have a v1
+     * @param request
+     * @param mode
+     * @param version
+     * @returns
      */
-    identificationFlow(request: IdentificationFlowRequest, onError?: MessageCallback, version?: string): Promise<import("../modules").DefaultResponseAndStatus | undefined>;
-    /**
-     * Identification flow for same devices db backend caller
-     * @param {IdentificationFlowRequest} request data map of request
-     * @param {MessageCallback} onError get feedback on any error logs
-     * @param {string} version what api version would you want to interface. [note: do not use v1]
-     * @return {Promise<DefaultResponseAndStatus>} returns response.
-     */
-    mobIdentificationFlow(request: IdentificationFlowRequest, onError?: MessageCallback, version?: string): Promise<import("../modules").DefaultResponseAndStatus | undefined>;
-    /**
-     * Signature flow for same devices db backend caller
-     * @param {SignatureFlowRequest} request data map of request
-     * @param {MessageCallback} onError get feedback on any error logs
-     * @param {string} version what api version would you want to interface. [note: do not use v1]
-     * @return {Promise<DefaultResponseAndStatus>} returns response.
-     */
-    mobSignatureFlow(request: SignatureFlowRequest, onError?: MessageCallback, version?: string): Promise<import("../modules").DefaultResponseAndStatus | undefined>;
-    /**
-     * Signature flow for a wildcard audience db backend caller
-     * @param {SignatureFlowRequest} request data map of request
-     * @param {MessageCallback} onError get feedback on any error logs
-     * @param {string} version what api version would you want to interface. [note: do not use v1]
-     * @return {Promise<DefaultResponseAndStatus>} returns response.
-     */
-    wildcardSignatureFlow(request: WildcardSignatureFlowRequest, onError?: MessageCallback, version?: string): Promise<import("../modules").DefaultResponseAndStatus | undefined>;
-    /**
-     * Cancel a flow db backend caller
-     * @param {CancelFlowRequest} request data map of request
-     * @param {MessageCallback} onError get feedback on any error logs
-     * @param {string} version what api version would you want to interface
-     * @return {Promise<DefaultResponseAndStatus>} returns response.
-     */
-    cancelFlow(request: CancelFlowRequest, onError?: MessageCallback, version?: string): Promise<import("../modules").DefaultResponseAndStatus | undefined>;
-    /**
-     * Ping a flow db backend caller
-     * @param {PingFlowRequest} request data map of request
-     * @param {MessageCallback} onError get feedback on any error logs
-     * @param {string} version what api version would you want to interface.
-     * @return {Promise<DefaultResponseAndStatus>} returns response.
-     */
-    pingFlow(request: PingFlowRequest, onError?: MessageCallback, version?: string): Promise<import("../modules").DefaultResponseAndStatus | undefined>;
-    /**
-     * Signature flow db backend caller
-     * @param {SignatureFlowRequest} request data map of request
-     * @param {MessageCallback} onError get feedback on any error logs
-     * @param {string} version what api version would you want to interface with
-     * @return {Promise<DefaultResponseAndStatus>} returns response.
-     */
-    signatureFlow(request: SignatureFlowRequest, onError?: MessageCallback, version?: string): Promise<import("../modules").DefaultResponseAndStatus | undefined>;
-    /**
-     * Wildcard flow db backend caller
-     * @param {IdentificationFlowRequest} request data map of request
-     * @param {MessageCallback} onError get feedback on any error logs
-     * @param {string} version what api version would you want to interface with
-     * @return {Promise<DefaultResponseAndStatus>} returns response.
-     */
-    wildCardIdentificationFlow(request: IdentificationFlowRequest, onError?: MessageCallback, version?: string): Promise<import("../modules").DefaultResponseAndStatus | undefined>;
-    /**
-     * Document signing flow db backend caller
-     * @param {eDocSignRequests} request data map of request
-     * @param {MessageCallback} onError get feedback on any error logs
-     * @param {string} version what api version would you want to interface with
-     * @return {Promise<DefaultResponseAndStatus>} returns response.
-     */
-    documentSigningFlow(request: eDocSignRequests, onError?: MessageCallback, version?: string): Promise<import("../modules").DefaultResponseAndStatus | undefined>;
-    /**
-     * Document signing flow db backend caller
-     * @param {UsageRecording} request data map of request
-     * @param {MessageCallback} onError get feedback on any error logs
-     * @return {Promise<DefaultResponseAndStatus>} returns response.
-     */
-    logApiUsage(request: UsageRecording, onError?: MessageCallback): Promise<import("../modules").DefaultResponseAndStatus | undefined>;
+    signature(request: SignatureFlowRequest | eDocSignRequests | WildcardSignatureFlowRequest, mode: "same" | "wildcard" | "different" | "doc", version?: string): Promise<{
+        data: DefaultResponse;
+        statusCode: number;
+    }>;
+    logic(request: UsageRecording | {
+        apikey: string;
+        type: "authentication" | "signature";
+    }, mode: "usage" | "billing"): Promise<{
+        data: DefaultResponse;
+        statusCode: number;
+    }>;
 }
