@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.ConsumerHelper = void 0;
+exports.makeAKeyFromIdentity = exports.ConsumerHelper = void 0;
 const labs_sharable_1 = require("labs-sharable");
 const __1 = require("..");
 const uuid_1 = require("uuid");
@@ -180,4 +180,13 @@ class ConsumerHelper {
     }
 }
 exports.ConsumerHelper = ConsumerHelper;
+function makeAKeyFromIdentity(id) {
+    if (!id.includes("_"))
+        throw new __1.SeverError("Identity id is not recognised: missing signature element.", 400, "invalid_request");
+    const key = id.split("_")[1];
+    if (key.length !== 36)
+        throw new __1.SeverError("Invalid identity id provided", 400, "invalid_request");
+    return key.replace(/-/g, "");
+}
+exports.makeAKeyFromIdentity = makeAKeyFromIdentity;
 //# sourceMappingURL=consumer.helper.js.map

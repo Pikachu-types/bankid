@@ -928,7 +928,7 @@ var DatabaseFunctions;
         * @param {ConsoleUser} member console user model
         * @return {Promise<Record<string, unknown>[]>} returns app
         */
-        getOrganizationsForMember(member, omitted, detailsOmit) {
+        getOrganizationsForMember(member, cipher, omitted, detailsOmit) {
             return __awaiter(this, void 0, void 0, function* () {
                 const getter = new Getters(this.db);
                 const consumers = yield getter.retrieveConsumers();
@@ -936,7 +936,16 @@ var DatabaseFunctions;
                 for (let i = 0; i < consumers.length; i++) {
                     const org = consumers[i];
                     if (member.organizations.includes(org.id)) {
-                        orgs.push(org.toMap({ paths: omitted, detailPaths: detailsOmit }));
+                        if (org.apiKey.includes("-vi")) {
+                            org.apis = {
+                                live: __1.FunctionHelpers.bankidCipherString((0, __1.makeAKeyFromIdentity)(org.id), __1.FunctionHelpers.bankidCipherToString(cipher, org.findApiKey("production"))),
+                                test: __1.FunctionHelpers.bankidCipherString((0, __1.makeAKeyFromIdentity)(org.id), __1.FunctionHelpers.bankidCipherToString(cipher, org.findApiKey("test"))),
+                            };
+                            orgs.push(org.toMap({ paths: omitted, detailPaths: detailsOmit }));
+                        }
+                        else {
+                            orgs.push(org.toMap({ paths: omitted, detailPaths: detailsOmit }));
+                        }
                     }
                 }
                 return orgs;

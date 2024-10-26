@@ -9,7 +9,8 @@ import {
   SeverError,
   StandaloneBankID, EIDUserResource, VendorModel,
   eSignature,
-  UserRoles
+  UserRoles,
+  makeAKeyFromIdentity
 } from "..";
 import { LabsCipher, parseInterface } from "labs-sharable";
 import { OIDCSession } from "../modules/models/public/oidc_session";
@@ -944,7 +945,7 @@ export namespace DatabaseFunctions {
     * @param {ConsoleUser} member console user model
     * @return {Promise<Record<string, unknown>[]>} returns app
     */
-    public async getOrganizationsForMember(member: ConsoleUser, omitted?: string[], detailsOmit?: string[])
+    public async getOrganizationsForMember(member: ConsoleUser, cipher: string, omitted?: string[], detailsOmit?: string[])
       : Promise<Record<string, unknown>[]> {
       const getter = new Getters(this.db);
       const consumers = await getter.retrieveConsumers();
@@ -952,7 +953,15 @@ export namespace DatabaseFunctions {
       for (let i = 0; i < consumers.length; i++) {
         const org = consumers[i];
         if (member.organizations.includes(org.id)) {
-          orgs.push(org.toMap({paths: omitted, detailPaths: detailsOmit}));
+          if (org.apiKey.includes("-vi")) {
+            org.apis = {
+              live: FunctionHelpers.bankidCipherString(makeAKeyFromIdentity(org.id), FunctionHelpers.bankidCipherToString(cipher, org.findApiKey("production"))),
+              test: FunctionHelpers.bankidCipherString(makeAKeyFromIdentity(org.id), FunctionHelpers.bankidCipherToString(cipher, org.findApiKey("test"))),
+            };
+            orgs.push(org.toMap({ paths: omitted, detailPaths: detailsOmit }));
+          } else {
+            orgs.push(org.toMap({ paths: omitted, detailPaths: detailsOmit }));
+          }
         }
       }
       return orgs;

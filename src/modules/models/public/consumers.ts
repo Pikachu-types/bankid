@@ -330,6 +330,7 @@ export class ConsumerModel {
   }
 
   /**
+   * {@deprecated}
    * finally hash api keys for db storing
    * @return {void} generated api keys
    */
@@ -338,6 +339,19 @@ export class ConsumerModel {
     this.apis = {
       live: FunctionHelpers.hashAPIKey(this.apis.live),
       test: FunctionHelpers.hashAPIKey(this.apis.test),
+    }
+    this.apiKey = this.apis.live;
+  }
+
+  /**
+   * finally encrypt api keys for db storing
+   * @return {void} generated api keys
+   */
+  public encryptAPIKeys(cipher: string): void {
+    if (!this.apis) return;
+    this.apis = {
+      live: FunctionHelpers.bankidCipherString(cipher, this.apis.live),
+      test: FunctionHelpers.bankidCipherString(cipher, this.apis.test),
     }
     this.apiKey = this.apis.live;
   }
@@ -361,13 +375,22 @@ export class ConsumerModel {
   /**
    * Check if user has read write privilege
    * @param {ConsumerUserReference} user  the user in question
+   * @param {boolean} ownerOnly  default valuer is false
    * @return {boolean} value
    */
-  public static isaPrivilegedUser(user: ConsumerUserReference): boolean {
-    const parm: UserRoles[] = ['admin', 'owner'];
+  public static isaPrivilegedUser(user: ConsumerUserReference, ownerOnly: boolean = false): boolean {
+    let parm: UserRoles[] = ['admin', 'owner'];
+    if (ownerOnly) {
+      parm = parm.filter(role => role !== 'admin');
+    }
     return parm.includes(user.role);
   }
 
+  public activePlans(): boolean {
+    if (!this.billing) return false;
+    return this.billing.authentication !== undefined || this.billing.signature !== undefined;
+  }
+  
   public static initiateDetails(): BusinessDetails {
     return {
       legalName: "",

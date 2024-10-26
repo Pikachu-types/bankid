@@ -364,7 +364,7 @@ export declare namespace DatabaseFunctions {
         * @param {ConsoleUser} member console user model
         * @return {Promise<Record<string, unknown>[]>} returns app
         */
-        getOrganizationsForMember(member: ConsoleUser, omitted?: string[], detailsOmit?: string[]): Promise<Record<string, unknown>[]>;
+        getOrganizationsForMember(member: ConsoleUser, cipher: string, omitted?: string[], detailsOmit?: string[]): Promise<Record<string, unknown>[]>;
         /**
          * modify console session to database
          * @param {ConsumerUserReference} consumer console user who owns session

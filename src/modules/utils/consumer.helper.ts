@@ -210,3 +210,10 @@ export class ConsumerHelper {
   }
 
 }
+
+export function makeAKeyFromIdentity(id: string) {
+  if (!id.includes("_")) throw new SeverError("Identity id is not recognised: missing signature element.", 400, "invalid_request");
+  const key = id.split("_")[1];
+  if (key.length !== 36) throw new SeverError("Invalid identity id provided", 400, "invalid_request");
+  return key.replace(/-/g, "");
+}

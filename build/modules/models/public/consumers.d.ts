@@ -135,10 +135,16 @@ export declare class ConsumerModel {
      */
     generateApiKeys(): void;
     /**
+     * {@deprecated}
      * finally hash api keys for db storing
      * @return {void} generated api keys
      */
     hashAPIKeys(): void;
+    /**
+     * finally encrypt api keys for db storing
+     * @return {void} generated api keys
+     */
+    encryptAPIKeys(cipher: string): void;
     /**
      * Validate if api key is valid
      * @param {string} other string value to compare
@@ -148,9 +154,11 @@ export declare class ConsumerModel {
     /**
      * Check if user has read write privilege
      * @param {ConsumerUserReference} user  the user in question
+     * @param {boolean} ownerOnly  default valuer is false
      * @return {boolean} value
      */
-    static isaPrivilegedUser(user: ConsumerUserReference): boolean;
+    static isaPrivilegedUser(user: ConsumerUserReference, ownerOnly?: boolean): boolean;
+    activePlans(): boolean;
     static initiateDetails(): BusinessDetails;
 }
 export interface BusinessDetails {

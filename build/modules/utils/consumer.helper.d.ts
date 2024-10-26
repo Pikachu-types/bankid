@@ -77,3 +77,4 @@ export declare class ConsumerHelper {
         jwt: string;
     }): Promise<RequestSignature>;
 }
+export declare function makeAKeyFromIdentity(id: string): string;

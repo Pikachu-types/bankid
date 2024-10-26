@@ -1,4 +1,4 @@
-import axios, { AxiosError, AxiosRequestConfig, AxiosResponse, isAxiosError } from "axios";
+import axios, { AxiosResponse, isAxiosError } from "axios";
 import { DefaultResponse } from "../interfaces/documents";
 import { SeverError } from "../utils/server.error";
 
