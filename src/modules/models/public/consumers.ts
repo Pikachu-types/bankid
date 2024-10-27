@@ -150,11 +150,11 @@ export class ConsumerModel {
    * @param {string} key provide api key needed to match for
    * @return {ConsumerModel | undefined} found object else undefined
    */
-  public static matchApiKey(list: ConsumerModel[], key: string)
+  public static matchApiKey(list: ConsumerModel[], key: string, cipher: string)
     : ConsumerModel | undefined {
     for (let i = 0; i < list.length; i++) {
       var a = list[i];
-      if (a.validateApiKey(key)) {
+      if (a.validateApiKey(key, cipher)) {
         return a;
       }
     }
@@ -362,13 +362,18 @@ export class ConsumerModel {
    * @param {string} other string value to compare
    * @return {boolean} valid or not
    */
-  public validateApiKey(other: string): boolean {
+  public validateApiKey(other: string, cipher: string): boolean {
     if (this.apiKey.length < 1) {
       return false;
     }
-    const hash = FunctionHelpers.hashAPIKey(other);
-    if (this.apis?.live === hash) return true;
-    if (this.apis?.test === hash) return true;
+    if (this.apiKey.includes("-vi")) {
+      if (FunctionHelpers.bankidCipherToString(cipher, this.apis.live) === other) return true;
+      if (FunctionHelpers.bankidCipherToString(cipher, this.apis.test) === other) return true;
+    } else {
+      const hash = FunctionHelpers.hashAPIKey(other);
+      if (this.apis?.live === hash) return true;
+      if (this.apis?.test === hash) return true;
+    }
     return false;
   }
 

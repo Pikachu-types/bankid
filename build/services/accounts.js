@@ -71,7 +71,7 @@ class Accounts {
             const registeredNINs = yield this.getter.retrieveRegisteredNINs(params.cipher);
             const user = __1.IdentificationModel.findOne(registeredNINs, params.id);
             if (!user) {
-                throw new __1.SeverError("National does not have a pasby™ digital ID", 404);
+                throw new __1.SeverError("National does not have a pasby digital ID", 404);
             }
             return user;
         });
@@ -98,7 +98,7 @@ class Accounts {
             }
             const consumer = yield this.getConsumer(params.data.consumer, params.cipher);
             const app = yield this.getApp(params.data.app, params.data.consumer, params.cipher);
-            const valid = consumer.validateApiKey(params.data.key) &&
+            const valid = consumer.validateApiKey(params.data.key, params.cipher) &&
                 app.validateSecret(params.data.secret, params.cipher);
             if (!valid) {
                 throw new __1.SeverError("Requester is not authorized", 401);
@@ -113,6 +113,7 @@ class Accounts {
             };
         });
     }
+    // BREAK LINES
     /**
        * Validates the provided API key against the list of consumers.
        * @param params - An object containing the API key to validate.
@@ -123,14 +124,14 @@ class Accounts {
     validateConsumer(params) {
         return __awaiter(this, void 0, void 0, function* () {
             const consumer = __1.ConsumerModel.
-                matchApiKey(yield this.getter.retrieveConsumers(), params.apikey);
+                matchApiKey(yield this.getter.retrieveConsumers(), params.apikey, params.cipher);
             if (!consumer) {
-                throw new __1.SeverError("Request forbidden: Api key not valid", 403);
+                throw new __1.SeverError("API key provided not valid", 400, 'invalid_request');
             }
             const app = __1.ClientApp.
                 matchSecretKey(yield this.getter.getConsumerApps(consumer.id), params.appSecret, params.cipher);
             if (!app) {
-                throw new __1.SeverError("Request forbidden: App secret not valid", 403);
+                throw new __1.SeverError("Client secret not valid", 400, 'invalid_request');
             }
             return {
                 consumer: consumer,
@@ -145,26 +146,21 @@ class Accounts {
     */
     authenticateApp(params) {
         return __awaiter(this, void 0, void 0, function* () {
-            const consumer = __1.ConsumerModel.
-                matchApiKey(yield this.getter.retrieveConsumers(), params.apikey);
-            if (consumer === undefined) {
-                throw new __1.SeverError("Request forbidden: Api key not valid", 403);
-            }
-            const app = __1.ClientApp.
-                matchSecretKey(yield this.getter.getConsumerApps(consumer.id), params.appSecret, params.cipher);
-            if (app === undefined) {
-                throw new __1.SeverError("Request forbidden: App secret not valid", 403);
-            }
+            const client = yield this.validateConsumer({
+                cipher: params.cipher,
+                apikey: params.apikey,
+                appSecret: params.appSecret,
+            });
             if (params.apikey.startsWith(__1.ApiKeyPrefix.test) &&
-                app.type === 'production') {
-                throw new __1.SeverError("Cannot apply a test key to a production type application", 403);
+                client.app.type === 'production') {
+                throw new __1.SeverError("Cannot apply a test key to a production type application", 400, 'invalid_request');
             }
             const data = {
-                sub: consumer.id,
-                app: app.id,
+                sub: client.consumer.id,
+                app: client.app.id,
                 secret: params.appSecret,
                 iat: (0, labs_sharable_1.unixTimeStampNow)(),
-                name: app.displayName,
+                name: client.app.displayName,
             };
             const token = labs_sharable_1.LabsCipher.jwtSign(data, params.jwt, "10min");
             const result = yield consumer_helper_1.ConsumerHelper.validateTokenAlone(token, params.jwt);

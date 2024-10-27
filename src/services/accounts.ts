@@ -85,7 +85,7 @@ export class Accounts {
     const user = IdentificationModel.findOne(registeredNINs,
       params.id);
     if (!user) {
-      throw new SeverError("National does not have a pasby™ digital ID", 404);
+      throw new SeverError("National does not have a pasby digital ID", 404);
     }
     return user;
   }
@@ -117,7 +117,7 @@ export class Accounts {
     }
     const consumer = await this.getConsumer(params.data.consumer, params.cipher);
     const app = await this.getApp(params.data.app, params.data.consumer, params.cipher);
-    const valid = consumer.validateApiKey(params.data.key) &&
+    const valid = consumer.validateApiKey(params.data.key, params.cipher) &&
       app.validateSecret(params.data.secret, params.cipher);
 
     if (!valid) {
@@ -133,6 +133,8 @@ export class Accounts {
       app: app,
     };
   }
+
+  // BREAK LINES
 
   /**
      * Validates the provided API key against the list of consumers.
@@ -153,17 +155,15 @@ export class Accounts {
     cipher: string,
   }) {
     const consumer = ConsumerModel.
-      matchApiKey(await this.getter.retrieveConsumers(), params.apikey);
+      matchApiKey(await this.getter.retrieveConsumers(), params.apikey, params.cipher);
     if (!consumer) {
-      throw new SeverError("Request forbidden: Api key not valid", 403);
+      throw new SeverError("API key provided not valid", 400, 'invalid_request');
     }
     const app = ClientApp.
       matchSecretKey(await this.getter.getConsumerApps(consumer.id), params.appSecret, params.cipher);
-
     if (!app) {
-      throw new SeverError("Request forbidden: App secret not valid", 403);
+      throw new SeverError("Client secret not valid", 400, 'invalid_request');
     }
-
     return {
       consumer: consumer,
       app: app,
@@ -191,28 +191,22 @@ export class Accounts {
     cipher: string,
   }):
     Promise<ConsumerAppsResponse> {
-    const consumer = ConsumerModel.
-      matchApiKey(await this.getter.retrieveConsumers(), params.apikey);
-    if (consumer === undefined) {
-      throw new SeverError("Request forbidden: Api key not valid", 403);
-    }
-    const app = ClientApp.
-      matchSecretKey(await this.getter.getConsumerApps(consumer.id), params.appSecret, params.cipher);
-
-    if (app === undefined) {
-      throw new SeverError("Request forbidden: App secret not valid", 403);
-    }
+    const client = await this.validateConsumer({
+      cipher: params.cipher,
+      apikey: params.apikey,
+      appSecret: params.appSecret,
+    });
 
     if (params.apikey.startsWith(ApiKeyPrefix.test) &&
-      app.type === 'production') {
-      throw new SeverError("Cannot apply a test key to a production type application", 403);
+      client.app.type === 'production') {
+      throw new SeverError("Cannot apply a test key to a production type application", 400, 'invalid_request');
     }
     const data = {
-      sub: consumer.id,
-      app: app.id,
+      sub: client.consumer.id,
+      app: client.app.id,
       secret: params.appSecret,
       iat: unixTimeStampNow(),
-      name: app.displayName,
+      name: client.app.displayName,
     };
     const token = LabsCipher.jwtSign(data, params.jwt, "10min");
     const result = await ConsumerHelper.validateTokenAlone(token, params.jwt);

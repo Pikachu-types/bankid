@@ -89,7 +89,7 @@ export declare class ConsumerModel {
      * @param {string} key provide api key needed to match for
      * @return {ConsumerModel | undefined} found object else undefined
      */
-    static matchApiKey(list: ConsumerModel[], key: string): ConsumerModel | undefined;
+    static matchApiKey(list: ConsumerModel[], key: string, cipher: string): ConsumerModel | undefined;
     /**
      * un-resolve maps for certain attributes
      * @return {void} nothing
@@ -150,7 +150,7 @@ export declare class ConsumerModel {
      * @param {string} other string value to compare
      * @return {boolean} valid or not
      */
-    validateApiKey(other: string): boolean;
+    validateApiKey(other: string, cipher: string): boolean;
     /**
      * Check if user has read write privilege
      * @param {ConsumerUserReference} user  the user in question
