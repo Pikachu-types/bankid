@@ -18,8 +18,12 @@ export declare class TransactionModel {
     provider?: "stripe" | "paystack" | "alatpay";
     relationship: {
         consumer: string;
-        type: "subscription" | "setup";
-        details: TSubPlan;
+        type: "subscription" | "setup" | "checkout";
+        details?: TSubPlan;
+        redirects?: {
+            success: string;
+            failed: string;
+        };
     };
     /**
     * Change record to TransactionModel class
@@ -37,10 +41,15 @@ export declare class TransactionModel {
     toMap(): Record<string, unknown>;
     static generateID(): string;
     static generate(params: {
-        request: LocalTransaction;
+        request?: LocalTransaction;
+        redirects?: {
+            success: string;
+            failed: string;
+        };
+        debug?: boolean;
         provider: "stripe" | "paystack" | "alatpay";
         reference: string;
-        consumer: string;
-        type: "subscription" | "setup";
+        consumer?: string;
+        type: "subscription" | "setup" | "checkout";
     }): TransactionModel;
 }

@@ -26,8 +26,12 @@ export class TransactionModel {
   @Expose() provider?: "stripe" | "paystack" | "alatpay";
   @Expose() relationship: {
     consumer: string;
-    type: "subscription" | "setup",
-    details: TSubPlan,
+    type: "subscription" | "setup" | "checkout",
+    details?: TSubPlan,
+    redirects?: {
+      success: string;
+      failed: string;
+    }
   } = {
       consumer: "",
       type: "setup",
@@ -78,24 +82,29 @@ export class TransactionModel {
   }
 
   public static generate(params: {
-    request: LocalTransaction,
+    request?: LocalTransaction,
+    redirects?: {
+      success: string;
+      failed: string;
+    },
+    debug?: boolean;
     provider: "stripe" | "paystack" | "alatpay",
-    reference: string, consumer: string,
-    type: "subscription" | "setup"
+    reference: string, consumer?: string,
+    type: "subscription" | "setup" | "checkout"
   }): TransactionModel {
     const transaction = new TransactionModel();
     transaction.id = this.generateID();
-    transaction.debug = params.request.debug;
+    transaction.debug = params?.request?.debug ?? params.debug ?? false;
     transaction.iat = unixTimeStampNow();
     transaction.provider = params.provider;
     transaction.reference = params.reference;
     transaction.relationship = {
-      consumer: params.consumer,
+      consumer: params.consumer ?? '',
       type: params.type,
-      details: params.request
+      details: params.request,
+      redirects: params.redirects
     }
     transaction.status = 'stale';
     return transaction;
   }
-
 }
