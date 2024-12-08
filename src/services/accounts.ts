@@ -99,6 +99,11 @@ export class Accounts {
     const user = IdentificationModel.fromJson(fakeNINs[0]);
     user.resolveMaps();
     user.unResolveMaps();
+    const naijaFaker = require("naija-faker");
+    const person = naijaFaker.getPerson();
+    user.contact.email = person['email'];
+    user.naming.family = person['lName']; 
+    user.naming.given = person['fName']; 
     return user;
   }
 
