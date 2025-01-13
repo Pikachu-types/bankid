@@ -1101,7 +1101,7 @@ export namespace DatabaseFunctions {
         collection(DocumentReference.consumers).doc(consumer).collection(DocumentReference.invoicing)
         .where('trxRef', '==', reference).get();
       if (source.empty) return;
-      return source.docs.map((e) => InvoiceModel.fromJson(e.data()))[0];
+      return source.docs.map((e) => InvoiceModel.fromJson(e.data()))[0];43
     }
 
     public async findInvoiceWithCode({ code, consumer }: {
