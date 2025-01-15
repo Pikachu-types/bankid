@@ -34,6 +34,7 @@ var BankID;
         Links["portalApiDomain"] = "https://api.bankid.ng";
         Links["signaturesDomain"] = "https://in.pasby.africa";
         Links["eDocsDomain"] = "https://in.pasby.africa/document-checker/";
+        Links["docSigningDomain"] = "https://sign.with.pasby.africa";
         Links["connectedDomain"] = "https://in.pasby.africa/connected/";
         Links["connectUri"] = "https://connect.bankid.ng/";
         Links["apiUri"] = "https://api.pasby.africa";
@@ -68,6 +69,9 @@ var BankID;
          */
         static buildEmailVerificationLink(token) {
             return `${Links.idDomain}/email-verification/v1?token=${token}`;
+        }
+        static buildDocumentSigningInterfaceLink(docID) {
+            return `${Links.docSigningDomain}/contract/${docID}`;
         }
         /**
          * Create a request identifier

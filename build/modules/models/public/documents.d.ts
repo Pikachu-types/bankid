@@ -1,4 +1,19 @@
 import { HookData } from "./requests";
+export type Signee = {
+    title?: string | null | undefined;
+    name: string;
+    type: "business" | "person";
+    email: string;
+    nin: string;
+    ip?: string;
+    representing: string;
+    signedAt?: number;
+};
+interface ISignatureStatus {
+    nin: string;
+    status: "viewing" | "signed" | "stale";
+    lut: number;
+}
 /**
  * Documents class
 */
@@ -15,6 +30,19 @@ export declare class Documents {
      * User agent
      */
     useragent: string;
+    /**
+     * Tells pasby hoe to handle this document signing request
+     */
+    mode?: "interface" | "api";
+    /**
+     * Would be the same length as the [to] object
+     * and we match a user using the nin
+     */
+    statusLog?: ISignatureStatus[];
+    /**
+     * Must be present if the mode is "interface"
+     */
+    signee?: Signee[];
     /**
      * Request destination [mobile, file, desktop]
      */
@@ -101,3 +129,4 @@ export interface clientRequest {
     app: string;
     ip: string;
 }
+export {};

@@ -51,6 +51,10 @@ exports.scopes = {
     "flow:poll": "flow:poll",
     "flow:cancel": "flow:cancel",
     "document:sign": "document:sign",
+    /**
+     * For interface use
+     */
+    "document:review": "document:review",
     "identity:read": "identity:read",
     "identity:write": "identity:write",
     "payment:read": "payment:read",

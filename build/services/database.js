@@ -1089,6 +1089,7 @@ var DatabaseFunctions;
                 if (source.empty)
                     return;
                 return source.docs.map((e) => invoicing_1.InvoiceModel.fromJson(e.data()))[0];
+                43;
             });
         }
         findInvoiceWithCode({ code, consumer }) {

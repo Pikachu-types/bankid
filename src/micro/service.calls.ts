@@ -22,7 +22,8 @@ const endpoints = {
     same: "/signing/same",
     different: "/signing/different",
     wildcard: "/signing/wildcard",
-    doc: "/signing/document"
+    doc: "/signing/document",
+    interface: "/signing/document-interface",
   },
   flow: {
     authorize: "/authenticate",
@@ -145,7 +146,7 @@ export class MicroServiceBackendAxios {
    */
   public async signature(
     request: SignatureFlowRequest | eDocSignRequests | WildcardSignatureFlowRequest,
-    mode: "same" | "wildcard" | "different" | "doc",
+    mode: "same" | "wildcard" | "different" | "doc" | "interface",
     version: string = "v1",
   ) {
     return await this.requestBuilder({

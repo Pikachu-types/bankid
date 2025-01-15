@@ -31,6 +31,7 @@ export declare namespace BankID {
         portalApiDomain = "https://api.bankid.ng",
         signaturesDomain = "https://in.pasby.africa",
         eDocsDomain = "https://in.pasby.africa/document-checker/",
+        docSigningDomain = "https://sign.with.pasby.africa",
         connectedDomain = "https://in.pasby.africa/connected/",
         connectUri = "https://connect.bankid.ng/",
         apiUri = "https://api.pasby.africa",
@@ -58,6 +59,7 @@ export declare namespace BankID {
          * @return {string} returns value.
          */
         static buildEmailVerificationLink(token: string): string;
+        static buildDocumentSigningInterfaceLink(docID: string): string;
         /**
          * Create a request identifier
          * @return {string} returns value.

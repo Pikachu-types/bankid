@@ -59,6 +59,10 @@ export declare const scopes: {
     readonly "flow:poll": "flow:poll";
     readonly "flow:cancel": "flow:cancel";
     readonly "document:sign": "document:sign";
+    /**
+     * For interface use
+     */
+    readonly "document:review": "document:review";
     readonly "identity:read": "identity:read";
     readonly "identity:write": "identity:write";
     readonly "payment:read": "payment:read";

@@ -3,6 +3,24 @@ import { HookData } from "./requests";
 import { DocumentTypes } from "../../enums/enums";
 import { v1 as uuidv1 } from 'uuid';
 
+
+export type Signee = {
+  title?: string | null | undefined;
+  name: string;
+  type: "business" | "person";
+  email: string;
+  nin: string;
+  ip?: string;
+  representing: string;
+  signedAt?: number;
+}
+
+interface ISignatureStatus {
+  nin: string;
+  status: "viewing" | "signed" | "stale",
+  lut: number
+}
+
 /**
  * Documents class
 */
@@ -21,6 +39,24 @@ export class Documents {
    * User agent
    */
   @Expose() useragent = "";
+
+  /**
+   * Tells pasby hoe to handle this document signing request
+   */
+  @Expose() mode?: "interface" | "api";
+  
+  /**
+   * Would be the same length as the [to] object
+   * and we match a user using the nin 
+   */
+  @Expose() statusLog?: ISignatureStatus[];
+
+
+  /**
+   * Must be present if the mode is "interface"
+   */
+  @Expose() signee?: Signee[];
+
   /**
    * Request destination [mobile, file, desktop]
    */

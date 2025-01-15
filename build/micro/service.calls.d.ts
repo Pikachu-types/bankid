@@ -44,7 +44,7 @@ export declare class MicroServiceBackendAxios {
      * @param version
      * @returns
      */
-    signature(request: SignatureFlowRequest | eDocSignRequests | WildcardSignatureFlowRequest, mode: "same" | "wildcard" | "different" | "doc", version?: string): Promise<{
+    signature(request: SignatureFlowRequest | eDocSignRequests | WildcardSignatureFlowRequest, mode: "same" | "wildcard" | "different" | "doc" | "interface", version?: string): Promise<{
         data: DefaultResponse;
         statusCode: number;
     }>;

@@ -43,6 +43,7 @@ export namespace BankID {
     portalApiDomain = "https://api.bankid.ng",
     signaturesDomain = "https://in.pasby.africa",
     eDocsDomain = "https://in.pasby.africa/document-checker/",
+    docSigningDomain = "https://sign.with.pasby.africa",
     connectedDomain = "https://in.pasby.africa/connected/",
     connectUri = "https://connect.bankid.ng/",
     apiUri = "https://api.pasby.africa",
@@ -82,6 +83,11 @@ export namespace BankID {
      */
     public static buildEmailVerificationLink(token:string): string {
       return `${Links.idDomain}/email-verification/v1?token=${token}`;
+    }
+       
+    
+    public static buildDocumentSigningInterfaceLink(docID: string): string {
+      return `${Links.docSigningDomain}/contract/${docID}`;
     }
     
     /**

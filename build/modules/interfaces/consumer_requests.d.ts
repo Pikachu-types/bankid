@@ -1,4 +1,5 @@
 import { ActionType, RequestMode } from "../enums/enums";
+import { Signee } from "../models/public/documents";
 import { AuthToken, DeviceProfile } from "./documents";
 /**
  * Authentication request
@@ -76,6 +77,7 @@ export interface eDocSignRequests {
      * all required nin identifiers to sign this document
      */
     to: string[];
+    signee?: Signee[];
     webhook: {
         host: string;
         reference: string;

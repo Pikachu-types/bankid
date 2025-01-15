@@ -21,7 +21,8 @@ const endpoints = {
         same: "/signing/same",
         different: "/signing/different",
         wildcard: "/signing/wildcard",
-        doc: "/signing/document"
+        doc: "/signing/document",
+        interface: "/signing/document-interface",
     },
     flow: {
         authorize: "/authenticate",
