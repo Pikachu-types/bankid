@@ -57,7 +57,7 @@ var ESignatures;
         * @param {void} callback a function to return pdf data
         * @return {void} stamped pdf document
         */
-        static stampOnlinePDF(data, callback) {
+        static stampOnlinePDF({ sandbox = false, data, callback }) {
             return __awaiter(this, void 0, void 0, function* () {
                 const existingPdfBytes = yield (0, http_1.download)(data.pdf);
                 const stampBytes = yield (0, http_1.download)(stampurl);
@@ -77,6 +77,16 @@ var ESignatures;
                     for (let i = 0; i < pages.length; i++) {
                         const page = pages[i];
                         const { width, height } = page.getSize();
+                        if (sandbox) {
+                            page.drawText("Sandbox", {
+                                x: width / 2,
+                                y: height / 2 + 300,
+                                size: 50,
+                                font: helveticaFont,
+                                color: (0, pdf_lib_1.rgb)(0.95, 0.1, 0.1),
+                                rotate: (0, pdf_lib_1.degrees)(-45),
+                            });
+                        }
                         page.drawImage(stamp, {
                             x: width * 0.86,
                             y: i == 0 ? height * 0.9 : 10,

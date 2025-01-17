@@ -1,11 +1,10 @@
 import bwipjs from 'bwip-js';
 import {
-  CustomError,
   convertUnixToDate, unixTimeStampNow
 } from 'labs-sharable';
 import {
   PDFDocument,
-  StandardFonts, rgb
+  StandardFonts, degrees, rgb
 } from 'pdf-lib';
 import { v3 as uuidv3, } from 'uuid';
 import { download } from '../services/http';
@@ -78,7 +77,9 @@ export namespace ESignatures {
     * @param {void} callback a function to return pdf data
     * @return {void} stamped pdf document
     */
-    public static async stampOnlinePDF(data: SignatureRequest, callback: (matrix: Uint8Array) => void): Promise<void> {
+    public static async stampOnlinePDF({ sandbox = false, data, callback }: {
+      data: SignatureRequest, sandbox?: boolean, callback: (matrix: Uint8Array) => void
+    }): Promise<void> {
       const existingPdfBytes = await download(data.pdf);
       const stampBytes = await download(stampurl);
       const logoBytes = await download(pasbyLogo);
@@ -99,6 +100,17 @@ export namespace ESignatures {
         for (let i = 0; i < pages.length; i++){
           const page = pages[i];
           const { width, height } = page.getSize();
+
+          if (sandbox) {
+            page.drawText("Sandbox", {
+              x: width / 2,
+              y: height / 2 + 300,
+              size: 50,
+              font: helveticaFont,
+              color: rgb(0.95, 0.1, 0.1),
+              rotate: degrees(-45),
+            });
+          }
 
           page.drawImage(stamp, {
             x: width * 0.86,

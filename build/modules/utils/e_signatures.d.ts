@@ -41,6 +41,10 @@ export declare namespace ESignatures {
         * @param {void} callback a function to return pdf data
         * @return {void} stamped pdf document
         */
-        static stampOnlinePDF(data: SignatureRequest, callback: (matrix: Uint8Array) => void): Promise<void>;
+        static stampOnlinePDF({ sandbox, data, callback }: {
+            data: SignatureRequest;
+            sandbox?: boolean;
+            callback: (matrix: Uint8Array) => void;
+        }): Promise<void>;
     }
 }
