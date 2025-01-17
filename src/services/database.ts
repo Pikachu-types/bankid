@@ -349,6 +349,15 @@ export namespace DatabaseFunctions {
       return source.docs.map((e) => Documents.fromJson(e.data()));
     }
 
+    public async getDocument({ id, collection }: {
+      id: string, collection: DocumentReference
+    }): Promise<Record<string, unknown>> {
+      const source = await this.db.collection(collection).doc(id)
+        .get();
+      if (!source.exists) throw new SeverError("The request data object does not exist", 400);
+      return parseInterface(source.data());
+    }
+
 
     public async isUserAttachedToConsumer(params: {
       org: string,

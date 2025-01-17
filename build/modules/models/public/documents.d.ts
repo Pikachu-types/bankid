@@ -30,6 +30,7 @@ export declare class Documents {
      * User agent
      */
     useragent: string;
+    domain?: "test" | "live";
     /**
      * Tells pasby hoe to handle this document signing request
      */

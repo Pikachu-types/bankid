@@ -108,6 +108,9 @@ __decorate([
 ], Documents.prototype, "useragent", void 0);
 __decorate([
     (0, class_transformer_1.Expose)()
+], Documents.prototype, "domain", void 0);
+__decorate([
+    (0, class_transformer_1.Expose)()
 ], Documents.prototype, "mode", void 0);
 __decorate([
     (0, class_transformer_1.Expose)()

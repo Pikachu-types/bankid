@@ -1,5 +1,5 @@
 import * as admin from "firebase-admin";
-import { BillingModel, ClientApp, ConsoleUser, ConsumerModel, ConsumerUserReference, DocumentAction, Documents, IdentificationModel, IdentificationRequest, InvitationRequest, PendingApprovals, Requests, SessionData, StandaloneBankID, EIDUserResource, VendorModel, eSignature, UserRoles } from "..";
+import { BillingModel, ClientApp, ConsoleUser, ConsumerModel, ConsumerUserReference, DocumentAction, DocumentReference, Documents, IdentificationModel, IdentificationRequest, InvitationRequest, PendingApprovals, Requests, SessionData, StandaloneBankID, EIDUserResource, VendorModel, eSignature, UserRoles } from "..";
 import { OIDCSession } from "../modules/models/public/oidc_session";
 import { CompanyLogic } from "../modules/models/portal/logic";
 import { TransactionModel } from "../modules/models/portal/payment.request";
@@ -143,6 +143,10 @@ export declare namespace DatabaseFunctions {
          * @return {Promise<Documents[]>} returns list.
          */
         getEDocs(): Promise<Documents[]>;
+        getDocument({ id, collection }: {
+            id: string;
+            collection: DocumentReference;
+        }): Promise<Record<string, unknown>>;
         isUserAttachedToConsumer(params: {
             org: string;
             nin: string;

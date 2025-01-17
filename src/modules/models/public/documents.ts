@@ -40,6 +40,9 @@ export class Documents {
    */
   @Expose() useragent = "";
 
+
+  @Expose() domain?: "test" | "live";
+
   /**
    * Tells pasby hoe to handle this document signing request
    */

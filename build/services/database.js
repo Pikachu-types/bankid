@@ -371,6 +371,15 @@ var DatabaseFunctions;
                 return source.docs.map((e) => __1.Documents.fromJson(e.data()));
             });
         }
+        getDocument({ id, collection }) {
+            return __awaiter(this, void 0, void 0, function* () {
+                const source = yield this.db.collection(collection).doc(id)
+                    .get();
+                if (!source.exists)
+                    throw new __1.SeverError("The request data object does not exist", 400);
+                return (0, labs_sharable_1.parseInterface)(source.data());
+            });
+        }
         isUserAttachedToConsumer(params) {
             return __awaiter(this, void 0, void 0, function* () {
                 const source = yield this.db.
