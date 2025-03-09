@@ -77,6 +77,7 @@ export enum DocumentReference {
    */
   operations = "ops",
   transactions = "transactions",
+  webhookRetries = "webhook-retries",
   /**
     * A request has just been handled
     */

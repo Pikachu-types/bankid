@@ -540,6 +540,44 @@ var DatabaseFunctions;
             });
         }
         /**
+         * Sends a webhook request to the specified URL with the provided body and retries on failure.
+         *
+         * @param {Object} params - The parameters for sending the webhook.
+         * @param {string} params.url - The URL to which the webhook request is sent.
+         * @param {any} params.body - The body of the webhook request.
+         * @param {string} params.documentId - The unique identifier of the document associated with the webhook.
+         * @param {WebhookRetry["documentType"]} params.documentType - The type of the document associated with the webhook.
+         *
+         * @returns {Promise<boolean>} - Returns a promise that resolves to true if the webhook is sent successfully, or false if it fails and is queued for retry.
+         *
+         * @throws Will log an error message if the webhook request fails.
+         */
+        sendWebhookWithRetry({ url, body, documentId, documentType, }) {
+            return __awaiter(this, void 0, void 0, function* () {
+                try {
+                    yield __1.Http.post({ url, body });
+                    return true;
+                }
+                catch (error) {
+                    console.error(`Webhook failed for ${documentId}. Error:`, error);
+                    // Save failed webhook for retry
+                    const retry = {
+                        id: this.db.collection(__1.DocumentReference.webhookRetries).doc().id,
+                        url,
+                        body,
+                        documentId,
+                        documentType,
+                        createdAt: (0, labs_sharable_1.unixTimeStampNow)(),
+                        lastAttempt: (0, labs_sharable_1.unixTimeStampNow)(),
+                        attempts: 1,
+                        maxAttempts: 5,
+                    };
+                    yield this.db.collection(__1.DocumentReference.webhookRetries).doc(retry.id).set(retry);
+                    return false;
+                }
+            });
+        }
+        /**
          * Creates a new OIDC session in the database.
          * @param data - The OIDC session object to be created.
          * @throws {SeverError} If the provided OIDC session object has an invalid ID.

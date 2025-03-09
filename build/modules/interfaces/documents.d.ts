@@ -3,6 +3,17 @@ import { ClientApp } from "../models/portal/apps";
 import { ConsumerModel } from "../models/public/consumers";
 import { StandaloneBankID } from "../models/public/standaloneIds";
 import { IdentificationModel } from "../models/public/users";
+export interface WebhookRetry {
+    id: string;
+    url: string;
+    body: Record<string, unknown>;
+    createdAt: number;
+    lastAttempt: number;
+    attempts: number;
+    maxAttempts: number;
+    documentId: string;
+    documentType: "identification" | "edoc" | "signature" | "payment";
+}
 /**
  * BookingEmailNotify
 */

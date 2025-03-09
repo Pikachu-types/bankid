@@ -79,6 +79,7 @@ var DocumentReference;
      */
     DocumentReference["operations"] = "ops";
     DocumentReference["transactions"] = "transactions";
+    DocumentReference["webhookRetries"] = "webhook-retries";
     /**
       * A request has just been handled
       */
