@@ -14,7 +14,7 @@ export interface WebhookRetry {
   attempts: number;
   maxAttempts: number;
   documentId: string;
-  documentType: "identification" | "edoc" | "signature" | "payment";
+  documentType: "identification" | "edoc" | "signature" | "payment" | "payout";
 }
 
 /**

@@ -75,6 +75,10 @@ export declare enum DocumentReference {
      */
     operations = "ops",
     transactions = "transactions",
+    /**
+     * For api handled transfers
+     */
+    payouts = "payouts",
     webhookRetries = "webhook-retries",
     /**
       * A request has just been handled
@@ -163,6 +167,7 @@ export declare enum DocumentTypes {
     session = "sess_",
     oidc = "tk_",
     transaction = "trx_",
+    payout = "pyt_",
     invitation = "invite_"
 }
 /**

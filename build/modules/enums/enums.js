@@ -79,6 +79,10 @@ var DocumentReference;
      */
     DocumentReference["operations"] = "ops";
     DocumentReference["transactions"] = "transactions";
+    /**
+     * For api handled transfers
+     */
+    DocumentReference["payouts"] = "payouts";
     DocumentReference["webhookRetries"] = "webhook-retries";
     /**
       * A request has just been handled
@@ -172,6 +176,7 @@ var DocumentTypes;
     DocumentTypes["session"] = "sess_";
     DocumentTypes["oidc"] = "tk_";
     DocumentTypes["transaction"] = "trx_";
+    DocumentTypes["payout"] = "pyt_";
     DocumentTypes["invitation"] = "invite_";
 })(DocumentTypes = exports.DocumentTypes || (exports.DocumentTypes = {}));
 /**

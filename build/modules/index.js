@@ -46,6 +46,7 @@ __exportStar(require("./models/portal/apps"), exports);
 __exportStar(require("./models/portal/logic"), exports);
 __exportStar(require("./models/portal/invoicing"), exports);
 __exportStar(require("./models/portal/payment.request"), exports);
+__exportStar(require("./models/portal/payment.transfer"), exports);
 __exportStar(require("./models/portal/dash_content"), exports);
 __exportStar(require("./models/portal/billing"), exports);
 __exportStar(require("./models/public/standaloneIds"), exports);
