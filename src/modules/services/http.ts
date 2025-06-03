@@ -1,5 +1,4 @@
 import axios, { isAxiosError } from "axios";
-import { CustomError } from "labs-sharable";
 import { PostRequest } from "../interfaces/documents";
 import { SeverError } from "../utils/server.error";
 

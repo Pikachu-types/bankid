@@ -47,7 +47,8 @@ exports.default = {
         ],
         consumers: [
             "bcn_ae2a0c84-4fa9-4736-b61c-949bf70be31a",
-            "bcn_577050ed-bfe2-46c5-8e0e-ecd5c3c8ea54", // Jackmay Group
+            "bcn_577050ed-bfe2-46c5-8e0e-ecd5c3c8ea54",
+            "bcn_d4fc5529-3788-44c7-8800-daa18b7b93d4", // Pikaboo Studios
         ]
     }
 };

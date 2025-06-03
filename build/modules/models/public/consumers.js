@@ -224,7 +224,7 @@ class ConsumerModel {
         if (!this.information) {
             throw new server_error_1.SeverError(`Information about ${this.name} is required to access production products.`, 400, 'authorization_error');
         }
-        else if (this.information && (!(this.information.rcNumber) || !(this.information.type) || !(this.information.email))) {
+        else if (this.information && this.information.type === 'enterprise' && (!(this.information.rcNumber) || !(this.information.email))) {
             throw new server_error_1.SeverError(`Some business details for ${this.name} is missing and required to process this request.`, 400, 'invalid_request');
         }
         else if (!this.billing) {
