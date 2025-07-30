@@ -4,6 +4,8 @@ import { OIDCSession } from "../modules/models/public/oidc_session";
 import { CompanyLogic } from "../modules/models/portal/logic";
 import { TransactionModel } from "../modules/models/portal/payment.request";
 import { InvoiceModel, OverageModel } from '../modules/models/portal/invoicing';
+import { ProductType, Subscription } from "console-shared-types";
+import { SubscriptionModel } from "console-shared-types";
 export declare namespace DatabaseFunctions {
     /**
     * Database helper class
@@ -382,6 +384,10 @@ export declare namespace DatabaseFunctions {
          * @return {Promise<void>} void.
          */
         modifyConsoleUserSession(user: ConsoleUser, data: SessionData, create?: boolean): Promise<void>;
+        doesSubscriptionExist(product: ProductType, consumer: string): Promise<SubscriptionModel | undefined>;
+        findSubscription(code: string): Promise<SubscriptionModel | undefined>;
+        getSubscriptions(consumer: string): Promise<SubscriptionModel[]>;
+        subscribeConsumer(model: Subscription): Promise<admin.firestore.WriteResult>;
         /**
         * Get user organizations map
         * @param {ConsoleUser} member console user model

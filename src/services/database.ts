@@ -19,6 +19,9 @@ import { OIDCSession } from "../modules/models/public/oidc_session";
 import { CompanyLogic } from "../modules/models/portal/logic";
 import { TransactionModel } from "../modules/models/portal/payment.request";
 import { InvoiceModel, OverageModel } from '../modules/models/portal/invoicing';
+import { ProductType, Subscription } from "console-shared-types";
+import { SubscriptionModel } from "console-shared-types";
+
 
 export namespace DatabaseFunctions {
 
@@ -566,7 +569,7 @@ export namespace DatabaseFunctions {
       body: any;
       documentId: string;
       documentType: WebhookRetry["documentType"];
-      }): Promise<boolean> {
+    }): Promise<boolean> {
       try {
         await Http.post({ url, body });
         return true;
@@ -767,7 +770,7 @@ export namespace DatabaseFunctions {
         await doc.set(data.toMap());
       }
     }
-    
+
 
     /**
      * Manage app
@@ -808,10 +811,12 @@ export namespace DatabaseFunctions {
       if (ref && create) {
         await ref.set({
           "content": FunctionHelpers.encryptJSON(params.data.toMap(), params.cipher),
+          "id": params.data.id,
         });
       } else {
         await ref.update({
           "content": FunctionHelpers.encryptJSON(params.data.toMap(), params.cipher),
+          "id": params.data.id,
         });
       }
     }
@@ -832,10 +837,12 @@ export namespace DatabaseFunctions {
       if (ref && create) {
         await ref.set({
           "content": FunctionHelpers.encryptJSON(params.data.toMap(), params.cipher),
+          "id": params.data.id,
         });
       } else {
         await ref.update({
           "content": FunctionHelpers.encryptJSON(params.data.toMap(), params.cipher),
+          "id": params.data.id,
         });
       }
     }
@@ -914,7 +921,7 @@ export namespace DatabaseFunctions {
       if (source.empty) throw new SeverError(`No such user with email: ${email} exists.`, 400, 'authorization_error');
       return source.docs.map((e) => ConsoleUser.fromJson(e.data()))[0];
     }
-    
+
     public async resolveConsoleUser(email: string)
       : Promise<ConsoleUser | undefined> {
       const source = await this.db.
@@ -924,14 +931,14 @@ export namespace DatabaseFunctions {
       return source.docs.map((e) => ConsoleUser.fromJson(e.data()))[0];
     }
 
-    public async getConsumerMember(consumer: string, email:string) {
+    public async getConsumerMember(consumer: string, email: string) {
       const source = await this.db.
         collection(DocumentReference.consumers).doc(consumer).collection(DocumentReference.members)
         .where('email', '==', email).get();
       if (source.empty) throw new SeverError(`The user with email: ${email} is not attached to organization: ${consumer}`, 400, 'invalid_request');
       return source.docs.map((e) => parseInterface(e.data()) as ConsumerUserReference)[0];
     }
-    
+
     public async checkConsumerMemberSilently(consumer: string, email: string) {
       const source = await this.db.
         collection(DocumentReference.consumers).doc(consumer).collection(DocumentReference.members)
@@ -949,7 +956,7 @@ export namespace DatabaseFunctions {
         s = this.db.
           collection(DocumentReference.consumers).doc(consumer).collection(DocumentReference.members)
           .where('email', '==', options.email);
-      }else if (options?.role) {
+      } else if (options?.role) {
         s = this.db.
           collection(DocumentReference.consumers).doc(consumer).collection(DocumentReference.members)
           .where('role', '==', options.role);
@@ -996,6 +1003,43 @@ export namespace DatabaseFunctions {
       }
     }
 
+    public async doesSubscriptionExist(product: ProductType, consumer: string):
+      Promise<SubscriptionModel | undefined> {
+      const ref = await this.db.
+        collection(DocumentReference.subscriptions).
+        where("product", "==", product)
+        .where("consumer", "==", consumer)
+        .limit(1).get();
+      if (ref.empty) return;
+      return SubscriptionModel.fromJson(ref.docs[0].data() as Subscription);
+    }
+
+    public async findSubscription(code: string):
+      Promise<SubscriptionModel | undefined> {
+      const ref = await this.db.
+        collection(DocumentReference.subscriptions).
+        where("subscription_code", "==", code)
+        .limit(1).get();
+      if (ref.empty) return;
+      return SubscriptionModel.fromJson(ref.docs[0].data() as Subscription);
+    }
+
+    public async getSubscriptions(consumer: string):
+      Promise<SubscriptionModel[]> {
+      const ref = await this.db.
+        collection(DocumentReference.subscriptions).
+       where("consumer", "==", consumer)
+       .get();
+      if (ref.empty) return [];
+
+      return ref.docs.map((doc) => SubscriptionModel.fromJson(doc.data() as Subscription));
+    }
+
+    public async subscribeConsumer(model: Subscription) {
+      return await this.db.collection(DocumentReference.subscriptions).doc(model.id).set({
+        ...model,
+      });
+    }
 
     /**
     * Get user organizations map
@@ -1043,7 +1087,7 @@ export namespace DatabaseFunctions {
       }
     }
 
-    public async deleteApp(consumer:string, app: string): Promise<void> {
+    public async deleteApp(consumer: string, app: string): Promise<void> {
       const ref = this.db.
         collection(DocumentReference.consumers)
         .doc(consumer).collection(DocumentReference.apps).doc(app);
@@ -1052,7 +1096,7 @@ export namespace DatabaseFunctions {
       await ref.delete();
     }
 
-    public async deleteMember(consumer:string, email: string): Promise<void> {
+    public async deleteMember(consumer: string, email: string): Promise<void> {
       const exist = await this.checkConsumerMemberSilently(consumer, email);
       if (!exist) throw new SeverError(`Member by email:${email} does not exist`, 400, 'invalid_request');
       const id = exist.id;
@@ -1062,7 +1106,7 @@ export namespace DatabaseFunctions {
       return;
     }
 
-    public async changeMemberRole(consumer:string, email: string, role: UserRoles): Promise<void> {
+    public async changeMemberRole(consumer: string, email: string, role: UserRoles): Promise<void> {
       const exist = await this.checkConsumerMemberSilently(consumer, email);
 
       if (!exist) throw new SeverError(`Member by email:${email} does not exist thus can't edit`, 400, 'invalid_request');
@@ -1075,7 +1119,7 @@ export namespace DatabaseFunctions {
       return;
     }
 
-    public async deleteConsumer(consumer:string): Promise<void> {
+    public async deleteConsumer(consumer: string): Promise<void> {
       const ref = this.db.
         collection(DocumentReference.consumers)
         .doc(consumer);
@@ -1103,7 +1147,7 @@ export namespace DatabaseFunctions {
         await query.update(data.toMap());
       }
     }
-    
+
     /**
      * Modify invoicing document
      * @param {InvoiceModel} data the invoicing model
@@ -1158,7 +1202,7 @@ export namespace DatabaseFunctions {
         collection(DocumentReference.consumers).doc(consumer).collection(DocumentReference.invoicing)
         .where('trxRef', '==', reference).get();
       if (source.empty) return;
-      return source.docs.map((e) => InvoiceModel.fromJson(e.data()))[0];43
+      return source.docs.map((e) => InvoiceModel.fromJson(e.data()))[0]; 43
     }
 
     public async findInvoiceWithCode({ code, consumer }: {

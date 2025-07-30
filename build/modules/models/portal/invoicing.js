@@ -123,6 +123,7 @@ class InvoiceModel {
         this.status = 'stale';
         this.id = "";
         this.trxRef = "";
+        this.subscription = ""; // the subscription id on our database
         this.mode = 'authentication';
         this.lut = 0;
         /**
@@ -178,6 +179,9 @@ __decorate([
 ], InvoiceModel.prototype, "trxRef", void 0);
 __decorate([
     (0, class_transformer_1.Expose)()
+], InvoiceModel.prototype, "subscription", void 0);
+__decorate([
+    (0, class_transformer_1.Expose)()
 ], InvoiceModel.prototype, "mode", void 0);
 __decorate([
     (0, class_transformer_1.Expose)()
@@ -197,6 +201,9 @@ __decorate([
 __decorate([
     (0, class_transformer_1.Expose)()
 ], InvoiceModel.prototype, "next_cycle", void 0);
+__decorate([
+    (0, class_transformer_1.Expose)()
+], InvoiceModel.prototype, "attempts", void 0);
 exports.InvoiceModel = InvoiceModel;
 function mYYYY(date) {
     return `${date.getMonth() + 1}-${date.getFullYear()}`;

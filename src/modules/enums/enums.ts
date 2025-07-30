@@ -46,6 +46,12 @@ export enum DocumentReference {
    * account with BankID 
    */
   console = "console",
+
+  /**
+   * 
+   */
+  subscriptions = "subscriptions",
+  
   /**
    * Collection reference for auth and console user sessions
    */

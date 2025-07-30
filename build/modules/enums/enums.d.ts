@@ -46,6 +46,10 @@ export declare enum DocumentReference {
      */
     console = "console",
     /**
+     *
+     */
+    subscriptions = "subscriptions",
+    /**
      * Collection reference for auth and console user sessions
      */
     sessions = "sessions",

@@ -1,4 +1,5 @@
 import { AuthenticateKeysData, ContactData } from "../superficial/contact";
+import { Authorization } from "console-shared-types";
 import { ConsoleRegAccountRequest } from "../../interfaces/requests";
 import { APIKeys, ConsumerServiceJSON } from "../../interfaces/documents";
 import { AppType, VerificationStatus, ConsumptionType } from "../../enums/shared";
@@ -20,7 +21,7 @@ export declare class ConsumerModel {
     lut: number | undefined;
     tier: number;
     information?: BusinessDetails;
-    billing: BillingCycle | null | undefined;
+    authorization?: Authorization;
     /**
      * Statistics details of usage
      */
@@ -116,7 +117,7 @@ export declare class ConsumerModel {
      * @return {ConsumerModel} new Consumer
      */
     static createConsumer(request: ConsoleRegAccountRequest): ConsumerModel;
-    readyForProduction(consumption?: ConsumptionType): void;
+    readyForProduction(): void;
     /**
      * generates consumer service json
      * @return {void} generated uid
@@ -158,7 +159,6 @@ export declare class ConsumerModel {
      * @return {boolean} value
      */
     static isaPrivilegedUser(user: ConsumerUserReference, ownerOnly?: boolean): boolean;
-    activePlans(): boolean;
     static initiateDetails(): BusinessDetails;
 }
 export interface BusinessDetails {
@@ -174,23 +174,4 @@ export interface BusinessDetails {
     industry: string;
     status: VerificationStatus;
 }
-export interface BillingCycle {
-    domain: "test" | "live";
-    customer: string;
-    authentication: IPlan | null | undefined;
-    signature: IPlan | null | undefined;
-    authorization: {
-        map: Record<string, unknown>;
-        keep: string;
-    };
-}
-interface IPlan {
-    plan: "basic" | "scale";
-    cycle: "monthly" | "yearly";
-    next_cycle?: number;
-    begun?: number;
-    iat: number;
-    subscription_code?: string;
-    token?: string;
-}
-export {};
+export declare function productname(consumption: ConsumptionType): string;

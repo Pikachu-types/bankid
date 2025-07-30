@@ -50,6 +50,10 @@ var DocumentReference;
      */
     DocumentReference["console"] = "console";
     /**
+     *
+     */
+    DocumentReference["subscriptions"] = "subscriptions";
+    /**
      * Collection reference for auth and console user sessions
      */
     DocumentReference["sessions"] = "sessions";

@@ -1,6 +1,7 @@
 import { plainToInstance, Expose } from "class-transformer";
 import { AuthenticateKeysData, ContactData } from "../superficial/contact";
 import { delay, unixTimeStampNow } from "labs-sharable";
+import { Authorization } from "console-shared-types";
 import { Generator } from "../../services/generator";
 import { FunctionHelpers } from "../../services/helper";
 import { ApiKeyPrefix, BankIDTypes, DocumentTypes } from "../../enums/enums";
@@ -32,7 +33,7 @@ export class ConsumerModel {
   @Expose() lut: number | undefined;
   @Expose() tier = 1;
   @Expose() information?: BusinessDetails;
-  @Expose() billing: BillingCycle | null | undefined;
+  @Expose() authorization?: Authorization;
   /**
    * Statistics details of usage
    */
@@ -125,9 +126,14 @@ export class ConsumerModel {
   
   public static findPaystackCustomer(list: ConsumerModel[], id: string)
     : ConsumerModel | undefined {
-    const c = "paystack_"+ id;
     for (let i = 0; i < list.length; i++) {
-      if (list[i].billing && list[i].billing?.customer === c) return list[i];
+      if (list[i].authorization && list[i].authorization?.customer.live === id) {
+        return list[i];
+      } else if (list[i].authorization && list[i].authorization?.customer.test === id) {
+        return list[i];
+      } else {
+        continue;
+      }
     }
     return;
   }
@@ -252,19 +258,11 @@ export class ConsumerModel {
     return data;
   }
 
-  public readyForProduction(consumption?: ConsumptionType): void {
+  public readyForProduction(): void {
     if (!this.information) {
       throw new SeverError(`Information about ${this.name} is required to access production products.`, 400, 'authorization_error');
     } else if (this.information && this.information.type === 'enterprise' && (!(this.information.rcNumber) || !(this.information.email))) {
       throw new SeverError(`Some business details for ${this.name} is missing and required to process this request.`, 400, 'invalid_request');
-    } else if (!this.billing) {
-      throw new SeverError(`${this.name} does not have any valid plans attached to it at the moment. Kindly resolve this to continue into production products.`, 400, 'invalid_request');
-    } else if (this.billing && consumption && consumption === 'auth' && !(this.billing.authentication)) {
-      throw new SeverError(`${this.name} needs to have a ${productname(consumption)}  subscription plan to achieve this action.`);
-    } else if (this.billing && consumption && consumption === 'sign' && !(this.billing.signature)) {
-      throw new SeverError(`${this.name} needs to have a ${productname(consumption)}  subscription plan to achieve this action.`);
-    } else if (this.billing && consumption && consumption === 'all' && (!(this.billing.signature) && !(this.billing.signature))) {
-      throw new SeverError(`${this.name} needs to have a ${productname(consumption)}  subscription plan to achieve this action.`);
     } else {
       return;
     }
@@ -390,11 +388,6 @@ export class ConsumerModel {
     }
     return parm.includes(user.role);
   }
-
-  public activePlans(): boolean {
-    if (!this.billing) return false;
-    return this.billing.authentication !== undefined || this.billing.signature !== undefined;
-  }
   
   public static initiateDetails(): BusinessDetails {
     return {
@@ -427,29 +420,7 @@ export interface BusinessDetails {
   status: VerificationStatus,
 }
 
-export interface BillingCycle {
-  domain: "test" | "live";
-  customer: string; // if paystack - paystack_<customer id>
-  authentication: IPlan | null | undefined;
-  signature: IPlan | null | undefined;
-  authorization: {
-    map: Record<string, unknown>,
-    keep: string; // authorization code which we will encrypt
-  }
-}
-
-interface IPlan {
-  plan: "basic" | "scale",
-  cycle: "monthly" | "yearly",
-  next_cycle?: number; // timestamp of next billing
-  begun?: number; // timestamp when the subscription became active
-  iat: number;
-  subscription_code?: string
-  token?: string
-}
-
-
-function productname(consumption: ConsumptionType): string {
+export function productname(consumption: ConsumptionType): string {
   switch (consumption) {
     case 'auth':
       return 'authentication';

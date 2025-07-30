@@ -107,6 +107,7 @@ export class InvoiceModel {
   @Expose() status: PaymentStatus = 'stale';
   @Expose() id = "";
   @Expose() trxRef = "";
+  @Expose() subscription = ""; // the subscription id on our database
   @Expose() mode: "authentication" | "signature" = 'authentication';
   @Expose() lut = 0;
   /**
@@ -117,6 +118,7 @@ export class InvoiceModel {
   @Expose() period_start = 0;
   @Expose() period_end = 0;
   @Expose() next_cycle = 0;
+  @Expose() attempts?: number;
 
   /**
    * Change record to InvoiceModel class

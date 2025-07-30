@@ -39,6 +39,7 @@ const labs_sharable_1 = require("labs-sharable");
 const oidc_session_1 = require("../modules/models/public/oidc_session");
 const payment_request_1 = require("../modules/models/portal/payment.request");
 const invoicing_1 = require("../modules/models/portal/invoicing");
+const console_shared_types_1 = require("console-shared-types");
 var DatabaseFunctions;
 (function (DatabaseFunctions) {
     /**
@@ -783,11 +784,13 @@ var DatabaseFunctions;
                 if (ref && create) {
                     yield ref.set({
                         "content": __1.FunctionHelpers.encryptJSON(params.data.toMap(), params.cipher),
+                        "id": params.data.id,
                     });
                 }
                 else {
                     yield ref.update({
                         "content": __1.FunctionHelpers.encryptJSON(params.data.toMap(), params.cipher),
+                        "id": params.data.id,
                     });
                 }
             });
@@ -805,11 +808,13 @@ var DatabaseFunctions;
                 if (ref && create) {
                     yield ref.set({
                         "content": __1.FunctionHelpers.encryptJSON(params.data.toMap(), params.cipher),
+                        "id": params.data.id,
                     });
                 }
                 else {
                     yield ref.update({
                         "content": __1.FunctionHelpers.encryptJSON(params.data.toMap(), params.cipher),
+                        "id": params.data.id,
                     });
                 }
             });
@@ -968,6 +973,45 @@ var DatabaseFunctions;
                 else {
                     yield ref.update(data.toMap());
                 }
+            });
+        }
+        doesSubscriptionExist(product, consumer) {
+            return __awaiter(this, void 0, void 0, function* () {
+                const ref = yield this.db.
+                    collection(__1.DocumentReference.subscriptions).
+                    where("product", "==", product)
+                    .where("consumer", "==", consumer)
+                    .limit(1).get();
+                if (ref.empty)
+                    return;
+                return console_shared_types_1.SubscriptionModel.fromJson(ref.docs[0].data());
+            });
+        }
+        findSubscription(code) {
+            return __awaiter(this, void 0, void 0, function* () {
+                const ref = yield this.db.
+                    collection(__1.DocumentReference.subscriptions).
+                    where("subscription_code", "==", code)
+                    .limit(1).get();
+                if (ref.empty)
+                    return;
+                return console_shared_types_1.SubscriptionModel.fromJson(ref.docs[0].data());
+            });
+        }
+        getSubscriptions(consumer) {
+            return __awaiter(this, void 0, void 0, function* () {
+                const ref = yield this.db.
+                    collection(__1.DocumentReference.subscriptions).
+                    where("consumer", "==", consumer)
+                    .get();
+                if (ref.empty)
+                    return [];
+                return ref.docs.map((doc) => console_shared_types_1.SubscriptionModel.fromJson(doc.data()));
+            });
+        }
+        subscribeConsumer(model) {
+            return __awaiter(this, void 0, void 0, function* () {
+                return yield this.db.collection(__1.DocumentReference.subscriptions).doc(model.id).set(Object.assign({}, model));
             });
         }
         /**

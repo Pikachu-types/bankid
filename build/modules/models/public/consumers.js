@@ -18,7 +18,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.ConsumerModel = void 0;
+exports.productname = exports.ConsumerModel = void 0;
 const class_transformer_1 = require("class-transformer");
 const contact_1 = require("../superficial/contact");
 const labs_sharable_1 = require("labs-sharable");
@@ -100,11 +100,17 @@ class ConsumerModel {
         return;
     }
     static findPaystackCustomer(list, id) {
-        var _a;
-        const c = "paystack_" + id;
+        var _a, _b;
         for (let i = 0; i < list.length; i++) {
-            if (list[i].billing && ((_a = list[i].billing) === null || _a === void 0 ? void 0 : _a.customer) === c)
+            if (list[i].authorization && ((_a = list[i].authorization) === null || _a === void 0 ? void 0 : _a.customer.live) === id) {
                 return list[i];
+            }
+            else if (list[i].authorization && ((_b = list[i].authorization) === null || _b === void 0 ? void 0 : _b.customer.test) === id) {
+                return list[i];
+            }
+            else {
+                continue;
+            }
         }
         return;
     }
@@ -220,24 +226,12 @@ class ConsumerModel {
         data.test = request.debug;
         return data;
     }
-    readyForProduction(consumption) {
+    readyForProduction() {
         if (!this.information) {
             throw new server_error_1.SeverError(`Information about ${this.name} is required to access production products.`, 400, 'authorization_error');
         }
         else if (this.information && this.information.type === 'enterprise' && (!(this.information.rcNumber) || !(this.information.email))) {
             throw new server_error_1.SeverError(`Some business details for ${this.name} is missing and required to process this request.`, 400, 'invalid_request');
-        }
-        else if (!this.billing) {
-            throw new server_error_1.SeverError(`${this.name} does not have any valid plans attached to it at the moment. Kindly resolve this to continue into production products.`, 400, 'invalid_request');
-        }
-        else if (this.billing && consumption && consumption === 'auth' && !(this.billing.authentication)) {
-            throw new server_error_1.SeverError(`${this.name} needs to have a ${productname(consumption)}  subscription plan to achieve this action.`);
-        }
-        else if (this.billing && consumption && consumption === 'sign' && !(this.billing.signature)) {
-            throw new server_error_1.SeverError(`${this.name} needs to have a ${productname(consumption)}  subscription plan to achieve this action.`);
-        }
-        else if (this.billing && consumption && consumption === 'all' && (!(this.billing.signature) && !(this.billing.signature))) {
-            throw new server_error_1.SeverError(`${this.name} needs to have a ${productname(consumption)}  subscription plan to achieve this action.`);
         }
         else {
             return;
@@ -362,11 +356,6 @@ class ConsumerModel {
         }
         return parm.includes(user.role);
     }
-    activePlans() {
-        if (!this.billing)
-            return false;
-        return this.billing.authentication !== undefined || this.billing.signature !== undefined;
-    }
     static initiateDetails() {
         return {
             legalName: "",
@@ -415,7 +404,7 @@ __decorate([
 ], ConsumerModel.prototype, "information", void 0);
 __decorate([
     (0, class_transformer_1.Expose)()
-], ConsumerModel.prototype, "billing", void 0);
+], ConsumerModel.prototype, "authorization", void 0);
 __decorate([
     (0, class_transformer_1.Expose)()
 ], ConsumerModel.prototype, "stats", void 0);
@@ -442,4 +431,5 @@ function productname(consumption) {
             return 'authentication and signature';
     }
 }
+exports.productname = productname;
 //# sourceMappingURL=consumers.js.map

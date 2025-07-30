@@ -64,6 +64,7 @@ export declare class InvoiceModel {
     status: PaymentStatus;
     id: string;
     trxRef: string;
+    subscription: string;
     mode: "authentication" | "signature";
     lut: number;
     /**
@@ -74,6 +75,7 @@ export declare class InvoiceModel {
     period_start: number;
     period_end: number;
     next_cycle: number;
+    attempts?: number;
     /**
      * Change record to InvoiceModel class
      *
