@@ -1,7 +1,7 @@
 import { plainToInstance, Expose } from "class-transformer";
 import { AuthenticateKeysData, ContactData } from "../superficial/contact";
 import { delay, unixTimeStampNow } from "labs-sharable";
-import { Authorization } from "console-shared-types";
+import { Authorization } from 'console-shared-types';
 import { Generator } from "../../services/generator";
 import { FunctionHelpers } from "../../services/helper";
 import { ApiKeyPrefix, BankIDTypes, DocumentTypes } from "../../enums/enums";

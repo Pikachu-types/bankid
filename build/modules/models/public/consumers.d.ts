@@ -1,5 +1,5 @@
 import { AuthenticateKeysData, ContactData } from "../superficial/contact";
-import { Authorization } from "console-shared-types";
+import { Authorization } from 'console-shared-types';
 import { ConsoleRegAccountRequest } from "../../interfaces/requests";
 import { APIKeys, ConsumerServiceJSON } from "../../interfaces/documents";
 import { AppType, VerificationStatus, ConsumptionType } from "../../enums/shared";
