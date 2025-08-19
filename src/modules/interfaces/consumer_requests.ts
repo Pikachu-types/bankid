@@ -105,6 +105,24 @@ export interface eDocSignRequests {
 }
 
 /**
+ * electronic document signature request
+ */
+export interface eDocSignRefreshRequests {
+  flow: string;
+  useragent: string;
+  ip: string;
+  token?: string;
+  /**
+   * Consumer api key
+   */
+  apikey: string;
+  /**
+   * App secret key
+   */
+  secret: string;
+}
+
+/**
  * Ping request
  */
 export interface PingRequest {

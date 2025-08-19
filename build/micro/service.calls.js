@@ -22,6 +22,7 @@ const endpoints = {
         different: "/signing/different",
         wildcard: "/signing/wildcard",
         doc: "/signing/document",
+        refresh: "/signing/refresh",
         interface: "/signing/document-interface",
     },
     flow: {
@@ -128,6 +129,12 @@ class MicroServiceBackendAxios {
     signature(request, mode, version = "v1") {
         var _a, _b, _c;
         return __awaiter(this, void 0, void 0, function* () {
+            // console.log("Signature call -- ", {
+            //   request,
+            //   mode,
+            //   version,
+            //   url: endpoints.signature[mode],
+            // })
             return yield this.requestBuilder({
                 url: endpoints.signature[mode],
                 version: version,

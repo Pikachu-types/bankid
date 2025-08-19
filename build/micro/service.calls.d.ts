@@ -1,4 +1,4 @@
-import { DefaultResponse, eDocSignRequests } from "../modules";
+import { DefaultResponse, eDocSignRefreshRequests, eDocSignRequests } from "../modules";
 import { AuthorizationGrantRequest, CancelFlowRequest, PingFlowRequest } from "./interfaces/flow.interfaces";
 import { IdentificationFlowRequest } from "./interfaces/identification.interfaces";
 import { SignatureFlowRequest, WildcardSignatureFlowRequest } from "./interfaces/signature.interfaces";
@@ -44,7 +44,7 @@ export declare class MicroServiceBackendAxios {
      * @param version
      * @returns
      */
-    signature(request: SignatureFlowRequest | eDocSignRequests | WildcardSignatureFlowRequest, mode: "same" | "wildcard" | "different" | "doc" | "interface", version?: string): Promise<{
+    signature(request: SignatureFlowRequest | eDocSignRequests | WildcardSignatureFlowRequest | eDocSignRefreshRequests, mode: "same" | "wildcard" | "different" | "doc" | "interface" | "refresh", version?: string): Promise<{
         data: DefaultResponse;
         statusCode: number;
     }>;

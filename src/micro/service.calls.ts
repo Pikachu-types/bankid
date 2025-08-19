@@ -1,6 +1,6 @@
 import {
   DefaultResponse,
-  apiRequest, eDocSignRequests,
+  apiRequest, eDocSignRefreshRequests, eDocSignRequests,
   parseInterface
 } from "../modules";
 import {
@@ -23,6 +23,7 @@ const endpoints = {
     different: "/signing/different",
     wildcard: "/signing/wildcard",
     doc: "/signing/document",
+    refresh: "/signing/refresh",
     interface: "/signing/document-interface",
   },
   flow: {
@@ -145,10 +146,16 @@ export class MicroServiceBackendAxios {
    * @returns 
    */
   public async signature(
-    request: SignatureFlowRequest | eDocSignRequests | WildcardSignatureFlowRequest,
-    mode: "same" | "wildcard" | "different" | "doc" | "interface",
+    request: SignatureFlowRequest | eDocSignRequests | WildcardSignatureFlowRequest | eDocSignRefreshRequests,
+    mode: "same" | "wildcard" | "different" | "doc" | "interface" | "refresh",
     version: string = "v1",
   ) {
+    // console.log("Signature call -- ", {
+    //   request,
+    //   mode,
+    //   version,
+    //   url: endpoints.signature[mode],
+    // })
     return await this.requestBuilder({
       url: endpoints.signature[mode],
       version: version,
