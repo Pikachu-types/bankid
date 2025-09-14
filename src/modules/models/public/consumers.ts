@@ -361,7 +361,7 @@ export class ConsumerModel {
    * @return {boolean} valid or not
    */
   public validateApiKey(other: string, cipher: string): boolean {
-    if (this.apiKey.length < 1) {
+    if (!this.apiKey) {
       return false;
     }
     if (this.apiKey.includes("-vi")) {

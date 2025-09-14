@@ -325,7 +325,7 @@ class ConsumerModel {
      */
     validateApiKey(other, cipher) {
         var _a, _b;
-        if (this.apiKey.length < 1) {
+        if (!this.apiKey) {
             return false;
         }
         if (this.apiKey.includes("-vi")) {
