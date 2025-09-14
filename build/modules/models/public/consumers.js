@@ -407,6 +407,9 @@ __decorate([
 ], ConsumerModel.prototype, "authorization", void 0);
 __decorate([
     (0, class_transformer_1.Expose)()
+], ConsumerModel.prototype, "billing", void 0);
+__decorate([
+    (0, class_transformer_1.Expose)()
 ], ConsumerModel.prototype, "stats", void 0);
 __decorate([
     (0, class_transformer_1.Expose)()

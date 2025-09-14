@@ -39,7 +39,7 @@ const labs_sharable_1 = require("labs-sharable");
 const oidc_session_1 = require("../modules/models/public/oidc_session");
 const payment_request_1 = require("../modules/models/portal/payment.request");
 const invoicing_1 = require("../modules/models/portal/invoicing");
-const console_shared_types_1 = require("console-shared-types");
+const console_types_1 = require("@pikachu/console-types");
 var DatabaseFunctions;
 (function (DatabaseFunctions) {
     /**
@@ -984,7 +984,7 @@ var DatabaseFunctions;
                     .limit(1).get();
                 if (ref.empty)
                     return;
-                return console_shared_types_1.SubscriptionModel.fromJson(ref.docs[0].data());
+                return console_types_1.SubscriptionModel.fromJson(ref.docs[0].data());
             });
         }
         findSubscription(code) {
@@ -995,7 +995,7 @@ var DatabaseFunctions;
                     .limit(1).get();
                 if (ref.empty)
                     return;
-                return console_shared_types_1.SubscriptionModel.fromJson(ref.docs[0].data());
+                return console_types_1.SubscriptionModel.fromJson(ref.docs[0].data());
             });
         }
         getSubscriptions(consumer) {
@@ -1006,7 +1006,7 @@ var DatabaseFunctions;
                     .get();
                 if (ref.empty)
                     return [];
-                return ref.docs.map((doc) => console_shared_types_1.SubscriptionModel.fromJson(doc.data()));
+                return ref.docs.map((doc) => console_types_1.SubscriptionModel.fromJson(doc.data()));
             });
         }
         subscribeConsumer(model) {

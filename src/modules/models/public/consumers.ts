@@ -1,7 +1,7 @@
 import { plainToInstance, Expose } from "class-transformer";
 import { AuthenticateKeysData, ContactData } from "../superficial/contact";
 import { delay, unixTimeStampNow } from "labs-sharable";
-import { Authorization } from 'console-shared-types';
+import { Authorization } from '@pikachu/console-types';
 import { Generator } from "../../services/generator";
 import { FunctionHelpers } from "../../services/helper";
 import { ApiKeyPrefix, BankIDTypes, DocumentTypes } from "../../enums/enums";
@@ -34,6 +34,26 @@ export class ConsumerModel {
   @Expose() tier = 1;
   @Expose() information?: BusinessDetails;
   @Expose() authorization?: Authorization;
+  @Expose() billing?: {
+    credits: {
+      balance: number;
+      firstTopUpAt?: number; // timestamp
+    }
+    goodStanding: boolean; // if they can use our apis or not
+    providers?: {
+      [key: string]: null | {
+        live?: {
+          customer: string;
+          iat: number;
+        },
+        test?: {
+          customer: string;
+          iat: number;
+        }
+      },
+    }
+
+  };
   /**
    * Statistics details of usage
    */

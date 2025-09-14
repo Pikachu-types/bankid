@@ -1,5 +1,5 @@
 import { AuthenticateKeysData, ContactData } from "../superficial/contact";
-import { Authorization } from 'console-shared-types';
+import { Authorization } from '@pikachu/console-types';
 import { ConsoleRegAccountRequest } from "../../interfaces/requests";
 import { APIKeys, ConsumerServiceJSON } from "../../interfaces/documents";
 import { AppType, VerificationStatus, ConsumptionType } from "../../enums/shared";
@@ -22,6 +22,25 @@ export declare class ConsumerModel {
     tier: number;
     information?: BusinessDetails;
     authorization?: Authorization;
+    billing?: {
+        credits: {
+            balance: number;
+            firstTopUpAt?: number;
+        };
+        goodStanding: boolean;
+        providers?: {
+            [key: string]: null | {
+                live?: {
+                    customer: string;
+                    iat: number;
+                };
+                test?: {
+                    customer: string;
+                    iat: number;
+                };
+            };
+        };
+    };
     /**
      * Statistics details of usage
      */

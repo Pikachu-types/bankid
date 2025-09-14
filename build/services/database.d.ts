@@ -4,8 +4,8 @@ import { OIDCSession } from "../modules/models/public/oidc_session";
 import { CompanyLogic } from "../modules/models/portal/logic";
 import { TransactionModel } from "../modules/models/portal/payment.request";
 import { InvoiceModel, OverageModel } from '../modules/models/portal/invoicing';
-import { ProductType, Subscription } from "console-shared-types";
-import { SubscriptionModel } from "console-shared-types";
+import { ProductType, Subscription } from "@pikachu/console-types";
+import { SubscriptionModel } from "@pikachu/console-types";
 export declare namespace DatabaseFunctions {
     /**
     * Database helper class
